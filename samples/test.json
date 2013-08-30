@@ -1,0 +1,114 @@
+[
+	{
+		"name" : "mySession",
+		"base-type" : "object",
+		"description" : "session has session id and session expire date.",
+		"property" :
+		[
+			{
+				"name" : "sessionID",
+				"base-type" : "string",
+	        		"description" : "session string after login",
+			        "maxLength" : 50,
+			        "minLength" : 20,
+				"required" : 1
+			},
+			{
+				"name" : "expirationDate",
+				"base-type" : "date",
+				"description" : "Experation date of session",
+		        	"maxValue" : 183759284,
+				"required" : 1
+			}
+		]
+	},
+	{
+              	"name" : "userAddress",
+		"base-type" : "object",
+		"description" : "user address type.",
+		"property" :
+		[
+	        	{
+		        	"name" : "street",
+		                "base-type" : "string",
+		                "required" : 1
+		        },
+		        {
+		                "name" : "houseNumber",
+		                "base-type" : "string",
+		                "required" : 1
+		        },
+		        {
+		        	"name" : "additionalAddress",
+		                "base-type" : "string",
+		                "required" : 0
+		        },
+		        {
+		                "name" : "City",
+		                "base-type" : "string",
+		                "required" : 1
+		        },
+		        {
+		                "name" : "Country",
+		                "base-type" : "string",
+		                "required" : 1
+		        },
+		        {
+		                "name" : "zipCode",
+				"base-type" : "string",
+	        		"required" : 1
+	        	}
+		]
+	},
+	{
+		"name" : "person",
+		"base-type" : "object",
+		"property" :
+		[
+			{
+				"name" : "firstName",
+				"base-type" : "string",
+				"required" : 1
+			},
+			{
+				"name" : "lastName",
+				"base-type" : "string",
+				"required" : 1
+			}
+		]
+	},
+	{
+		"name" : "user",
+		"base-type" : "person",
+		"description" : "test description of user type.",
+		"property" :
+		[
+			{
+				"name" : "email",
+				"base-type" : "string",
+				"regex" : "[A-Z0-9._%+-]+@(?:[A-Z0-9-]+\\.)+[A-Z]{2,4}"
+			},
+			{
+				"name" : "family",
+				"base-type" : "array",
+				"subType" : ["person", "userAddress", "string"],
+				"required" : 1
+			},			
+			{
+				"name" : "userID",
+				"base-type" : "string",
+				"required" : 1
+			},
+			{
+				"name" : "address",
+				"base-type" : "userAddress",
+				"required" : 1
+			},
+			{
+				"name" : "session",
+				"base-type" : "mySession",
+				"required" : 1
+			}
+		]
+	}
+]
