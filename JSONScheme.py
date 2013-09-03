@@ -420,14 +420,12 @@ class JSONScheme :
         tmpList = []
         if jsonObj and type(jsonObj) != list :
             print "error - fail to read property in ", self.type_name, "property must be always array."
-            return False
+            return tmpList
 
         for dic in jsonObj :
             newProp = self.makeNewScheme(dic)
             if newProp :
                 tmpList.append(newProp)
-            else :
-                return False
 
         return tmpList
 
