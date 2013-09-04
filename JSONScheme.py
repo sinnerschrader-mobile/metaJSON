@@ -236,14 +236,10 @@ class JSONScheme :
     
     def getClassName(self):
         
-        if len(self.props) or self.base_type == "object" :
+        if self.rootBaseType() == "object" :
             className = self.type_name.upper()
             className = self.projectPrefix + className[:1] + self.type_name[1:] + self.objectSuffix
             return className
-        elif self.rootBaseType() == "object" :
-            parentSchemeObj = self.getScheme(self.base_type)
-            if parentSchemeObj :
-                return parentSchemeObj.getClassName()
 
         print "error : " + self.type_name + " has no Class Name."
         return ""
