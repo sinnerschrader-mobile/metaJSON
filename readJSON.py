@@ -138,11 +138,11 @@ if iOS :
     if os.path.exists(dirPathToSaveCodes+ "/abstractInterfaceFiles"):
         shutil.rmtree(dirPathToSaveCodes + "/abstractInterfaceFiles")
 
-    valiationCodeGen = NSStringValidationCodeGenerator()
-    valiationCodeGen.templatePath = templatePath
-    valiationCodeGen.projectPrefix = projectPrefix
-    valiationCodeGen.dirPath = dirPathToSaveCodes
-    valiationCodeGen.writeSourceCode()
+    templateCodeGen = TemplateCodeGenerator()
+    templateCodeGen.templatePath = templatePath
+    templateCodeGen.projectPrefix = projectPrefix
+    templateCodeGen.dirPath = dirPathToSaveCodes
+    templateCodeGen.writeTemplates()
 
 JSONScheme.projectPrefix = projectPrefix
 JSONScheme.objectSuffix = objectSuffix

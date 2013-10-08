@@ -77,7 +77,6 @@ class ObjectiveCCodeGenerator :
 
         hIncludeHeaders = "#import <Foundation/Foundation.h>\n"
         mIncludeHeaders = "#import \"" + self.projectPrefix + "APIParser.h\"\n"
-        mIncludeHeaders += "#import \"" + self.projectPrefix + "ParserError.h\"\n"
         mIncludeHeaders += "#import \"NSString+RegExValidation.h\"\n"
         mIncludeHeaders += "#import \"" + schemeObj.getClassName() +".h\"\n"
         predefineCalsses = ""
@@ -552,7 +551,7 @@ class ObjectiveCCodeGenerator :
         firstIndent = self.getIndentString(indentDepth)
         secondIndent = self.getIndentString(indentDepth+1)
         errorString = "NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:@\"" + self.makeVarName(schemeObj) + "\", @\"propertyName\", @\"" + schemeObj.type_name + "\", @\"key\", @\"validation error\", @\"reason\", NSStringFromClass([self class]), @\"objectClass\",nil];\n"
-        errorString += secondIndent + "*error = [" + self.projectPrefix + "ParserError errorWithDomain:k" + self.projectPrefix + "ErrorDomain_parser code:k" + self.projectPrefix + "ErrorDomain_parser_valueIsNotValid userInfo:userInfo];\n"
+        errorString += secondIndent + "*error = [NSError errorWithDomain:k" + self.projectPrefix + "ErrorDomain_parser code:k" + self.projectPrefix + "ErrorDomain_parser_valueIsNotValid userInfo:userInfo];\n"
         errorString += secondIndent + "NSLog(@\"%@\", *error);\n"
         
         maxResult = schemeObj.getMaxLength()
@@ -579,7 +578,7 @@ class ObjectiveCCodeGenerator :
         firstIndent = self.getIndentString(indentDepth)
         secondIndent = self.getIndentString(indentDepth+1)
         errorString = "NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:@\"" + self.makeVarName(schemeObj) + "\", @\"propertyName\", @\"" + schemeObj.type_name + "\", @\"key\", @\"validation error\", @\"reason\", NSStringFromClass([self class]), @\"objectClass\",nil];\n"
-        errorString += secondIndent + "*error = [" + self.projectPrefix + "ParserError errorWithDomain:k" + self.projectPrefix + "ErrorDomain_parser code:k" + self.projectPrefix + "ErrorDomain_parser_valueIsNotValid userInfo:userInfo];\n"
+        errorString += secondIndent + "*error = [NSError errorWithDomain:k" + self.projectPrefix + "ErrorDomain_parser code:k" + self.projectPrefix + "ErrorDomain_parser_valueIsNotValid userInfo:userInfo];\n"
         errorString += secondIndent + "NSLog(@\"%@\", *error);\n"
         
         maxResult = schemeObj.getMaxValue()
@@ -600,7 +599,7 @@ class ObjectiveCCodeGenerator :
         firstIndent = self.getIndentString(indentDepth)
         secondIndent = self.getIndentString(indentDepth+1)
         errorString = "NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:@\"" + self.makeVarName(schemeObj) + "\", @\"propertyName\", @\"" + schemeObj.type_name + "\", @\"key\", @\"validation error\", @\"reason\", NSStringFromClass([self class]), @\"objectClass\",nil];\n"
-        errorString += secondIndent + "*error = [" + self.projectPrefix + "ParserError errorWithDomain:k" + self.projectPrefix + "ErrorDomain_parser code:k" + self.projectPrefix + "ErrorDomain_parser_valueIsNotValid userInfo:userInfo];\n"
+        errorString += secondIndent + "*error = [NSError errorWithDomain:k" + self.projectPrefix + "ErrorDomain_parser code:k" + self.projectPrefix + "ErrorDomain_parser_valueIsNotValid userInfo:userInfo];\n"
         errorString += secondIndent + "NSLog(@\"%@\", *error);\n"
         
         maxResult = schemeObj.getMaxLength()
@@ -621,7 +620,7 @@ class ObjectiveCCodeGenerator :
         firstIndent = self.getIndentString(indentDepth)
         secondIndent = self.getIndentString(indentDepth+1)
         errorString = "NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:@\"" + self.makeVarName(schemeObj) + "\", @\"propertyName\", @\"" + schemeObj.type_name + "\", @\"key\", @\"validation error\", @\"reason\", NSStringFromClass([self class]), @\"objectClass\",nil];\n"
-        errorString += secondIndent + "*error = [" + self.projectPrefix + "ParserError errorWithDomain:k" + self.projectPrefix + "ErrorDomain_parser code:k" + self.projectPrefix + "ErrorDomain_parser_valueIsNotValid userInfo:userInfo];\n"
+        errorString += secondIndent + "*error = [NSError errorWithDomain:k" + self.projectPrefix + "ErrorDomain_parser code:k" + self.projectPrefix + "ErrorDomain_parser_valueIsNotValid userInfo:userInfo];\n"
         errorString += secondIndent + "NSLog(@\"%@\", *error);\n"
         
         maxResult = schemeObj.getMaxValue()
@@ -641,7 +640,7 @@ class ObjectiveCCodeGenerator :
         firstIndent = self.getIndentString(indentDepth)
         secondIndent = self.getIndentString(indentDepth+1)
         errorString = "NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:@\"" + self.makeVarName(schemeObj) + "\", @\"propertyName\", @\"" + schemeObj.type_name + "\", @\"key\", @\"validation error\", @\"reason\", NSStringFromClass([self class]), @\"objectClass\",nil];\n"
-        errorString += secondIndent + "*error = [" + self.projectPrefix + "ParserError errorWithDomain:k" + self.projectPrefix + "ErrorDomain_parser code:k" + self.projectPrefix + "ErrorDomain_parser_valueIsNotValid userInfo:userInfo];\n"
+        errorString += secondIndent + "*error = [NSError errorWithDomain:k" + self.projectPrefix + "ErrorDomain_parser code:k" + self.projectPrefix + "ErrorDomain_parser_valueIsNotValid userInfo:userInfo];\n"
         errorString += secondIndent + "NSLog(@\"%@\", *error);\n"
                 
         maxResult = schemeObj.getMaxCount()
@@ -929,7 +928,7 @@ class ObjectiveCCodeGenerator :
         return returnString
 
 
-class NSStringValidationCodeGenerator :
+class TemplateCodeGenerator :
     
     projectPrefix = ""
     dirPath = ""
@@ -939,7 +938,7 @@ class NSStringValidationCodeGenerator :
         projectPrefix = "S2M"
         dirPath = "classes"
         templatePath = "./templates"
-    def writeHeader(self) :
+    def writeNSStringCategory(self) :
         today = datetime.date.fromtimestamp(time.time())
         if not os.path.exists(self.dirPath):
             os.makedirs(self.dirPath)
@@ -955,11 +954,6 @@ class NSStringValidationCodeGenerator :
         finally :
             headerDstFile.close()
 
-    def writeImpl(self) :
-        today = datetime.date.fromtimestamp(time.time())
-        if not os.path.exists(self.dirPath):
-            os.makedirs(self.dirPath)
-
         implDstFile = open(self.dirPath + "/NSString+RegExValidation.m", "w")
         implSrcFile = self.templatePath + "/NSString+RegExValidation.m"
 
@@ -971,14 +965,46 @@ class NSStringValidationCodeGenerator :
         finally :
             implDstFile.close()
 
-    def writeSourceCode(self) :
+    def writeAPIParser(self) :
+        today = datetime.date.fromtimestamp(time.time())
+        if not os.path.exists(self.dirPath):
+            os.makedirs(self.dirPath)
+
+        headerDstFile = open(self.dirPath + "/"+self.projectPrefix+"APIParser.h", "w")
+        headerSrcFile = self.templatePath + "/APIParser/APIParser.h"
+
+
+        try:
+            for line in open(headerSrcFile):
+                newLine = line.replace('_DATE_', "")
+                newLine = newLine.replace('_YEAR_', str(today.year))
+                newLine = newLine.replace('_PREFIX_', self.projectPrefix)
+                headerDstFile.write(newLine)
+        finally :
+            headerDstFile.close()
+
+        implDstFile = open(self.dirPath + "/"+self.projectPrefix+"APIParser.m", "w")
+        implSrcFile = self.templatePath + "/APIParser/APIParser.m"
+
+        try:
+            for line in open(implSrcFile):
+                newLine = line.replace('_DATE_', "")
+                newLine = newLine.replace('_YEAR_', str(today.year))
+                newLine = newLine.replace('_PREFIX_', self.projectPrefix)
+                implDstFile.write(newLine)
+        finally :
+            implDstFile.close()
+
+    def writeTemplates(self) :
 
         if self.dirPath.endswith("/") :
             self.dirPath = self.dirPath[:-1]
-
-        self.dirPath = self.dirPath + "/Utilities/NSString"
-        self.writeHeader()
-        self.writeImpl()
+        baseDirPath = self.dirPath
+        self.dirPath = baseDirPath + "/Utilities/NSString"
+        self.writeNSStringCategory()
+        self.dirPath = baseDirPath + "/Utilities/APIParser"
+        self.writeAPIParser()
+        
     
     
 
