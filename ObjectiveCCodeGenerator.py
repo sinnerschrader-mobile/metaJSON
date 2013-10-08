@@ -929,7 +929,7 @@ class ObjectiveCCodeGenerator :
         return returnString
 
 
-class NSStringValidationCodeGenerator :
+class TemplateCodeGenerator :
     
     projectPrefix = ""
     dirPath = ""
@@ -971,7 +971,7 @@ class NSStringValidationCodeGenerator :
         finally :
             implDstFile.close()
 
-    def writeSourceCode(self) :
+    def writeTemplates(self) :
 
         if self.dirPath.endswith("/") :
             self.dirPath = self.dirPath[:-1]
