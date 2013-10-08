@@ -77,7 +77,6 @@ class ObjectiveCCodeGenerator :
 
         hIncludeHeaders = "#import <Foundation/Foundation.h>\n"
         mIncludeHeaders = "#import \"" + self.projectPrefix + "APIParser.h\"\n"
-        mIncludeHeaders += "#import \"" + self.projectPrefix + "ParserError.h\"\n"
         mIncludeHeaders += "#import \"NSString+RegExValidation.h\"\n"
         mIncludeHeaders += "#import \"" + schemeObj.getClassName() +".h\"\n"
         predefineCalsses = ""
@@ -552,7 +551,7 @@ class ObjectiveCCodeGenerator :
         firstIndent = self.getIndentString(indentDepth)
         secondIndent = self.getIndentString(indentDepth+1)
         errorString = "NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:@\"" + self.makeVarName(schemeObj) + "\", @\"propertyName\", @\"" + schemeObj.type_name + "\", @\"key\", @\"validation error\", @\"reason\", NSStringFromClass([self class]), @\"objectClass\",nil];\n"
-        errorString += secondIndent + "*error = [" + self.projectPrefix + "ParserError errorWithDomain:k" + self.projectPrefix + "ErrorDomain_parser code:k" + self.projectPrefix + "ErrorDomain_parser_valueIsNotValid userInfo:userInfo];\n"
+        errorString += secondIndent + "*error = [NSError errorWithDomain:k" + self.projectPrefix + "ErrorDomain_parser code:k" + self.projectPrefix + "ErrorDomain_parser_valueIsNotValid userInfo:userInfo];\n"
         errorString += secondIndent + "NSLog(@\"%@\", *error);\n"
         
         maxResult = schemeObj.getMaxLength()
@@ -579,7 +578,7 @@ class ObjectiveCCodeGenerator :
         firstIndent = self.getIndentString(indentDepth)
         secondIndent = self.getIndentString(indentDepth+1)
         errorString = "NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:@\"" + self.makeVarName(schemeObj) + "\", @\"propertyName\", @\"" + schemeObj.type_name + "\", @\"key\", @\"validation error\", @\"reason\", NSStringFromClass([self class]), @\"objectClass\",nil];\n"
-        errorString += secondIndent + "*error = [" + self.projectPrefix + "ParserError errorWithDomain:k" + self.projectPrefix + "ErrorDomain_parser code:k" + self.projectPrefix + "ErrorDomain_parser_valueIsNotValid userInfo:userInfo];\n"
+        errorString += secondIndent + "*error = [NSError errorWithDomain:k" + self.projectPrefix + "ErrorDomain_parser code:k" + self.projectPrefix + "ErrorDomain_parser_valueIsNotValid userInfo:userInfo];\n"
         errorString += secondIndent + "NSLog(@\"%@\", *error);\n"
         
         maxResult = schemeObj.getMaxValue()
@@ -600,7 +599,7 @@ class ObjectiveCCodeGenerator :
         firstIndent = self.getIndentString(indentDepth)
         secondIndent = self.getIndentString(indentDepth+1)
         errorString = "NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:@\"" + self.makeVarName(schemeObj) + "\", @\"propertyName\", @\"" + schemeObj.type_name + "\", @\"key\", @\"validation error\", @\"reason\", NSStringFromClass([self class]), @\"objectClass\",nil];\n"
-        errorString += secondIndent + "*error = [" + self.projectPrefix + "ParserError errorWithDomain:k" + self.projectPrefix + "ErrorDomain_parser code:k" + self.projectPrefix + "ErrorDomain_parser_valueIsNotValid userInfo:userInfo];\n"
+        errorString += secondIndent + "*error = [NSError errorWithDomain:k" + self.projectPrefix + "ErrorDomain_parser code:k" + self.projectPrefix + "ErrorDomain_parser_valueIsNotValid userInfo:userInfo];\n"
         errorString += secondIndent + "NSLog(@\"%@\", *error);\n"
         
         maxResult = schemeObj.getMaxLength()
@@ -621,7 +620,7 @@ class ObjectiveCCodeGenerator :
         firstIndent = self.getIndentString(indentDepth)
         secondIndent = self.getIndentString(indentDepth+1)
         errorString = "NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:@\"" + self.makeVarName(schemeObj) + "\", @\"propertyName\", @\"" + schemeObj.type_name + "\", @\"key\", @\"validation error\", @\"reason\", NSStringFromClass([self class]), @\"objectClass\",nil];\n"
-        errorString += secondIndent + "*error = [" + self.projectPrefix + "ParserError errorWithDomain:k" + self.projectPrefix + "ErrorDomain_parser code:k" + self.projectPrefix + "ErrorDomain_parser_valueIsNotValid userInfo:userInfo];\n"
+        errorString += secondIndent + "*error = [NSError errorWithDomain:k" + self.projectPrefix + "ErrorDomain_parser code:k" + self.projectPrefix + "ErrorDomain_parser_valueIsNotValid userInfo:userInfo];\n"
         errorString += secondIndent + "NSLog(@\"%@\", *error);\n"
         
         maxResult = schemeObj.getMaxValue()
@@ -641,7 +640,7 @@ class ObjectiveCCodeGenerator :
         firstIndent = self.getIndentString(indentDepth)
         secondIndent = self.getIndentString(indentDepth+1)
         errorString = "NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:@\"" + self.makeVarName(schemeObj) + "\", @\"propertyName\", @\"" + schemeObj.type_name + "\", @\"key\", @\"validation error\", @\"reason\", NSStringFromClass([self class]), @\"objectClass\",nil];\n"
-        errorString += secondIndent + "*error = [" + self.projectPrefix + "ParserError errorWithDomain:k" + self.projectPrefix + "ErrorDomain_parser code:k" + self.projectPrefix + "ErrorDomain_parser_valueIsNotValid userInfo:userInfo];\n"
+        errorString += secondIndent + "*error = [NSError errorWithDomain:k" + self.projectPrefix + "ErrorDomain_parser code:k" + self.projectPrefix + "ErrorDomain_parser_valueIsNotValid userInfo:userInfo];\n"
         errorString += secondIndent + "NSLog(@\"%@\", *error);\n"
                 
         maxResult = schemeObj.getMaxCount()
