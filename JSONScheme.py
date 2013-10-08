@@ -236,24 +236,24 @@ class JSONScheme :
     
     def getClassName(self):
         
-        if len(self.props) or self.base_type == "object" :
-            className = self.type_name.upper()
-            className = self.projectPrefix + className[:1] + self.type_name[1:] + self.objectSuffix
+        if self.rootBaseType() == "object" :
+            if self.props : 
+                className = self.type_name.upper()
+                className = self.projectPrefix + className[:1] + self.type_name[1:] + self.objectSuffix
+            else : # it means, this scheme descripe just property info, not class info. 
+                className = self.base_type.upper()
+                className = self.projectPrefix + className[:1] + self.base_type[1:] + self.objectSuffix
             return className
-        elif self.rootBaseType() == "object" :
-            parentSchemeObj = self.getScheme(self.base_type)
-            if parentSchemeObj :
-                return parentSchemeObj.getClassName()
 
         print "error : " + self.type_name + " has no Class Name."
         return ""
 
     def getMachineClassName(self):
         
-        if len(self.props) or self.rootBaseType() == "object" :
-            className = self.type_name.upper()
-            className = "_" + self.projectPrefix + className[:1] + self.type_name[1:] + self.objectSuffix
-            return className
+        className = self.getClassName()
+        if len(className) :
+            machineClassName = "_" + className 
+            return machineClassName
 
         print "error : " + self.type_name + " has no Class Name."
         return ""
@@ -284,6 +284,9 @@ class JSONScheme :
         return False
     
     def getSubType(self) :
+        if self.isNaturalType() :
+            return self.sub_type
+
         if len(self.sub_type) :
             return self.sub_type
 
@@ -294,6 +297,11 @@ class JSONScheme :
         return self.sub_type
         
     def getBaseTypes(self) :
+        
+        if self.isNaturalType() :
+            return self.base_type_list
+        
+
         if len(self.base_type_list) :
             return self.base_type_list
         elif self.hasScheme(self.base_type) :
@@ -419,15 +427,13 @@ class JSONScheme :
     def parseProperty(self, jsonObj) :
         tmpList = []
         if jsonObj and type(jsonObj) != list :
-            print "error - fail to read property in ", self.type_name, "property must be always array."
-            return False
+            print "Warning - ", self.type_name, " has no property."
+            return tmpList
 
         for dic in jsonObj :
             newProp = self.makeNewScheme(dic)
             if newProp :
                 tmpList.append(newProp)
-            else :
-                return False
 
         return tmpList
 
