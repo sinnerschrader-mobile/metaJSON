@@ -237,8 +237,12 @@ class JSONScheme :
     def getClassName(self):
         
         if self.rootBaseType() == "object" :
-            className = self.type_name.upper()
-            className = self.projectPrefix + className[:1] + self.type_name[1:] + self.objectSuffix
+            if self.props : 
+                className = self.type_name.upper()
+                className = self.projectPrefix + className[:1] + self.type_name[1:] + self.objectSuffix
+            else : # it means, this scheme descripe just property info, not class info. 
+                className = self.base_type.upper()
+                className = self.projectPrefix + className[:1] + self.base_type[1:] + self.objectSuffix
             return className
 
         print "error : " + self.type_name + " has no Class Name."
@@ -246,10 +250,10 @@ class JSONScheme :
 
     def getMachineClassName(self):
         
-        if len(self.props) or self.rootBaseType() == "object" :
-            className = self.type_name.upper()
-            className = "_" + self.projectPrefix + className[:1] + self.type_name[1:] + self.objectSuffix
-            return className
+        className = self.getClassName()
+        if len(className) :
+            machineClassName = "_" + className 
+            return machineClassName
 
         print "error : " + self.type_name + " has no Class Name."
         return ""
