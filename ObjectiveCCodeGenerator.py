@@ -23,28 +23,32 @@ THE SOFTWARE.
 '''
 
 import datetime, time, os
+from pystache import Renderer
+
+
 
 class ObjectiveCCodeGenerator :
 
     projectPrefix = ""
     dirPath = ""
-    
+
     def __init__(self):
         projectPrefix = ""
         dirPath = "classes"
-    
-    
-    def getCommonDescriptionString(self) :
+
+    def templateFilePath(self, filename) :
+        templatePath = os.path.realpath( __file__ )
+        templatePath = templatePath.replace(os.path.basename( __file__ ), 'templates')
+        return os.path.join(templatePath, filename)
+
+    def getCommonDescriptionString(self, name) :
+        templateFile = open(self.templateFilePath("header.h.mustache"), "r")
         today = datetime.date.fromtimestamp(time.time())
-        commonDescription = "//\n//  Created by MetaJSONParser."
-        commonDescription += "\n//  Copyright (c) "+  str(today.year) +" SinnerSchrader Mobile. All rights reserved.\n\n"
-        return commonDescription
-    
+        return Renderer().render(templateFile.read(), {"date": str(today.year), "filename": name})
+
     def getHeaderDescriptionString(self, name) :
-        hDescriptionString = "//\n//  "+ self.getTitledString(name) +".h\n"
-        hDescriptionString += self.getCommonDescriptionString()
-        return hDescriptionString
-    
+        return self.getCommonDescriptionString(self.getTitledString(name) + ".h")
+
     def getSourceDescriptionString(self, name) :
         mDescriptionString = "//\n//  "+ self.getTitledString(name) +".m\n"
         mDescriptionString += self.getCommonDescriptionString()
