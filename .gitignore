@@ -1,2 +1,5 @@
 # Exclude .pyc (compile python file) files
 *.pyc
+
+# Default ouptut folder
+src/
