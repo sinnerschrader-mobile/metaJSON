@@ -50,10 +50,8 @@ class ObjectiveCCodeGenerator :
         return self.getCommonDescriptionString(self.getTitledString(name) + ".h")
 
     def getSourceDescriptionString(self, name) :
-        mDescriptionString = "//\n//  "+ self.getTitledString(name) +".m\n"
-        mDescriptionString += self.getCommonDescriptionString()
-        return mDescriptionString
-    
+        return self.getCommonDescriptionString(self.getTitledString(name) + ".m")
+
     def makeVarName(self,schemeObj) :
         returnName = schemeObj.type_name
         if str(schemeObj.type_name) == "id" or str(schemeObj.type_name) == "description" :
