@@ -691,7 +691,11 @@ class ObjectiveCCodeGenerator :
         elif schemeBaseType == "number" :
             resultString += firstIndent + className + varName + " = [" + self.projectPrefix + "APIParser numberFromResponseDictionary:" + dicName + " forKey:@\"" + keyName + "\" acceptNil:"
         elif schemeBaseType == "date" :
-            resultString += firstIndent + className + varName + " = [" + self.projectPrefix + "APIParser dateWithTimeIntervalFromResponseDictionary:" + dicName + " forKey:@\"" + keyName + "\" acceptNil:"
+            dateObjSubType = schemeObj.getSubType()
+            if len(dateObjSubType) and dateObjSubType[0] == str("ms") :
+                resultString += firstIndent + className + varName + " = [" + self.projectPrefix + "APIParser dateWithMilliSecondsTimeIntervalFromResponseDictionary:" + dicName + " forKey:@\"" + keyName + "\" acceptNil:"
+            else :
+                resultString += firstIndent + className + varName + " = [" + self.projectPrefix + "APIParser dateWithTimeIntervalFromResponseDictionary:" + dicName + " forKey:@\"" + keyName + "\" acceptNil:"
         elif schemeBaseType == "data" :
             resultString += firstIndent + className + varName + " = [" + self.projectPrefix + "APIParser dataFromResponseDictionary:" + dicName + " forKey:@\"" + keyName + "\" acceptNil:"
         elif schemeBaseType == "boolean" :
@@ -900,7 +904,11 @@ class ObjectiveCCodeGenerator :
             if schemeObj.rootBaseType() == "boolean" :
                 returnString += secondIndent + "[" + dicName+ " setObject:[NSNumber numberWithBool:self." + self.makeVarName(schemeObj) + "] forKey:@\"" + schemeObj.type_name + "\"];\n"
             elif schemeObj.rootBaseType() == "date" :
-                returnString += secondIndent + "[" + dicName+ " setObject:[NSNumber numberWithInteger:[[NSNumber numberWithDouble:[self." + self.makeVarName(schemeObj) + " timeIntervalSince1970]] longValue]] forKey:@\"" + schemeObj.type_name + "\"];\n";
+                dateObjSubType = schemeObj.getSubType()
+                if len(dateObjSubType) and dateObjSubType[0] == str("ms") :
+                    returnString += secondIndent + "[" + dicName+ " setObject:[NSNumber numberWithInteger:[[NSNumber numberWithDouble:[self." + self.makeVarName(schemeObj) + " timeIntervalSince1970]] longValue] * 1000] forKey:@\"" + schemeObj.type_name + "\"];\n";
+                else :
+                    returnString += secondIndent + "[" + dicName+ " setObject:[NSNumber numberWithInteger:[[NSNumber numberWithDouble:[self." + self.makeVarName(schemeObj) + " timeIntervalSince1970]] longValue]] forKey:@\"" + schemeObj.type_name + "\"];\n";
             elif schemeObj.rootBaseType() == "array" :
                 arrayObjType = schemeObj.getSubType()
                 if arrayObjType and len(arrayObjType) == 1 and schemeObj.hasScheme(arrayObjType[0]) == True :
