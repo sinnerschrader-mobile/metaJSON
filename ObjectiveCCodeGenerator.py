@@ -906,7 +906,13 @@ class ObjectiveCCodeGenerator :
             elif schemeObj.rootBaseType() == "date" :
                 dateObjSubType = schemeObj.getSubType()
                 if len(dateObjSubType) and dateObjSubType[0] == str("ms") :
-                    returnString += secondIndent + "[" + dicName+ " setObject:[NSNumber numberWithInteger:[[NSNumber numberWithDouble:[self." + self.makeVarName(schemeObj) + " timeIntervalSince1970]] longValue] * 1000] forKey:@\"" + schemeObj.type_name + "\"];\n";
+                    returnString += secondIndent + "NSNumber* number = @([self." + self.makeVarName(schemeObj) + " timeIntervalSince1970] * 1000);\n"
+                    returnString += secondIndent + "NSNumberFormatter *formatter = [[NSNumberFormatter alloc] init];\n"
+                    returnString += secondIndent + "[formatter setNumberStyle:NSNumberFormatterNoStyle];\n"
+                    returnString += secondIndent + "[formatter setNegativeFormat:@\"0\"];\n"
+                    returnString += secondIndent + "NSString *value = [formatter stringFromNumber:number];\n"
+                    returnString += secondIndent + "NSNumber *convertedNumber = [formatter numberFromString:value];\n"
+                    returnString += secondIndent + "[" + dicName+ " setObject:convertedNumber forKey:@\"" + schemeObj.type_name + "\"];\n";
                 else :
                     returnString += secondIndent + "[" + dicName+ " setObject:[NSNumber numberWithInteger:[[NSNumber numberWithDouble:[self." + self.makeVarName(schemeObj) + " timeIntervalSince1970]] longValue]] forKey:@\"" + schemeObj.type_name + "\"];\n";
             elif schemeObj.rootBaseType() == "array" :
@@ -1012,6 +1018,8 @@ class TemplateCodeGenerator :
         self.writeNSStringCategory()
         self.dirPath = baseDirPath + "/Utilities/APIParser"
         self.writeAPIParser()
+
+
         
     
     
