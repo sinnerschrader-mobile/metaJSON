@@ -8,4 +8,3 @@
 @interface S2MSenderJSONObject : _S2MSenderJSONObject
 
 @end
-

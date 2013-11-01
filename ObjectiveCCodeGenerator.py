@@ -78,7 +78,7 @@ class ObjectiveCCodeGenerator :
         return propertyHash
 
     def generateHeaderFile(self, schemeObj) :
-        templateFile = open(self.templateFilePath("header.h.mustache"), "r")
+        templateFile = open(self.templateFilePath("_header.h.mustache"), "r")
         today = datetime.date.fromtimestamp(time.time())
         props = []
         for prop in schemeObj.props:
@@ -86,6 +86,16 @@ class ObjectiveCCodeGenerator :
 
         hashParams = {"date": str(today.year), "machineClassName": schemeObj.getMachineClassName(), "humanClassName": schemeObj.getClassName(), "variableName": self.makeVarName(schemeObj), "properties": props}
         print "hashParams"
+        print hashParams
+
+        return Renderer().render(templateFile.read(), hashParams)
+
+    def generateHumanHeaderFile(self, schemeObj) :
+        templateFile = open(self.templateFilePath("header.h.mustache"), "r")
+        today = datetime.date.fromtimestamp(time.time())
+
+        hashParams = {"date": str(today.year), "machineClassName": schemeObj.getMachineClassName(), "humanClassName": schemeObj.getClassName()}
+
         print hashParams
 
         return Renderer().render(templateFile.read(), hashParams)
@@ -302,23 +312,18 @@ class ObjectiveCCodeGenerator :
 
         ### Creating output ##########
 
-
         # machine files
         self.write_abstract_file(schemeObj.getMachineClassName() + ".h", self.generateHeaderFile(schemeObj))
         self.write_abstract_file(schemeObj.getMachineClassName() + ".m", sourceString)
 
         #customizable file
-        customizableInterface = self.getHeaderDescriptionString(schemeObj.getClassName())
-        customizableInterface += "#import \"" + schemeObj.getMachineClassName() +".h\"\n"
-        customizableInterface += "@interface " + schemeObj.getClassName() + " : " + schemeObj.getMachineClassName() + "\n\n@end\n\n"
 
         customizableImplementation = self.getSourceDescriptionString(schemeObj.getClassName())
         customizableImplementation += "#import \"" + schemeObj.getClassName() +".h\"\n"
         customizableImplementation += "@implementation " + schemeObj.getClassName() + "\n\n@end\n\n"
 
-
         # human files
-        self.write_human_file(schemeObj.getClassName() + ".h", customizableInterface)
+        self.write_human_file(schemeObj.getClassName() + ".h", self.generateHumanHeaderFile(schemeObj))
         self.write_human_file(schemeObj.getClassName() + ".m", customizableImplementation)
 
         return True

@@ -1,0 +1,26 @@
+//
+//  {{machineClassName}}.h
+//
+//  Created by MetaJSONParser.
+//  Copyright (c) {{date}} SinnerSchrader Mobile. All rights reserved.
+
+#import <Foundation/Foundation.h>
+
+@class {{humanClassName}};
+
+@interface {{machineClassName}} : NSObject <NSCoding>
+
+
+{{#properties}}
+{{#comment}}
+//{{comment}}
+{{/comment }}
+{{declaration}}
+{{/properties}}
+
++ ({{humanClassName}} *){{variableName}}WithDictionary:(NSDictionary *)dic withError:(NSError **)error;
+- (id)initWithDictionary:(NSDictionary *)dic withError:(NSError **)error;
+- (NSDictionary *)propertyDictionary;
+
+@end
+
