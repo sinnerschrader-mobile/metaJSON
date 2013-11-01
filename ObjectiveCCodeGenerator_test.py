@@ -7,53 +7,37 @@ import commands
 
 class TestObjectiveCCodeGenerator(unittest.TestCase):
   def setUp(self):
-    print('In setUp()')
     self.gen = ObjectiveCCodeGenerator()
     self.gen.dirPath = './src'
     self.maxDiff = None
+    default_folder = 'test_data/'
+    self.test_file_path = default_folder + 'test_class'
+
+    self.scheme_sender_object = pickle.load(open(self.test_file_path + '.p', 'rb'))
 
   def tearDown(self):
-    print('In tearDown()')
     del self.gen
 
-  def test_makeMachineHeader(self):
-    schemeObject = pickle.load(open('test_data/schemeObj.p', 'rb'))
-    self.gen.make(schemeObject)
-    command = "diff src/AbstractInterfaceFiles/_S2MSenderJSONObject.h test_data/_S2MSenderJSONObject.h"
-    status, output = commands.getstatusoutput(command)
-    print output
-    self.assertIs(status,0, "generated header file is different")
+  def test_human_header_content(self):
+    result = self.gen.human_header_content(self.scheme_sender_object)
+    self.assert_content_file(self.test_file_path + "/S2MSenderJSONObject.h", result)
 
-  def test_makeMachineSource(self):
-    schemeObject = pickle.load(open('test_data/schemeObj.p', 'rb'))
-    self.gen.make(schemeObject)
-    command = "diff src/AbstractInterfaceFiles/_S2MSenderJSONObject.m test_data/_S2MSenderJSONObject.m"
-    status, output = commands.getstatusoutput(command)
-    print output
-    self.assertIs(status,0, "generated source file is different")
+  def test_human_source_content(self):
+    result = self.gen.human_source_content(self.scheme_sender_object)
+    self.assert_content_file(self.test_file_path + "/S2MSenderJSONObject.m", result)
 
-  def test_makeHumanHeader(self):
-    schemeObject = pickle.load(open('test_data/schemeObj.p', 'rb'))
-    self.gen.make(schemeObject)
-    command = "diff src/S2MSenderJSONObject.h test_data/S2MSenderJSONObject.h"
-    status, output = commands.getstatusoutput(command)
-    print output
-    self.assertIs(status,0, "generated human header file is different")
-
-  def test_makeHumanSource(self):
-    schemeObject = pickle.load(open('test_data/schemeObj.p', 'rb'))
-    self.gen.make(schemeObject)
-    command = "diff src/S2MSenderJSONObject.m test_data/S2MSenderJSONObject.m"
-    status, output = commands.getstatusoutput(command)
-    print output
-    self.assertIs(status,0, "generated human source file is different")
+  def test_machine_source_content(self):
+    result = self.gen.machine_source_content(self.scheme_sender_object)
+    self.assert_content_file(self.test_file_path + "/_S2MSenderJSONObject.m", result)
 
   def test_machine_header_content(self):
-    schemeObject = pickle.load(open('test_data/schemeObj.p', 'rb'))
-    with open("test_data/_S2MSenderJSONObject.h", 'r') as content_file:
+    result = self.gen.machine_header_content(self.scheme_sender_object)
+    self.assert_content_file(self.test_file_path + "/_S2MSenderJSONObject.h", result)
+
+  def assert_content_file(self, filename, content):
+    with open(filename, 'r') as content_file:
         expected_result = content_file.read()
-    result = self.gen.machine_header_content(schemeObject)
-    self.assertMultiLineEqual(result, expected_result)
+    self.assertMultiLineEqual(content, expected_result)
 
 if __name__ == '__main__':
     unittest.main()

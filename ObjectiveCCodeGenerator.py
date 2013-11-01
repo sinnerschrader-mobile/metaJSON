@@ -813,22 +813,3 @@ class TemplateCodeGenerator :
         self.writeNSStringCategory()
         self.dirPath = baseDirPath + "/Utilities/APIParser"
         self.writeAPIParser()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
