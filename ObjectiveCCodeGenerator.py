@@ -90,7 +90,7 @@ class ObjectiveCCodeGenerator :
 
         return Renderer().render(templateFile.read(), hashParams)
 
-    def generateHumanHeaderFile(self, schemeObj) :
+    def human_header_content(self, schemeObj) :
         templateFile = open(self.template_file_path("header.h.mustache"), "r")
         today = datetime.date.fromtimestamp(time.time())
 
@@ -320,7 +320,7 @@ class ObjectiveCCodeGenerator :
         self.write_abstract_file(schemeObj.getMachineClassName() + ".m", self.generateSourceFile(schemeObj))
 
         # human files
-        self.write_human_file(schemeObj.getClassName() + ".h", self.generateHumanHeaderFile(schemeObj))
+        self.write_human_file(schemeObj.getClassName() + ".h", self.human_header_content(schemeObj))
         self.write_human_file(schemeObj.getClassName() + ".m",  self.generateHumanSourceFile(schemeObj))
 
         return True
