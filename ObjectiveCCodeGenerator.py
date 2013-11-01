@@ -104,7 +104,7 @@ class ObjectiveCCodeGenerator :
         hashParams = {"date": str(today.year), "machineClassName": schemeObj.getMachineClassName(), "humanClassName": schemeObj.getClassName()}
         return Renderer().render(templateFile.read(), hashParams)
 
-    def generateSourceFile(self, schemeObj) :
+    def machine_source_content(self, schemeObj) :
         sourceString = ""
 
         mDescriptionString = self.source_description_string(schemeObj.getMachineClassName())
@@ -317,7 +317,7 @@ class ObjectiveCCodeGenerator :
     def make(self, schemeObj) :
         # machine files
         self.write_abstract_file(schemeObj.getMachineClassName() + ".h", self.machine_header_content(schemeObj))
-        self.write_abstract_file(schemeObj.getMachineClassName() + ".m", self.generateSourceFile(schemeObj))
+        self.write_abstract_file(schemeObj.getMachineClassName() + ".m", self.machine_source_content(schemeObj))
 
         # human files
         self.write_human_file(schemeObj.getClassName() + ".h", self.human_header_content(schemeObj))
