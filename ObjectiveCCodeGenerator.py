@@ -45,14 +45,6 @@ class ObjectiveCCodeGenerator :
         templatePath = templatePath.replace(os.path.basename( __file__ ), 'templates')
         return os.path.join(templatePath, filename)
 
-    def common_description_string(self, name) :
-        templateFile = open(self.template_file_path("_source.m.mustache"), "r")
-        today = datetime.date.fromtimestamp(time.time())
-        return Renderer().render(templateFile.read(), {"date": str(today.year), "filename": name})
-
-    def source_description_string(self, name) :
-        return self.common_description_string(self.getTitledString(name) + ".m")
-
     def makeVarName(self,schemeObj) :
         returnName = schemeObj.type_name
         if str(schemeObj.type_name) == "id" or str(schemeObj.type_name) == "description" :
@@ -77,19 +69,6 @@ class ObjectiveCCodeGenerator :
             propertyHash["comment"] = propObj.type_description
         return propertyHash
 
-    def machine_header_content(self, schemeObj) :
-        templateFile = open(self.template_file_path("_header.h.mustache"), "r")
-        today = datetime.date.fromtimestamp(time.time())
-        props = []
-        for prop in schemeObj.props:
-            props.append(self.process_properties(prop))
-
-        hashParams = {"date": str(today.year), "machineClassName": schemeObj.getMachineClassName(), "humanClassName": schemeObj.getClassName(), "variableName": self.makeVarName(schemeObj), "properties": props}
-        # print "hashParams"
-        # print hashParams
-
-        return Renderer().render(templateFile.read(), hashParams)
-
     def human_header_content(self, schemeObj) :
         templateFile = open(self.template_file_path("header.h.mustache"), "r")
         today = datetime.date.fromtimestamp(time.time())
@@ -104,11 +83,30 @@ class ObjectiveCCodeGenerator :
         hashParams = {"date": str(today.year), "machineClassName": schemeObj.getMachineClassName(), "humanClassName": schemeObj.getClassName()}
         return Renderer().render(templateFile.read(), hashParams)
 
+    def machine_header_content(self, schemeObj) :
+        templateFile = open(self.template_file_path("_header.h.mustache"), "r")
+        today = datetime.date.fromtimestamp(time.time())
+        props = []
+        for prop in schemeObj.props:
+            props.append(self.process_properties(prop))
+
+        hashParams = {"date": str(today.year), "machineClassName": schemeObj.getMachineClassName(), "humanClassName": schemeObj.getClassName(), "variableName": self.makeVarName(schemeObj), "properties": props}
+        # print "hashParams"
+        # print hashParams
+
+        return Renderer().render(templateFile.read(), hashParams)
+
     def machine_source_content(self, schemeObj) :
-        sourceString = ""
+        templateFile = open(self.template_file_path("_source.m.mustache"), "r")
+        today = datetime.date.fromtimestamp(time.time())
 
-        mDescriptionString = self.source_description_string(schemeObj.getMachineClassName())
+        # retrieve all params for template
+        hashParams = {"date": str(today.year), "machineClassName": schemeObj.getMachineClassName()}
 
+        # render
+        sourceString = Renderer().render(templateFile.read(), hashParams)
+
+        # process missing content
         mIncludeHeaders = "#import \"" + self.projectPrefix + "APIParser.h\"\n"
         mIncludeHeaders += "#import \"NSString+RegExValidation.h\"\n"
         mIncludeHeaders += "#import \"" + schemeObj.getClassName() +".h\"\n"
@@ -310,7 +308,7 @@ class ObjectiveCCodeGenerator :
         interfaceImplementation += "\n#pragma mark - NSCoding\n" + encodeMethodString + decodeMethodString
         interfaceImplementation += "\n#pragma mark - Object Info\n" + propertyDictionaryString + descriptionMethodString +"\n@end\n"
 
-        sourceString += mDescriptionString + mIncludeHeaders + "\n\n" + interfaceImplementation
+        sourceString += mIncludeHeaders + "\n\n" + interfaceImplementation
 
         return sourceString
 

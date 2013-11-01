@@ -16,17 +16,6 @@ class TestObjectiveCCodeGenerator(unittest.TestCase):
     print('In tearDown()')
     del self.gen
 
-  def test_source_description_string(self):
-    result = self.gen.source_description_string("MyClass")
-    expected_result = """//
-//  MyClass.m
-//
-//  Created by MetaJSONParser.
-//  Copyright (c) 2013 SinnerSchrader Mobile. All rights reserved.
-
-"""
-    self.assertMultiLineEqual(result, expected_result)
-
   def test_makeMachineHeader(self):
     schemeObject = pickle.load(open('test_data/schemeObj.p', 'rb'))
     self.gen.make(schemeObject)
