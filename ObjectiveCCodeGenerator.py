@@ -97,7 +97,7 @@ class ObjectiveCCodeGenerator :
         hashParams = {"date": str(today.year), "machineClassName": schemeObj.getMachineClassName(), "humanClassName": schemeObj.getClassName()}
         return Renderer().render(templateFile.read(), hashParams)
 
-    def generateHumanSourceFile(self, schemeObj) :
+    def human_source_content(self, schemeObj) :
         templateFile = open(self.template_file_path("source.m.mustache"), "r")
         today = datetime.date.fromtimestamp(time.time())
 
@@ -321,7 +321,7 @@ class ObjectiveCCodeGenerator :
 
         # human files
         self.write_human_file(schemeObj.getClassName() + ".h", self.human_header_content(schemeObj))
-        self.write_human_file(schemeObj.getClassName() + ".m",  self.generateHumanSourceFile(schemeObj))
+        self.write_human_file(schemeObj.getClassName() + ".m",  self.human_source_content(schemeObj))
 
         return True
 
