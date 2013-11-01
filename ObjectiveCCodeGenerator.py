@@ -77,7 +77,7 @@ class ObjectiveCCodeGenerator :
             propertyHash["comment"] = propObj.type_description
         return propertyHash
 
-    def generateHeaderFile(self, schemeObj) :
+    def machine_header_content(self, schemeObj) :
         templateFile = open(self.template_file_path("_header.h.mustache"), "r")
         today = datetime.date.fromtimestamp(time.time())
         props = []
@@ -316,7 +316,7 @@ class ObjectiveCCodeGenerator :
 
     def make(self, schemeObj) :
         # machine files
-        self.write_abstract_file(schemeObj.getMachineClassName() + ".h", self.generateHeaderFile(schemeObj))
+        self.write_abstract_file(schemeObj.getMachineClassName() + ".h", self.machine_header_content(schemeObj))
         self.write_abstract_file(schemeObj.getMachineClassName() + ".m", self.generateSourceFile(schemeObj))
 
         # human files

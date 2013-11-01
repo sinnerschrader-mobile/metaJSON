@@ -59,11 +59,11 @@ class TestObjectiveCCodeGenerator(unittest.TestCase):
     print output
     self.assertIs(status,0, "generated human source file is different")
 
-  def test_generateHeaderFile(self):
+  def test_machine_header_content(self):
     schemeObject = pickle.load(open('test_data/schemeObj.p', 'rb'))
     with open("test_data/_S2MSenderJSONObject.h", 'r') as content_file:
         expected_result = content_file.read()
-    result = self.gen.generateHeaderFile(schemeObject)
+    result = self.gen.machine_header_content(schemeObject)
     self.assertMultiLineEqual(result, expected_result)
 
 if __name__ == '__main__':
