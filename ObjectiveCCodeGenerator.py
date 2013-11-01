@@ -300,34 +300,12 @@ class ObjectiveCCodeGenerator :
 
         sourceString += mDescriptionString + mIncludeHeaders + "\n\n" + interfaceImplementation
 
-        if not os.path.exists(self.dirPath):
-            os.makedirs(self.dirPath)
+        ### Creating output ##########
 
-        if self.dirPath.endswith("/") :
-            self.dirPath = self.dirPath[:-1]
 
-        if not os.path.exists(self.dirPath + "/AbstractInterfaceFiles/"):
-            os.makedirs(self.dirPath + "/AbstractInterfaceFiles/")
-
-        #machine file
-        machine_header_file = self.generateHeaderFile(schemeObj)
-        # print machine_header_file
-        try:
-            headerFilename = self.dirPath + "/AbstractInterfaceFiles/" + schemeObj.getMachineClassName() + ".h"
-            headerFile = open(headerFilename, "w")
-            print "create " + headerFilename + " file..."
-            headerFile.write(machine_header_file) # Write a string to a file
-        finally :
-            headerFile.close()
-
-        #print sourceString
-        try:
-            sourceFile = open(self.dirPath + "/AbstractInterfaceFiles/" + schemeObj.getMachineClassName() + ".m", "w")
-            print "create " + self.dirPath + "/AbstractInterfaceFiles/" + schemeObj.getMachineClassName() + ".m" + " file..."
-            sourceFile.write(sourceString) # Write a string to a file
-        finally :
-            sourceFile.close()
-
+        # machine files
+        self.write_abstract_file(schemeObj.getMachineClassName() + ".h", self.generateHeaderFile(schemeObj))
+        self.write_abstract_file(schemeObj.getMachineClassName() + ".m", sourceString)
 
         #customizable file
         customizableInterface = self.getHeaderDescriptionString(schemeObj.getClassName())
@@ -339,27 +317,43 @@ class ObjectiveCCodeGenerator :
         customizableImplementation += "@implementation " + schemeObj.getClassName() + "\n\n@end\n\n"
 
 
-        #print headerString
-        customizableInterfaceFileName = self.dirPath + "/" + schemeObj.getClassName() + ".h"
-        if os.path.isfile(customizableInterfaceFileName) is False :
-            print "create " + customizableInterfaceFileName + " file..."
-            try:
-                headerFile = open(customizableInterfaceFileName, "w")
-                headerFile.write(customizableInterface) # Write a string to a file
-            finally :
-                headerFile.close()
-
-        #print sourceString
-        customizableImplementationFileName = self.dirPath + "/" + schemeObj.getClassName() + ".m"
-        if os.path.isfile(customizableImplementationFileName) is False :
-            print "create " + customizableImplementationFileName + " file..."
-            try:
-                sourceFile = open(customizableImplementationFileName, "w")
-                sourceFile.write(customizableImplementation) # Write a string to a file
-            finally :
-                sourceFile.close()
+        # human files
+        self.write_human_file(schemeObj.getClassName() + ".h", customizableInterface)
+        self.write_human_file(schemeObj.getClassName() + ".m", customizableImplementation)
 
         return True
+
+    def write_abstract_file(self, filename, content) :
+        folder = "/AbstractInterfaceFiles/"
+        if not os.path.exists(self.dirPath + folder):
+            os.makedirs(self.dirPath + folder)
+
+        filepath = self.dirPath + folder + filename
+        self.write_file(filepath, content)
+
+    def write_human_file(self, filename, content) :
+        folder = "/"
+        if not os.path.exists(self.dirPath + folder):
+            os.makedirs(self.dirPath + folder)
+
+        filepath = self.dirPath + folder + filename
+        self.write_file(filepath, content)
+
+    def write_file(self, filename, content) :
+        if not os.path.exists(self.dirPath):
+            os.makedirs(self.dirPath)
+
+        if self.dirPath.endswith("/") :
+            self.dirPath = self.dirPath[:-1]
+
+
+        if os.path.isfile(filename) is False :
+            print "create " + filename + " file..."
+            try:
+                writefile = open(filename, "w")
+                writefile.write(content) # Write a string to a file
+            finally :
+                writefile.close()
 
 
     """
