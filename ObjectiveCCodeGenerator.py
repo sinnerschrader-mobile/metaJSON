@@ -43,12 +43,9 @@ class ObjectiveCCodeGenerator :
         return os.path.join(templatePath, filename)
 
     def getCommonDescriptionString(self, name) :
-        templateFile = open(self.templateFilePath("source.m.mustache"), "r")
+        templateFile = open(self.templateFilePath("_source.m.mustache"), "r")
         today = datetime.date.fromtimestamp(time.time())
         return Renderer().render(templateFile.read(), {"date": str(today.year), "filename": name})
-
-    def getHeaderDescriptionString(self, name) :
-        return self.getCommonDescriptionString(self.getTitledString(name) + ".h")
 
     def getSourceDescriptionString(self, name) :
         return self.getCommonDescriptionString(self.getTitledString(name) + ".m")
@@ -85,8 +82,8 @@ class ObjectiveCCodeGenerator :
             props.append(self.processProperties(prop))
 
         hashParams = {"date": str(today.year), "machineClassName": schemeObj.getMachineClassName(), "humanClassName": schemeObj.getClassName(), "variableName": self.makeVarName(schemeObj), "properties": props}
-        print "hashParams"
-        print hashParams
+        # print "hashParams"
+        # print hashParams
 
         return Renderer().render(templateFile.read(), hashParams)
 
@@ -95,11 +92,14 @@ class ObjectiveCCodeGenerator :
         today = datetime.date.fromtimestamp(time.time())
 
         hashParams = {"date": str(today.year), "machineClassName": schemeObj.getMachineClassName(), "humanClassName": schemeObj.getClassName()}
-
-        print hashParams
-
         return Renderer().render(templateFile.read(), hashParams)
 
+    def generateHumanSourceFile(self, schemeObj) :
+        templateFile = open(self.templateFilePath("source.m.mustache"), "r")
+        today = datetime.date.fromtimestamp(time.time())
+
+        hashParams = {"date": str(today.year), "machineClassName": schemeObj.getMachineClassName(), "humanClassName": schemeObj.getClassName()}
+        return Renderer().render(templateFile.read(), hashParams)
 
     def make(self, schemeObj) :
         headerString = ""
@@ -316,15 +316,9 @@ class ObjectiveCCodeGenerator :
         self.write_abstract_file(schemeObj.getMachineClassName() + ".h", self.generateHeaderFile(schemeObj))
         self.write_abstract_file(schemeObj.getMachineClassName() + ".m", sourceString)
 
-        #customizable file
-
-        customizableImplementation = self.getSourceDescriptionString(schemeObj.getClassName())
-        customizableImplementation += "#import \"" + schemeObj.getClassName() +".h\"\n"
-        customizableImplementation += "@implementation " + schemeObj.getClassName() + "\n\n@end\n\n"
-
         # human files
         self.write_human_file(schemeObj.getClassName() + ".h", self.generateHumanHeaderFile(schemeObj))
-        self.write_human_file(schemeObj.getClassName() + ".m", customizableImplementation)
+        self.write_human_file(schemeObj.getClassName() + ".m",  self.generateHumanSourceFile(schemeObj))
 
         return True
 
