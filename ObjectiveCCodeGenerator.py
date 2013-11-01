@@ -22,7 +22,10 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 '''
 
-import datetime, time, os, sys
+import datetime
+import time
+import os
+import sys
 from pystache import Renderer
 # import pickle
 # from cStringIO import StringIO
@@ -37,18 +40,18 @@ class ObjectiveCCodeGenerator :
         projectPrefix = ""
         dirPath = "classes"
 
-    def templateFilePath(self, filename) :
+    def template_file_path(self, filename) :
         templatePath = os.path.realpath( __file__ )
         templatePath = templatePath.replace(os.path.basename( __file__ ), 'templates')
         return os.path.join(templatePath, filename)
 
-    def getCommonDescriptionString(self, name) :
-        templateFile = open(self.templateFilePath("_source.m.mustache"), "r")
+    def common_description_string(self, name) :
+        templateFile = open(self.template_file_path("_source.m.mustache"), "r")
         today = datetime.date.fromtimestamp(time.time())
         return Renderer().render(templateFile.read(), {"date": str(today.year), "filename": name})
 
-    def getSourceDescriptionString(self, name) :
-        return self.getCommonDescriptionString(self.getTitledString(name) + ".m")
+    def source_description_string(self, name) :
+        return self.common_description_string(self.getTitledString(name) + ".m")
 
     def makeVarName(self,schemeObj) :
         returnName = schemeObj.type_name
@@ -68,18 +71,18 @@ class ObjectiveCCodeGenerator :
 
         return returnName
 
-    def processProperties(self, propObj) :
+    def process_properties(self, propObj) :
         propertyHash = {"declaration": self.propertyDefinitionString(propObj)}
         if propObj.type_description and len(propObj.type_description) :
             propertyHash["comment"] = propObj.type_description
         return propertyHash
 
     def generateHeaderFile(self, schemeObj) :
-        templateFile = open(self.templateFilePath("_header.h.mustache"), "r")
+        templateFile = open(self.template_file_path("_header.h.mustache"), "r")
         today = datetime.date.fromtimestamp(time.time())
         props = []
         for prop in schemeObj.props:
-            props.append(self.processProperties(prop))
+            props.append(self.process_properties(prop))
 
         hashParams = {"date": str(today.year), "machineClassName": schemeObj.getMachineClassName(), "humanClassName": schemeObj.getClassName(), "variableName": self.makeVarName(schemeObj), "properties": props}
         # print "hashParams"
@@ -88,14 +91,14 @@ class ObjectiveCCodeGenerator :
         return Renderer().render(templateFile.read(), hashParams)
 
     def generateHumanHeaderFile(self, schemeObj) :
-        templateFile = open(self.templateFilePath("header.h.mustache"), "r")
+        templateFile = open(self.template_file_path("header.h.mustache"), "r")
         today = datetime.date.fromtimestamp(time.time())
 
         hashParams = {"date": str(today.year), "machineClassName": schemeObj.getMachineClassName(), "humanClassName": schemeObj.getClassName()}
         return Renderer().render(templateFile.read(), hashParams)
 
     def generateHumanSourceFile(self, schemeObj) :
-        templateFile = open(self.templateFilePath("source.m.mustache"), "r")
+        templateFile = open(self.template_file_path("source.m.mustache"), "r")
         today = datetime.date.fromtimestamp(time.time())
 
         hashParams = {"date": str(today.year), "machineClassName": schemeObj.getMachineClassName(), "humanClassName": schemeObj.getClassName()}
@@ -104,7 +107,7 @@ class ObjectiveCCodeGenerator :
     def generateSourceFile(self, schemeObj) :
         sourceString = ""
 
-        mDescriptionString = self.getSourceDescriptionString(schemeObj.getMachineClassName())
+        mDescriptionString = self.source_description_string(schemeObj.getMachineClassName())
 
         mIncludeHeaders = "#import \"" + self.projectPrefix + "APIParser.h\"\n"
         mIncludeHeaders += "#import \"NSString+RegExValidation.h\"\n"
@@ -312,8 +315,6 @@ class ObjectiveCCodeGenerator :
         return sourceString
 
     def make(self, schemeObj) :
-        ### Creating output ##########
-
         # machine files
         self.write_abstract_file(schemeObj.getMachineClassName() + ".h", self.generateHeaderFile(schemeObj))
         self.write_abstract_file(schemeObj.getMachineClassName() + ".m", self.generateSourceFile(schemeObj))

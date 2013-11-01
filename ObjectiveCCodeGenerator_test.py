@@ -16,8 +16,8 @@ class TestObjectiveCCodeGenerator(unittest.TestCase):
     print('In tearDown()')
     del self.gen
 
-  def test_getSourceDescriptionString(self):
-    result = self.gen.getSourceDescriptionString("MyClass")
+  def test_source_description_string(self):
+    result = self.gen.source_description_string("MyClass")
     expected_result = """//
 //  MyClass.m
 //
