@@ -101,15 +101,12 @@ class ObjectiveCCodeGenerator :
         today = datetime.date.fromtimestamp(time.time())
 
         # retrieve all params for template
-        hashParams = {"date": str(today.year), "machineClassName": schemeObj.getMachineClassName()}
+        hashParams = {"date": str(today.year), "machineClassName": schemeObj.getMachineClassName(), "projectPrefix": self.projectPrefix, "humanClassName": schemeObj.getClassName()}
 
         # render
         sourceString = Renderer().render(templateFile.read(), hashParams)
 
         # process missing content
-        mIncludeHeaders = "#import \"" + self.projectPrefix + "APIParser.h\"\n"
-        mIncludeHeaders += "#import \"NSString+RegExValidation.h\"\n"
-        mIncludeHeaders += "#import \"" + schemeObj.getClassName() +".h\"\n"
         predefineCalsses = ""
         interfaceDefinition = "@class " + schemeObj.getClassName() + ";\n\n"
         interfaceDefinition += "@interface " + schemeObj.getMachineClassName()
@@ -293,11 +290,6 @@ class ObjectiveCCodeGenerator :
                 otherClassList.append(otherClassObject)
                 otherClassNameList.append(otherClassObject.getClassName())
 
-        for includeTypeObj in otherClassList :
-            predefineCalsses += "@class " + includeTypeObj.getClassName() + ";\n"
-            mIncludeHeaders += "#import \""+ includeTypeObj.getClassName() + ".h\"\n"
-            if len(includeTypeObj.props) and includeTypeObj.rootBaseType() == "object" :
-                self.make(includeTypeObj)
 
         initMethodString += "    }\n" + "    return self;\n}\n\n"
         interfaceDefinition += "\n" + propertyDefinition + "\n" + methodDefinition + "\n@end\n"
@@ -308,7 +300,7 @@ class ObjectiveCCodeGenerator :
         interfaceImplementation += "\n#pragma mark - NSCoding\n" + encodeMethodString + decodeMethodString
         interfaceImplementation += "\n#pragma mark - Object Info\n" + propertyDictionaryString + descriptionMethodString +"\n@end\n"
 
-        sourceString += mIncludeHeaders + "\n\n" + interfaceImplementation
+        sourceString += "\n\n" + interfaceImplementation
 
         return sourceString
 
