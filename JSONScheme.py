@@ -77,7 +77,10 @@ class JSONScheme :
         maxLength = 0
         minLength = 0
         domain = ["ROOT"]
-    
+
+    def __setattr__(self, name, value):
+        self.__dict__[name] = value
+
     def hasScheme(self, schemeName) :
         tmpDomainList = list(self.domain)
         tmpDomainList.append(self.type_name)

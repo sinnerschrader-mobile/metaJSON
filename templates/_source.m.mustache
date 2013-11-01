@@ -7,3 +7,60 @@
 #import "{{projectPrefix}}APIParser.h"
 #import "NSString+RegExValidation.h"
 #import "{{humanClassName}}.h"
+
+
+@implementation {{machineClassName}}
+
+#pragma mark - factory
+
++ ({{humanClassName}} *){{variableName}}WithDictionary:(NSDictionary *)dic withError:(NSError **)error {
+    return [[{{humanClassName}} alloc] initWithDictionary:dic withError:error];
+}
+
+
+#pragma mark - initialize
+- (id)initWithDictionary:(NSDictionary *)dic  withError:(NSError **)error {
+    self = [super init];
+    if (self) {
+    {{#properties}}
+        self.{{type_name}} = [APIParser stringFromResponseDictionary:dic forKey:@"{{type_name}}" acceptNumber:NO acceptNil:NO error:error];
+        if (*error) {
+            return self;
+        }
+    {{/properties}}
+    }
+    return self;
+}
+
+
+#pragma mark - getter
+
+#pragma mark - NSCoding
+- (void)encodeWithCoder:(NSCoder*)coder {
+  {{#properties}}
+    [coder encodeObject:self.{{type_name}} forKey:@"{{type_name}}"];
+  {{/properties}}
+}
+- (id)initWithCoder:(NSCoder *)coder {
+    self = [super init];
+    {{#properties}}
+    self.{{type_name}} = [coder decodeObjectForKey:@"{{type_name}}"];
+    {{/properties}}
+    return self;
+}
+
+#pragma mark - Object Info
+- (NSDictionary *)propertyDictionary {
+    NSMutableDictionary *dic = [[NSMutableDictionary alloc] init];
+    {{#properties}}
+    if (self.{{type_name}}) {
+        [dic setObject:self.{{type_name}} forKey:@"{{type_name}}"];
+    }
+    {{/properties}}
+    return dic;
+}
+- (NSString *)description {
+    return [NSString stringWithFormat:@"%@",[self propertyDictionary]];
+}
+
+@end

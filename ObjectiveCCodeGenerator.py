@@ -89,7 +89,6 @@ class ObjectiveCCodeGenerator :
         props = []
         for prop in schemeObj.props:
             props.append(self.process_properties(prop))
-
         hashParams = {"date": str(today.year), "machineClassName": schemeObj.getMachineClassName(), "humanClassName": schemeObj.getClassName(), "variableName": self.makeVarName(schemeObj), "properties": props}
         # print "hashParams"
         # print hashParams
@@ -100,207 +99,17 @@ class ObjectiveCCodeGenerator :
         templateFile = open(self.template_file_path("_source.m.mustache"), "r")
         today = datetime.date.fromtimestamp(time.time())
 
+        props = []
+        for prop in schemeObj.props:
+            props.append(prop.__dict__)
+        print props
+
         # retrieve all params for template
-        hashParams = {"date": str(today.year), "machineClassName": schemeObj.getMachineClassName(), "projectPrefix": self.projectPrefix, "humanClassName": schemeObj.getClassName()}
+        hashParams = {"date": str(today.year), "machineClassName": schemeObj.getMachineClassName(), "projectPrefix": self.projectPrefix, "humanClassName": schemeObj.getClassName(), "variableName": self.makeVarName(schemeObj), "properties": props}
 
         # render
         sourceString = Renderer().render(templateFile.read(), hashParams)
 
-        # process missing content
-        predefineCalsses = ""
-        interfaceDefinition = "@class " + schemeObj.getClassName() + ";\n\n"
-        interfaceDefinition += "@interface " + schemeObj.getMachineClassName()
-        interfaceImplementation = "@implementation " + schemeObj.getMachineClassName() + "\n"
-        propertyDefinition = ""
-        methodDefinition = ""
-        initMethodString = ""
-
-        factoryMethodImpl = "\n+ (" + schemeObj.getClassName() +" *)" + self.makeVarName(schemeObj) + "WithDictionary:(NSDictionary *)dic withError:(NSError **)error {\n"
-        factoryMethodImpl += "    return [[" + schemeObj.getClassName() + " alloc] initWithDictionary:dic withError:error];\n"
-        factoryMethodImpl += "}\n\n"
-
-        descriptionMethodString = "- (NSString *)description {\n    return [NSString stringWithFormat:@\"%@\",[self propertyDictionary]];\n}\n"
-        propertyDictionaryString = "- (NSDictionary *)propertyDictionary {\n"
-
-        encodeMethodString = "- (void)encodeWithCoder:(NSCoder*)coder {\n"
-        decodeMethodString = "- (id)initWithCoder:(NSCoder *)coder {\n"
-
-        """
-            check base type
-        """
-        if schemeObj.isNaturalType() or schemeObj.rootBaseType() == "any":
-            print "error : ", schemeObj.base_type ," (" , schemeObj.type_name, ") is natural type. Cannot make source code for it.\n"
-            return False
-        if schemeObj.rootBaseType() != "object" :
-            print "error : ", schemeObj.base_type ," (" , schemeObj.type_name,") is not custom 'object' type.\n"
-            return False
-
-        if len(schemeObj.props) == 0 :
-            # don't make source codes.
-            print "NO Property : " + schemeObj.getMachineClassName()
-
-        if schemeObj.base_type != "object" :
-
-            encodeMethodString += "    [super encodeWithCoder:coder];\n"
-            decodeMethodString += "    self = [super initWithCoder:coder];\n"
-            propertyDictionaryString += "    NSDictionary *parentDic = [super propertyDictionary];\n"
-            propertyDictionaryString += "    NSMutableDictionary *dic = [[NSMutableDictionary alloc] initWithDictionary:parentDic];\n"
-
-            #print "(make : !object) : find scheme : " + schemeObj.base_type + " from : " + schemeObj.type_name
-            if schemeObj.hasScheme(schemeObj.base_type) :
-                parentSchemeObj = schemeObj.getScheme(schemeObj.base_type)
-                hIncludeHeaders += "#import \"" + parentSchemeObj.getClassName() + ".h\"\n"
-                interfaceDefinition += " : " + parentSchemeObj.getClassName() + "\n"
-                initMethodString = "- (id)initWithDictionary:(NSDictionary *)dic  withError:(NSError **)error {\n    self = [super initWithDictionary:dic withError:error];\n"
-            else :
-                print "error : ", schemeObj.base_type, "(parent type of ", schemeObj.type_name ,") is not defined.\n"
-                return False
-        else :
-            decodeMethodString += "    self = [super init];\n"
-            interfaceDefinition += " : NSObject <NSCoding>\n"
-            initMethodString = "- (id)initWithDictionary:(NSDictionary *)dic  withError:(NSError **)error {\n    self = [super init];\n"
-            propertyDictionaryString += "    NSMutableDictionary *dic = [[NSMutableDictionary alloc] init];\n"
-
-        initMethodString += "    if (self) {\n"
-        interfaceDefinition += "\n"
-        #factory method
-        methodDefinition += "+ (" + schemeObj.getClassName() +" *)" + self.makeVarName(schemeObj) + "WithDictionary:(NSDictionary *)dic withError:(NSError **)error;\n"
-        #initialize
-        methodDefinition += "- (id)initWithDictionary:(NSDictionary *)dic withError:(NSError **)error;\n"
-        #property dictionary method
-        methodDefinition += "- (NSDictionary *)propertyDictionary;\n"
-        getterMethodImplementation = ""
-
-
-        """
-            check properties
-        """
-        otherClasses = {}
-        for propObj in schemeObj.props :
-            decodeMethodString += self.propertyDecodeString(propObj, 1)
-            encodeMethodString += self.propertyEncodeString(propObj, 1)
-            propertyDictionaryString += self.setPropertyDictionaryString(propObj, "dic", 1)
-
-            subTypeSchemeList = propObj.getSubType()
-            if propObj.rootBaseType() == "array" and len(subTypeSchemeList) == 1 and not "any" in subTypeSchemeList:
-                subTypeSchemeName = subTypeSchemeList[0]
-                tmpArrayName = "tmp" + self.getTitledString(propObj.type_name) + "Array"
-                initMethodString += self.getNaturalTypeGetterFromDictionaryCode(propObj, "NSArray *", tmpArrayName, "dic", propObj.type_name, (propObj.required != True), 2, "self")
-                initMethodString += self.getNaturalTypeValidationCode(propObj, tmpArrayName, 2, "self")
-                tmpMutableArrayName = "tmp" + self.getTitledString(propObj.type_name)
-                initMethodString += "        NSMutableArray *" + tmpMutableArrayName + " = [[NSMutableArray alloc] initWithCapacity:" + tmpArrayName + ".count];\n"
-
-                initMethodString += "        for (NSUInteger loop = 0; loop < " + tmpArrayName + ".count; loop++) {\n"
-                subTypeSchemeObj = propObj.getScheme(subTypeSchemeName)
-
-                if subTypeSchemeName in propObj.naturalTypeList :
-                    initMethodString += self.getNaturalTypeGetterFromArrayCode(subTypeSchemeName, self.getNaturalTypeClassString(subTypeSchemeName), "tmpValue", tmpArrayName, "loop", (propObj.required != True), 3, "self")
-                    initMethodString += "            if (tmpValue) {\n"
-                    initMethodString += "                [" + tmpMutableArrayName + " addObject:tmpValue];\n"
-                    initMethodString += "            }\n"
-                elif subTypeSchemeObj and subTypeSchemeObj.isNaturalType() :
-                    initMethodString += self.getNaturalTypeGetterFromArrayCode(subTypeSchemeName, self.getNaturalTypeClassString(subTypeSchemeObj.rootBaseType()), "tmpValue", tmpArrayName, "loop", (propObj.required != True), 3, "self")
-                    if subTypeSchemeObj :
-                        initMethodString += self.getNaturalTypeValidationCode(subTypeSchemeObj, "tmpValue", 3, "self")
-                    initMethodString += "            if (tmpValue) {\n"
-                    initMethodString += "                [" + tmpMutableArrayName + " addObject:tmpValue];\n"
-                    initMethodString += "            }\n"
-                elif subTypeSchemeObj and subTypeSchemeObj.rootBaseType() == "object" :
-                    tmpDicName = "tmpDic"
-                    initMethodString += self.getDictionaryGetterFromArrayCode(tmpDicName, tmpArrayName, "loop", False, 3, "self")
-                    initMethodString += "            " + subTypeSchemeObj.getClassName() + "*tmpObject = nil;\n"
-                    initMethodString += self.getObjectAllocatorFromDictionaryCode(False, subTypeSchemeObj.getClassName(), "tmpObject", tmpDicName, (propObj.required != True), 3, "self")
-                    initMethodString += "            if (tmpObject) {\n"
-                    initMethodString += "                [" + tmpMutableArrayName + " addObject:tmpObject];\n"
-                    initMethodString += "            }\n"
-                else :
-                    print "Error : can't handle subType of " + propObj.type_name
-                    return False
-
-                initMethodString += "        }\n"
-                initMethodString += "        self." + self.makeVarName(propObj) + " = [NSArray arrayWithArray:" + tmpMutableArrayName + "];\n"
-
-            elif propObj.isNaturalType() :
-                initMethodString += self.getNaturalTypeGetterFromDictionaryCode(propObj, "", "self." + self.makeVarName(propObj), "dic", propObj.type_name, (propObj.required != True), 2, "self")
-                initMethodString += self.getNaturalTypeValidationCode(propObj, "self." + self.makeVarName(propObj), 2, "self")
-                if len(subTypeSchemeList) > 1 or "any" in subTypeSchemeList :
-                    pass
-                else :
-                    continue
-
-            elif propObj.rootBaseType() == "object" :
-                if otherClasses.has_key(propObj.type_name) == False :
-                    otherClasses[propObj.type_name] =  propObj
-                tmpVarName = "tmp"+self.getTitledString(propObj.type_name)
-                initMethodString += self.getDictionaryGetterFromDictionaryCode(tmpVarName, "dic", propObj.type_name, (propObj.required != True), 2, "self")
-                initMethodString += self.getObjectAllocatorFromDictionaryCode(False, propObj.getClassName(), "self." + self.makeVarName(propObj), tmpVarName, (propObj.required != True), 2, "self")
-                continue
-
-            else :
-                tmpVarName = "tmp" + self.getTitledString(propObj.type_name)
-                initMethodString += self.getGetterFromDictionaryCode("id ", tmpVarName, "dic", propObj.type_name, (propObj.required != True), 2, "self")
-                initMethodString += "        if ("+ tmpVarName +") {\n"
-                initMethodString += self.getDictionaryAllocatorCode(False, "self." + self.makeVarName(propObj), tmpVarName, propObj.type_name, 3, "self")
-                initMethodString += "        }\n"
-
-            if propObj.rootBaseType() == "array" and len(subTypeSchemeList) == 1 and not "any" in subTypeSchemeList:
-                pass
-            else :
-                for methodDefinitionString in self.getterMethodDefinitionString(propObj) :
-                    methodDefinition += methodDefinitionString
-                getterMethodImplementation += self.getterMethodString(propObj);
-
-            if propObj.rootBaseType() == "multi" :
-                for multiTypeScheme in propObj.getBaseTypes() :
-                    if multiTypeScheme in propObj.naturalTypeList or multiTypeScheme == "any" :
-                        continue
-                    #print "(make : property multi) : find scheme : " + multiTypeScheme + " from : " + propObj.type_name
-                    elif schemeObj.hasScheme(multiTypeScheme) == False :
-                        print "Warning : " + propObj.type_name + " in " + propObj.getDomainString() + " (multi) has undefined base-type."
-                        print "          undefined type : " + multiTypeScheme
-                        continue
-                    multiTypeSchemeObj = propObj.getScheme(multiTypeScheme)
-
-                    if multiTypeSchemeObj.rootBaseType() == "object" and otherClasses.has_key(multiTypeScheme) == False:
-                        otherClasses[multiTypeScheme] =  multiTypeSchemeObj
-            elif propObj.rootBaseType() == "any" :
-                pass
-
-            elif propObj.rootBaseType() == "array" :
-                for subTypeScheme in propObj.getSubType() :
-                    if subTypeScheme in propObj.naturalTypeList or subTypeScheme == "any" :
-                        continue
-                    #print "(make : property array) : find scheme : " + subTypeScheme + " from : " + propObj.type_name
-                    elif propObj.hasScheme(subTypeScheme) == False:
-                        print "Warning : " + propObj.type_name + " in " + propObj.getDomainString() + " (array) has undefined sub type."
-                        print "          undefined type : " + multiTypeScheme
-                        continue
-                    subTypeSchemeObj = propObj.getScheme(subTypeScheme)
-                    if subTypeSchemeObj.rootBaseType() == "object" and otherClasses.has_key(subTypeSchemeObj.type_name) == False :
-                        otherClasses[subTypeSchemeObj.type_name] =  subTypeSchemeObj
-
-        encodeMethodString += "}\n"
-        decodeMethodString += "    return self;\n}\n"
-        propertyDictionaryString += "    return dic;\n}\n"
-        otherClassNameList = []
-        otherClassList = []
-        for otherClassName in otherClasses :
-            otherClassObject = otherClasses[otherClassName]
-            if not otherClassObject.getClassName() in otherClassNameList :
-                otherClassList.append(otherClassObject)
-                otherClassNameList.append(otherClassObject.getClassName())
-
-
-        initMethodString += "    }\n" + "    return self;\n}\n\n"
-        interfaceDefinition += "\n" + propertyDefinition + "\n" + methodDefinition + "\n@end\n"
-
-        interfaceImplementation += "\n#pragma mark - factory\n" + factoryMethodImpl
-        interfaceImplementation += "\n#pragma mark - initialize\n" + initMethodString
-        interfaceImplementation += "\n#pragma mark - getter\n" + getterMethodImplementation
-        interfaceImplementation += "\n#pragma mark - NSCoding\n" + encodeMethodString + decodeMethodString
-        interfaceImplementation += "\n#pragma mark - Object Info\n" + propertyDictionaryString + descriptionMethodString +"\n@end\n"
-
-        sourceString += "\n\n" + interfaceImplementation
 
         return sourceString
 
@@ -1004,13 +813,6 @@ class TemplateCodeGenerator :
         self.writeNSStringCategory()
         self.dirPath = baseDirPath + "/Utilities/APIParser"
         self.writeAPIParser()
-
-
-
-
-
-
-
 
 
 
