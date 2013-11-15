@@ -175,9 +175,11 @@ class ObjectiveCCodeGenerator :
                     initMethodString += "                [" + tmpMutableArrayName + " addObject:tmpValue];\n"
                     initMethodString += "            }\n"
                 elif subTypeSchemeObj and subTypeSchemeObj.isNaturalType() :
-                    initMethodString += self.getNaturalTypeGetterFromArrayCode(subTypeSchemeName, self.getNaturalTypeClassString(subTypeSchemeObj.rootBaseType()), "tmpValue", tmpArrayName, "loop", (propObj.required != True), 3, "self")
                     if subTypeSchemeObj :
+                        initMethodString += self.getNaturalTypeGetterFromArrayCode(subTypeSchemeObj, self.getNaturalTypeClassString(subTypeSchemeObj.rootBaseType()), "tmpValue", tmpArrayName, "loop", (propObj.required != True), 3, "self")
                         initMethodString += self.getNaturalTypeValidationCode(subTypeSchemeObj, "tmpValue", 3, "self")
+                    else :
+                        initMethodString += self.getNaturalTypeGetterFromArrayCode(subTypeSchemeName, self.getNaturalTypeClassString(subTypeSchemeObj.rootBaseType()), "tmpValue", tmpArrayName, "loop", (propObj.required != True), 3, "self")
                     initMethodString += "            if (tmpValue) {\n"
                     initMethodString += "                [" + tmpMutableArrayName + " addObject:tmpValue];\n"
                     initMethodString += "            }\n"
