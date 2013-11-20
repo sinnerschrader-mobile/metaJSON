@@ -56,6 +56,7 @@ You can also use just one of those ("minValue" or "maxValue").
 {
 	"name" : "myDate",
 	"base-type" : "date",
+	"subType" : "ms",
 	"description" : string
 	"minValue" : UTC time interval since 1970
 	"maxValue" : UTC time interval since 1970
@@ -63,6 +64,8 @@ You can also use just one of those ("minValue" or "maxValue").
 ```
 	
 * The value of myDate should be always UTC time interval since 1970.
+* "subType" is optional, to specify wheather it's millisecond based timestamp or second based timestamp.
+* If "subType" is specified as "ms", "minValue" and "maxValue" should be used like "1382455623.098"
 * "minValue" and "maxValue" are optional, to validate this type.
 * "maxValue" should be always same or later than "minValue".
 	

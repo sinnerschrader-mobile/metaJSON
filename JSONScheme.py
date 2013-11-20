@@ -284,7 +284,7 @@ class JSONScheme :
         return False
     
     def getSubType(self) :
-        if self.isNaturalType() :
+        if self.isNaturalType() and self.base_type in JSONScheme.naturalTypeList:
             return self.sub_type
 
         if len(self.sub_type) :

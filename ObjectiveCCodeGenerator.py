@@ -175,9 +175,11 @@ class ObjectiveCCodeGenerator :
                     initMethodString += "                [" + tmpMutableArrayName + " addObject:tmpValue];\n"
                     initMethodString += "            }\n"
                 elif subTypeSchemeObj and subTypeSchemeObj.isNaturalType() :
-                    initMethodString += self.getNaturalTypeGetterFromArrayCode(subTypeSchemeName, self.getNaturalTypeClassString(subTypeSchemeObj.rootBaseType()), "tmpValue", tmpArrayName, "loop", (propObj.required != True), 3, "self")
                     if subTypeSchemeObj :
+                        initMethodString += self.getNaturalTypeGetterFromArrayCode(subTypeSchemeObj, self.getNaturalTypeClassString(subTypeSchemeObj.rootBaseType()), "tmpValue", tmpArrayName, "loop", (propObj.required != True), 3, "self")
                         initMethodString += self.getNaturalTypeValidationCode(subTypeSchemeObj, "tmpValue", 3, "self")
+                    else :
+                        initMethodString += self.getNaturalTypeGetterFromArrayCode(subTypeSchemeName, self.getNaturalTypeClassString(subTypeSchemeObj.rootBaseType()), "tmpValue", tmpArrayName, "loop", (propObj.required != True), 3, "self")
                     initMethodString += "            if (tmpValue) {\n"
                     initMethodString += "                [" + tmpMutableArrayName + " addObject:tmpValue];\n"
                     initMethodString += "            }\n"
@@ -211,13 +213,8 @@ class ObjectiveCCodeGenerator :
                 initMethodString += self.getDictionaryGetterFromDictionaryCode(tmpVarName, "dic", propObj.type_name, (propObj.required != True), 2, "self")
                 initMethodString += self.getObjectAllocatorFromDictionaryCode(False, propObj.getClassName(), "self." + self.makeVarName(propObj), tmpVarName, (propObj.required != True), 2, "self")
                 continue
-
             else :
-                tmpVarName = "tmp" + self.getTitledString(propObj.type_name)
-                initMethodString += self.getGetterFromDictionaryCode("id ", tmpVarName, "dic", propObj.type_name, (propObj.required != True), 2, "self")
-                initMethodString += "        if ("+ tmpVarName +") {\n"
-                initMethodString += self.getDictionaryAllocatorCode(False, "self." + self.makeVarName(propObj), tmpVarName, propObj.type_name, 3, "self")
-                initMethodString += "        }\n"
+                initMethodString += self.getUndefinedTypeGetterFromDictionaryCode("", "self." + self.makeVarName(propObj), "dic", propObj.type_name, (propObj.required != True), 2, "nil")
 
             if propObj.rootBaseType() == "array" and len(subTypeSchemeList) == 1 and not "any" in subTypeSchemeList:
                 pass
@@ -428,7 +425,7 @@ class ObjectiveCCodeGenerator :
                     resultStringList.append(self.getterMethodDefinitionStringInArray(self.getNaturalTypeClassString(schemeName), schemeName, titleName, postFix))
 
         elif schemeObj.base_type == "any"  :
-            resultStringList.append(self.getterMethodDefinitionStringInDictionary("id", schemeObj.type_name, "Object", postFix))
+            pass
 
         elif schemeObj.isNaturalType() :
             print "Error : " + schemeObj.type_name + " is Natural type. don't need to define getter method.\n"
@@ -449,6 +446,11 @@ class ObjectiveCCodeGenerator :
         selfDicName = "self." + self.makeVarName(schemeObj)
         
         if schemeObj.rootBaseType() == "multi" :
+            selfDicName = "new" + self.makeVarName(schemeObj) + "Dic"
+            multiTypeVariableNilValidation = "if (!self."+ schemeObj.type_name + ") return nil;\n"
+            defineNewDicAndCheck = "NSDictionary *" + selfDicName + " = @{@\"" + schemeObj.type_name+ "\" : self." + self.makeVarName(schemeObj) +"};\n"
+            print multiTypeVariableNilValidation
+            print defineNewDicAndCheck
             for schemeName in schemeObj.getBaseTypes() :
                 #print "(getterMethodString : multi) : find scheme : " + schemeName + " from : " + schemeObj.type_name
                 if schemeObj.hasScheme(schemeName) :
@@ -459,6 +461,8 @@ class ObjectiveCCodeGenerator :
                     if baseSubTypeSchemeObj.isNaturalType() == False :
                         tmpDicName = "tmp" + self.getTitledString(schemeObj.type_name) + "Dic"
                         resultString += self.getterMethodDefinitionStringInDictionary(baseSubTypeSchemeObj.getClassName() + " *", schemeObj.type_name, baseSubTypeSchemeObj.getClassName(), postFix)
+                        resultString += "    " + multiTypeVariableNilValidation
+                        resultString += "    " + defineNewDicAndCheck
                         resultString += self.getDictionaryGetterFromDictionaryCode(tmpDicName, selfDicName, schemeObj.type_name, (schemeObj.required != True), 1, "nil")
                         resultString += self.getHandleErrorCode( tmpDicName +" == nil", "", "nil", 1)
                         resultString += "    " + baseSubTypeSchemeObj.getClassName() + " *" + tmpVarName + " = nil;\n"
@@ -466,6 +470,8 @@ class ObjectiveCCodeGenerator :
                         resultString += "    return " + tmpVarName + ";\n}\n"
                     else :
                         resultString += self.getterMethodDefinitionStringInDictionary(self.getNaturalTypeClassString(baseSubTypeSchemeObj.rootBaseType()), schemeObj.type_name, baseSubTypeTitle, postFix)
+                        resultString += "    " + multiTypeVariableNilValidation
+                        resultString += "    " + defineNewDicAndCheck
                         resultString += self.getNaturalTypeGetterFromDictionaryCode(baseSubTypeSchemeObj, self.getNaturalTypeClassString(baseSubTypeSchemeObj.rootBaseType()), tmpVarName, selfDicName, schemeObj.type_name, (schemeObj.required != True), 1, "nil")
                         resultString += self.getHandleErrorCode( tmpVarName +" == nil", "", "nil", 1)
                         resultString += self.getNaturalTypeValidationCode(baseSubTypeSchemeObj, tmpVarName, 1, "nil")
@@ -473,10 +479,14 @@ class ObjectiveCCodeGenerator :
                 
                 elif schemeName == "any" :
                     resultString += self.getterMethodDefinitionStringInDictionary("id", schemeObj.type_name, "Object", postFix)
+                    resultString += "    " + multiTypeVariableNilValidation
+                    resultString += "    " + defineNewDicAndCheck
                     resultString += self.getUndefinedTypeGetterFromDictionaryCode("id ", tmpVarName, selfDicName, schemeObj.type_name, (schemeObj.required != True), 1, "nil")
                     resultString += "    return " + tmpVarName + ";\n}\n"
                 else :
                     resultString += self.getterMethodDefinitionStringInDictionary(self.getNaturalTypeClassString(schemeName), schemeObj.type_name, self.getNaturalTypeClassTitleString(schemeName),postFix)
+                    resultString += "    " + multiTypeVariableNilValidation
+                    resultString += "    " + defineNewDicAndCheck
                     resultString += self.getNaturalTypeGetterFromDictionaryCode(schemeName, self.getNaturalTypeClassString(schemeName), tmpVarName, selfDicName, schemeObj.type_name, (schemeObj.required != True), 1, "nil")
                     resultString += "    return " + tmpVarName + ";\n}\n"
         
@@ -484,7 +494,6 @@ class ObjectiveCCodeGenerator :
             postFix = "AtIndex:(NSUInteger)index withError:(NSError **)error {\n";
             for schemeName in schemeObj.getSubType() :
                 if schemeObj.hasScheme(schemeName) :
-                    #print "(getterMethodString : array) : find scheme : " + schemeName + " from : " + schemeObj.type_name
                     baseSubTypeSchemeObj = schemeObj.getScheme(schemeName)
                     
                     if baseSubTypeSchemeObj.isNaturalType() == False :
@@ -513,9 +522,7 @@ class ObjectiveCCodeGenerator :
                     resultString += "    return " + tmpVarName + ";\n}\n"
         
         elif schemeObj.base_type == "any"  :
-            resultString += self.getterMethodDefinitionStringInDictionary("id", schemeObj.type_name, "Object", postFix)
-            resultString += self.getUndefinedTypeGetterFromDictionaryCode("id ", tmpVarName, selfDicName, schemeObj.type_name, (schemeObj.required != True), 1, "nil")
-            resultString += "    return " + tmpVarName + ";\n}\n"
+            pass
         
         elif schemeObj.isNaturalType() :
             print "Error : " + schemeObj.type_name + " is Natural type. don't need to implement getter method.\n"
@@ -691,7 +698,11 @@ class ObjectiveCCodeGenerator :
         elif schemeBaseType == "number" :
             resultString += firstIndent + className + varName + " = [" + self.projectPrefix + "APIParser numberFromResponseDictionary:" + dicName + " forKey:@\"" + keyName + "\" acceptNil:"
         elif schemeBaseType == "date" :
-            resultString += firstIndent + className + varName + " = [" + self.projectPrefix + "APIParser dateWithTimeIntervalFromResponseDictionary:" + dicName + " forKey:@\"" + keyName + "\" acceptNil:"
+            dateObjSubType = schemeObj.getSubType()
+            if len(dateObjSubType) and dateObjSubType[0] == str("ms") :
+                resultString += firstIndent + className + varName + " = [" + self.projectPrefix + "APIParser dateWithMilliSecondsTimeIntervalFromResponseDictionary:" + dicName + " forKey:@\"" + keyName + "\" acceptNil:"
+            else :
+                resultString += firstIndent + className + varName + " = [" + self.projectPrefix + "APIParser dateWithTimeIntervalFromResponseDictionary:" + dicName + " forKey:@\"" + keyName + "\" acceptNil:"
         elif schemeBaseType == "data" :
             resultString += firstIndent + className + varName + " = [" + self.projectPrefix + "APIParser dataFromResponseDictionary:" + dicName + " forKey:@\"" + keyName + "\" acceptNil:"
         elif schemeBaseType == "boolean" :
@@ -870,9 +881,8 @@ class ObjectiveCCodeGenerator :
             else :
                 return "@property (nonatomic, strong) id " + self.makeVarName(schemeObj) + ";\n"
 
-        elif schemeObj.rootBaseType() == "multi" or schemeObj.rootBaseType() == "any" :
-            return "@property (nonatomic, strong) NSDictionary *" + self.makeVarName(schemeObj) + ";\n"
-        
+        elif schemeObj.rootBaseType() == "multi" or schemeObj.rootBaseType() == "any":
+            return "@property (nonatomic, strong) id " + self.makeVarName(schemeObj) + ";\n"
         
         return "@property (nonatomic, strong) "+ schemeObj.getClassName() +" *" + self.makeVarName(schemeObj) + ";\n"
 
@@ -900,7 +910,17 @@ class ObjectiveCCodeGenerator :
             if schemeObj.rootBaseType() == "boolean" :
                 returnString += secondIndent + "[" + dicName+ " setObject:[NSNumber numberWithBool:self." + self.makeVarName(schemeObj) + "] forKey:@\"" + schemeObj.type_name + "\"];\n"
             elif schemeObj.rootBaseType() == "date" :
-                returnString += secondIndent + "[" + dicName+ " setObject:[NSNumber numberWithInteger:[[NSNumber numberWithDouble:[self." + self.makeVarName(schemeObj) + " timeIntervalSince1970]] longValue]] forKey:@\"" + schemeObj.type_name + "\"];\n";
+                dateObjSubType = schemeObj.getSubType()
+                if len(dateObjSubType) and dateObjSubType[0] == str("ms") :
+                    returnString += secondIndent + "NSNumber* number = @([self." + self.makeVarName(schemeObj) + " timeIntervalSince1970] * 1000);\n"
+                    returnString += secondIndent + "NSNumberFormatter *formatter = [[NSNumberFormatter alloc] init];\n"
+                    returnString += secondIndent + "[formatter setNumberStyle:NSNumberFormatterNoStyle];\n"
+                    returnString += secondIndent + "[formatter setNegativeFormat:@\"0\"];\n"
+                    returnString += secondIndent + "NSString *value = [formatter stringFromNumber:number];\n"
+                    returnString += secondIndent + "NSNumber *convertedNumber = [formatter numberFromString:value];\n"
+                    returnString += secondIndent + "[" + dicName+ " setObject:convertedNumber forKey:@\"" + schemeObj.type_name + "\"];\n";
+                else :
+                    returnString += secondIndent + "[" + dicName+ " setObject:[NSNumber numberWithInteger:[[NSNumber numberWithDouble:[self." + self.makeVarName(schemeObj) + " timeIntervalSince1970]] longValue]] forKey:@\"" + schemeObj.type_name + "\"];\n";
             elif schemeObj.rootBaseType() == "array" :
                 arrayObjType = schemeObj.getSubType()
                 if arrayObjType and len(arrayObjType) == 1 and schemeObj.hasScheme(arrayObjType[0]) == True :
@@ -1004,6 +1024,8 @@ class TemplateCodeGenerator :
         self.writeNSStringCategory()
         self.dirPath = baseDirPath + "/Utilities/APIParser"
         self.writeAPIParser()
+
+
         
     
     

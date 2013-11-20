@@ -20,6 +20,9 @@ NSInteger const k_PREFIX_ErrorDomain_parser_valueIsNotValid = 11;
 
 NSString * const k_PREFIX_ErrorDomain_parser = @"_PREFIX_Parser";
 
+NSString * const k_PREFIX_ErrorDomain_parser_userInfoKey = @"_PREFIX_ParserAttributeName";
+NSString * const k_PREFIX_ErrorDomain_parser_userInfoValue = @"_PREFIX_ParserAttributeValue";
+
 #ifndef _PREFIX__ASSURE_ERROR
 #define _PREFIX__ASSURE_ERROR(error)                                              \
 if (!(error)) (error) = (NSError*__autoreleasing*)alloca(sizeof(NSError*));                       \
@@ -309,13 +312,13 @@ if (!(error)) (error) = (NSError*__autoreleasing*)alloca(sizeof(NSError*));     
     id object = [responseDict objectForKey:key];
     if (!object) {
         if (!acceptNil) {
-            *error =[NSError errorWithDomain:k_PREFIX_ErrorDomain_parser code:k_PREFIX_ErrorDomain_parser_keyNotFound userInfo:nil];
+            *error =[NSError errorWithDomain:k_PREFIX_ErrorDomain_parser code:k_PREFIX_ErrorDomain_parser_keyNotFound userInfo:@{k_PREFIX_ErrorDomain_parser_userInfoKey: key}];
         }
         return nil;
     }
     if (object == [NSNull null]) {
         if (!acceptNil) {
-            *error =[NSError errorWithDomain:k_PREFIX_ErrorDomain_parser code:k_PREFIX_ErrorDomain_parser_valueIsNull userInfo:nil];
+            *error =[NSError errorWithDomain:k_PREFIX_ErrorDomain_parser code:k_PREFIX_ErrorDomain_parser_valueIsNull userInfo:@{k_PREFIX_ErrorDomain_parser_userInfoKey: key}];
         }
         return nil;
     }

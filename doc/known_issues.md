@@ -16,6 +16,9 @@ A definition like below which might be referenced as sub or base type is not yet
 }
 ```
 
+###Documentation Topic 4
+java code generator doesn't support "subType" for "date" type yet.
+
 ###Documentation Topic 12
 The complete topic 12 is not yet fully supported and/or tested. Some parts might already work but there is no intentionally support implemented yet.
 
