@@ -236,8 +236,8 @@ class JSONScheme :
     
     def getClassName(self):
         
-        if self.rootBaseType() == "object" :
-            if self.props : 
+        if self.rootBaseType() == "object":
+            if self.props or self.base_type == "object": 
                 className = self.type_name.upper()
                 className = self.projectPrefix + className[:1] + self.type_name[1:] + self.objectSuffix
             else : # it means, this scheme descripe just property info, not class info. 
