@@ -588,7 +588,7 @@ if (!(error)) (error) = (NSError*__autoreleasing*)alloca(sizeof(NSError*));     
         return nil;
     }
     
-    NSDate *date = [NSDate dateWithTimeIntervalSince1970:[timeInterval longLongValue]];
+    NSDate *date = [NSDate dateWithTimeIntervalSince1970:[timeInterval doubleValue]];
     
     return date;
 }
