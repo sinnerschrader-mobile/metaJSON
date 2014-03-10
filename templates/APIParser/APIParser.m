@@ -575,7 +575,7 @@ if (!(error)) (error) = (NSError*__autoreleasing*)alloca(sizeof(NSError*));     
         return nil;
     }
     
-    NSNumber *timeInterval = [NSNumber numberWithLongLong:(dateNumber.longLongValue / 1000)];
+    NSNumber *timeInterval = [NSNumber numberWithDouble:(dateNumber.doubleValue / 1000)];
     
     if (*error || !timeInterval || ![timeInterval isKindOfClass:[NSNumber class]])
     {
