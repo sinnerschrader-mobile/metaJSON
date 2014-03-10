@@ -54,10 +54,10 @@ json2yaml -d 5 test.json > test.yaml
 
 ## Documentation
 
-See MetaJSONProtocol.md file in the doc folder.
+See [MetaJSONProtocol.md](doc/MetaJSONProtocol.md) file in the doc folder.
 
 ## Known issues
-Please check the issue tracker and/or refer to the known_issues.md file in the doc folder.
+Please check the issue tracker and/or refer to the [known_issues.md](doc/known_issues.md) file in the doc folder.
 
 ## License
 The project is published with the MIT License. Please read the LICENSE.txt for more details.
