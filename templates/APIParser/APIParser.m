@@ -394,7 +394,11 @@ if (!(error)) (error) = (NSError*__autoreleasing*)alloca(sizeof(NSError*));     
         // pass unchanged error from objectFromResponseDictionary
         return nil;
     }
-    
+
+    if ([number isKindOfClass:[NSNumber class]]) {
+        return number;
+    }
+
     if ([number isKindOfClass:[NSString class]]) {
         
         NSString *numberString = (NSString *)number;
