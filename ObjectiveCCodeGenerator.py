@@ -22,7 +22,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 '''
 
-import datetime, time, os
+import datetime, time, os, re
 
 class ObjectiveCCodeGenerator :
 
@@ -51,7 +51,7 @@ class ObjectiveCCodeGenerator :
         return mDescriptionString
     
     def makeVarName(self,schemeObj) :
-        returnName = schemeObj.type_name
+        returnName = re.sub('[,.-]', '_', schemeObj.type_name)
         if str(schemeObj.type_name) == "id" or str(schemeObj.type_name) == "description" :
             titleName = schemeObj.type_name.upper()
             titleName = titleName[:1] + schemeObj.type_name[1:]
