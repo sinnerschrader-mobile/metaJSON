@@ -701,6 +701,8 @@ class ObjectiveCCodeGenerator :
             dateObjSubType = schemeObj.getSubType()
             if len(dateObjSubType) and dateObjSubType[0] == str("ms") :
                 resultString += firstIndent + className + varName + " = [" + self.projectPrefix + "APIParser dateWithMilliSecondsTimeIntervalFromResponseDictionary:" + dicName + " forKey:@\"" + keyName + "\" acceptNil:"
+            elif len(dateObjSubType) and dateObjSubType[0] == str("iso8601") :
+                resultString += firstIndent + className + varName + " = [" + self.projectPrefix + "APIParser dateFromResponseDictionary:" + dicName + " forKey:@\"" + keyName + "\" acceptNil:"
             else :
                 resultString += firstIndent + className + varName + " = [" + self.projectPrefix + "APIParser dateWithTimeIntervalFromResponseDictionary:" + dicName + " forKey:@\"" + keyName + "\" acceptNil:"
         elif schemeBaseType == "data" :
