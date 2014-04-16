@@ -5,10 +5,17 @@
 //  Copyright (c) {{date}} SinnerSchrader Mobile. All rights reserved.
 
 #import <Foundation/Foundation.h>
+{{^baseTypeIsObject}}
+#import "{{baseClassName}}.h"
+{{/baseTypeIsObject}}
 
 @class {{humanClassName}};
-
+{{#baseTypeIsObject}}
 @interface {{machineClassName}} : NSObject <NSCoding>
+{{/baseTypeIsObject}}
+{{^baseTypeIsObject}}
+@interface {{machineClassName}} : {{baseClassName}}
+{{/baseTypeIsObject}}
 
 {{#numberProperties}}
 {{#comment}}
