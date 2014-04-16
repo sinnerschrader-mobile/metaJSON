@@ -85,85 +85,138 @@
   return self;
 }
 
-
+{{#baseObjectType}}
+#pargma mark - clone
+-(instancetype) clone
+{
+    NSData *archivedData = [NSKeyedArchiver archivedDataWithRootObject:self];
+    typeof(self) clone = [NSKeyedUnarchiver unarchiveObjectWithData:archivedData];
+    return clone;
+}
+{{/baseObjectType}}
 #pragma mark - getter
+
+{{#arrayProperties}}
+{{/arrayProperties}}
+
+{{#undefinedProperties}}
+{{/undefinedProperties}}
 
 #pragma mark - NSCoding
 - (void)encodeWithCoder:(NSCoder*)coder {
-  [super encodeWithCoder:coder];
-  {{#numberProperties}}
-  [coder encodeObject:{{varName}} forKey:@"{{name}}"];
-  {{/numberProperties}}
-  {{#stringProperties}}
-  [coder encodeObject:{{varName}} forKey:@"{{name}}"];
-  {{/stringProperties}}
-  {{#booleanProperties}}
-  {{/booleanProperties}}
-  {{#dataProperties}}
-  {{/dataProperties}}
-  {{#dateProperties}}
-  {{/dateProperties}}
-  {{#msDateProperties}}
-  {{/msDateProperties}}
-  {{#arrayProperties}}
-  {{/arrayProperties}}
-  {{#objectProperties}}
-  {{/objectProperties}}
-  {{#undefinedProperties}}
-  {{/undefinedProperties}}
+   [super encodeWithCoder:coder];
+   {{#numberProperties}}
+   [coder encodeObject:self.{{varName}} forKey:@"{{name}}"];
+   {{/numberProperties}}
+   {{#stringProperties}}
+   [coder encodeObject:self.{{varName}} forKey:@"{{name}}"];
+   {{/stringProperties}}
+   {{#booleanProperties}}
+   [coder encodeBool:self.{{varName}} forKey:@"{{name}}"];
+   {{/booleanProperties}}
+   {{#dataProperties}}
+   [coder encodeObject:self.{{varName}} forKey:@"{{name}}"];
+   {{/dataProperties}}
+   {{#dateProperties}}
+   [coder encodeObject:self.{{varName}} forKey:@"{{name}}"];
+   {{/dateProperties}}
+   {{#msDateProperties}}
+   [coder encodeObject:self.{{varName}} forKey:@"{{name}}"];
+   {{/msDateProperties}}
+   {{#arrayProperties}}
+   [coder encodeObject:self.{{varName}} forKey:@"{{name}}"];
+   {{/arrayProperties}}
+   {{#objectProperties}}
+   [coder encodeObject:self.{{varName}} forKey:@"{{name}}"];
+   {{/objectProperties}}
+   {{#undefinedProperties}}
+   [coder encodeObject:self.{{varName}} forKey:@"{{name}}"];
+   {{/undefinedProperties}}
 }
+
 - (id)initWithCoder:(NSCoder *)coder {
-  self = [super initWithCoder:coder];
-  {{#numberProperties}}
-  self.{{varName}} = [coder decodeObjectForKey:@"{{name}}"];
-  {{/numberProperties}}
-  {{#stringProperties}}
-  self.{{varName}} = [coder decodeObjectForKey:@"{{name}}"];
-  {{/stringProperties}}
-  {{#booleanProperties}}
-  {{/booleanProperties}}
-  {{#dataProperties}}
-  {{/dataProperties}}
-  {{#dateProperties}}
-  {{/dateProperties}}
-  {{#msDateProperties}}
-  {{/msDateProperties}}
-  {{#arrayProperties}}
-  {{/arrayProperties}}
-  {{#objectProperties}}
-  {{/objectProperties}}
-  {{#undefinedProperties}}
-  {{/undefinedProperties}}
-  return self;
+   self = [super initWithCoder:coder];
+   {{#numberProperties}}
+   self.{{varName}} = [coder decodeObjectForKey:@"{{name}}"];
+   {{/numberProperties}}
+   {{#stringProperties}}
+   self.{{varName}} = [coder decodeObjectForKey:@"{{name}}"];
+   {{/stringProperties}}
+   {{#booleanProperties}}
+   self.{{varName}} = [coder decodeBoolForKey:@"{{name}}"];
+   {{/booleanProperties}}
+   {{#dataProperties}}
+   self.{{varName}} = [coder decodeObjectForKey:@"{{name}}"];
+   {{/dataProperties}}
+   {{#dateProperties}}
+   self.{{varName}} = [coder decodeObjectForKey:@"{{name}}"];
+   {{/dateProperties}}
+   {{#msDateProperties}}
+   self.{{varName}} = [coder decodeObjectForKey:@"{{name}}"];
+   {{/msDateProperties}}
+   {{#arrayProperties}}
+   self.{{varName}} = [coder decodeObjectForKey:@"{{name}}"];
+   {{/arrayProperties}}
+   {{#objectProperties}}
+   self.{{varName}} = [coder decodeObjectForKey:@"{{name}}"];
+   {{/objectProperties}}
+   {{#undefinedProperties}}
+   self.{{varName}} = [coder decodeObjectForKey:@"{{name}}"];
+   {{/undefinedProperties}}
+   return self;
 }
 
 #pragma mark - Object Info
 - (NSDictionary *)propertyDictionary {
-  NSMutableDictionary *dic = [[super propertyDictionary] mutableCopy];
-  {{#numberProperties}}
-  if (self.{{varName}}) {
-    [dic setObject:self.{{varName}} forKey:@"{{name}}"];
-  }
-  {{/numberProperties}}
-  {{#stringProperties}}
-  if (self.{{varName}}) {
-    [dic setObject:self.{{varName}} forKey:@"{{name}}"];
-  }
-  {{/stringProperties}}
-  {{#booleanProperties}}
-  {{/booleanProperties}}
-  {{#dataProperties}}
-  {{/dataProperties}}
-  {{#dateProperties}}
-  {{/dateProperties}}
-  {{#msDateProperties}}
-  {{/msDateProperties}}
-  {{#arrayProperties}}
-  {{/arrayProperties}}
-  {{#objectProperties}}
-  {{/objectProperties}}
-  {{#undefinedProperties}}
-  {{/undefinedProperties}}
-  return dic;
+   {{#baseObjectType}}
+   NSMutableDictionary *dic = [[super propertyDictionary] mutableCopy];
+   {{/baseObjectType}}
+   {{^baseObjectType}}
+   NSMutableDictionary *dic = [[NSMutableDictionary alloc] init];
+   {{/baseObjectType}}
+   {{#numberProperties}}
+   if (self.{{varName}}) {
+      [dic setObject:self.{{varName}} forKey:@"{{name}}"];
+   }
+   {{/numberProperties}}
+   {{#stringProperties}}
+   if (self.{{varName}}) {
+      [dic setObject:self.{{varName}} forKey:@"{{name}}"];
+   }
+   {{/stringProperties}}
+   {{#booleanProperties}}
+   if (self.{{varName}}) {
+      [dic setObject:[NSNumber numberWithBool:self.{{varName}}] forKey:@"{{name}}"];
+   }
+   {{/booleanProperties}}
+   {{#dataProperties}}
+   {{/dataProperties}}
+   {{#dateProperties}}
+   {{/dateProperties}}
+   {{#msDateProperties}}
+   if (self.{{varName}}) {
+        NSNumber* number = @([self.lastModificationTimestamp timeIntervalSince1970] * 1000);
+        NSNumberFormatter *formatter = [[NSNumberFormatter alloc] init];
+        [formatter setNumberStyle:NSNumberFormatterNoStyle];
+        [formatter setNegativeFormat:@"0"];
+        NSString *value = [formatter stringFromNumber:number];
+        NSNumber *convertedNumber = [formatter numberFromString:value];
+        [dic setObject:convertedNumber forKey:@"{{name}}"];
+    }
+   {{/msDateProperties}}
+   {{#arrayProperties}}
+   {{/arrayProperties}}
+   {{#objectProperties}}
+   {{/objectProperties}}
+   {{#undefinedProperties}}
+   {{/undefinedProperties}}
+   return dic;
 }
+
+{{#baseObjectType}}
+- (NSString *)description
+{
+  return [[self propertyDictionary] description];
+}
+{{/baseObjectType}}
 @end
