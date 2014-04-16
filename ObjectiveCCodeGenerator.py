@@ -71,7 +71,6 @@ class ObjectiveCCodeGenerator :
         propertyHash['varName'] = self.makeVarName(propObj)
         if propObj.required == 1:
             propertyHash['required'] = True
-        print propObj.base_type
         return propertyHash
 
     def human_header_content(self, schemeObj) :
@@ -89,26 +88,26 @@ class ObjectiveCCodeGenerator :
         return Renderer().render(templateFile.read(), hashParams)
 
     def machine_header_content(self, schemeObj) :
-        templateFile = open(self.template_file_path("_header.h.mustache"), "r")
-        today = datetime.date.fromtimestamp(time.time())
-
-        numberProps = []
-        stringProps = []
-        for prop in schemeObj.props:
-            if prop.base_type == "string":
-                stringProps.append(self.process_properties(prop))
-            if prop.base_type == "number":
-                numberProps.append(self.process_properties(prop))
-
-        hashParams = {"date": str(today.year), "machineClassName": schemeObj.getMachineClassName(), "humanClassName": schemeObj.getClassName(), "variableName": self.makeVarName(schemeObj), "stringProperties": stringProps, "numberProperties": numberProps}
-        print hashParams
-        # print "hashParams"
-        # print hashParams
-
-        return Renderer().render(templateFile.read(), hashParams)
+        template_file = open(self.template_file_path("_header.h.mustache"), "r")
+        return self.machine_file_content(schemeObj, template_file)
 
     def machine_source_content(self, schemeObj) :
-        templateFile = open(self.template_file_path("_source.m.mustache"), "r")
+        template_file = open(self.template_file_path("_source.m.mustache"), "r")
+        return self.machine_file_content(schemeObj, template_file)
+
+    def make(self, schemeObj) :
+        # machine files
+        self.write_abstract_file(schemeObj.getMachineClassName() + ".h", self.machine_header_content(schemeObj))
+        self.write_abstract_file(schemeObj.getMachineClassName() + ".m", self.machine_source_content(schemeObj))
+
+        # human files
+        self.write_human_file(schemeObj.getClassName() + ".h", self.human_header_content(schemeObj))
+        self.write_human_file(schemeObj.getClassName() + ".m",  self.human_source_content(schemeObj))
+
+        return True
+
+
+    def machine_file_content(self, schemeObj, template_file) :
         today = datetime.date.fromtimestamp(time.time())
 
         numberProps = []
@@ -124,21 +123,9 @@ class ObjectiveCCodeGenerator :
             hashParams['baseTypeIsObject'] = True
         print hashParams
         # render
-        sourceString = Renderer().render(templateFile.read(), hashParams)
-
-
+        sourceString = Renderer().render(template_file.read(), hashParams)
         return sourceString
 
-    def make(self, schemeObj) :
-        # machine files
-        self.write_abstract_file(schemeObj.getMachineClassName() + ".h", self.machine_header_content(schemeObj))
-        self.write_abstract_file(schemeObj.getMachineClassName() + ".m", self.machine_source_content(schemeObj))
-
-        # human files
-        self.write_human_file(schemeObj.getClassName() + ".h", self.human_header_content(schemeObj))
-        self.write_human_file(schemeObj.getClassName() + ".m",  self.human_source_content(schemeObj))
-
-        return True
 
     def write_abstract_file(self, filename, content) :
         folder = "/AbstractInterfaceFiles/"
