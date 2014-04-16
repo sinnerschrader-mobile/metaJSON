@@ -57,6 +57,9 @@ class TestSampleTestStringOptionsCase(TestObjectiveCCodeGenerator):
     def test_machine_header_content(self):
         result = self.gen.machine_header_content(self.scheme_object)
         self.assert_content_file(self.test_file_path + "/_S2MLoginJSONObject.h", result)
+    # def test_make(self):
+    #     result = self.gen.machine_header_content(self.scheme_object)
+    #     self.gen.make(self.scheme_object)
 
 # class TestSampleTestCase(TestObjectiveCCodeGenerator):
 #     def setUp(self):

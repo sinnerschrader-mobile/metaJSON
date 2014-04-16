@@ -4,7 +4,7 @@
 //  Created by MetaJSONParser.
 //  Copyright (c) 2014 SinnerSchrader Mobile. All rights reserved.
 
-#import "APIParser.h"
+#import "S2MAPIParser.h"
 #import "NSString+RegExValidation.h"
 #import "S2MSenderJSONObject.h"
 
@@ -23,11 +23,11 @@
 {
     self = [super init];
     if (self) {
-        self.senderName = [APIParser stringFromResponseDictionary:dic forKey:@"senderName" acceptNumber:YES acceptNil:NO error:error];
+        self.senderName = [S2MAPIParser stringFromResponseDictionary:dic forKey:@"senderName" acceptNumber:NO acceptNil:NO error:error];
         if (*error) {
             return self;
         }
-        self.previewImageURL = [APIParser stringFromResponseDictionary:dic forKey:@"previewImageURL" acceptNumber:YES acceptNil:NO error:error];
+        self.previewImageURL = [S2MAPIParser stringFromResponseDictionary:dic forKey:@"previewImageURL" acceptNumber:NO acceptNil:NO error:error];
         if (*error) {
             return self;
         }
