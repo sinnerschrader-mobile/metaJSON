@@ -2,7 +2,7 @@
 //  _S2MSenderJSONObject.h
 //
 //  Created by MetaJSONParser.
-//  Copyright (c) 2013 SinnerSchrader Mobile. All rights reserved.
+//  Copyright (c) 2014 SinnerSchrader Mobile. All rights reserved.
 
 #import <Foundation/Foundation.h>
 
@@ -19,4 +19,3 @@
 - (NSDictionary *)propertyDictionary;
 
 @end
-
