@@ -87,7 +87,7 @@
 
 {{#baseTypeIsObject}}
 #pargma mark - clone
--(instancetype) clone
+- (instancetype)clone
 {
     NSData *archivedData = [NSKeyedArchiver archivedDataWithRootObject:self];
     typeof(self) clone = [NSKeyedUnarchiver unarchiveObjectWithData:archivedData];

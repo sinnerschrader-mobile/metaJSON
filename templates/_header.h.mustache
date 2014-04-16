@@ -9,17 +9,55 @@
 @class {{humanClassName}};
 
 @interface {{machineClassName}} : NSObject <NSCoding>
-
-
-{{#properties}}
-{{#comment}}
-//{{comment}}
+{{#numberProperties}}
 {{/comment }}
-{{declaration}}
-{{/properties}}
+@property (nonatomic, strong) NSNumber *{{name}};
+{{/numberProperties}}
+{{#stringProperties}}
+{{/comment }}
+@property (nonatomic, strong) NSString *{{name}};
+{{/stringProperties}}
+{{#booleanProperties}}
+{{/comment }}
+@property (nonatomic, assign) BOOL {{name}};
+{{/booleanProperties}}
+{{#dataProperties}}
+{{/comment }}
+@property (nonatomic, strong) NSData *{{name}};
+{{/dataProperties}}
+{{#dateProperties}}
+{{/comment }}
+@property (nonatomic, strong) NSDate *{{name}};
+{{/dateProperties}}
+{{#msDateProperties}}
+{{/comment }}
+@property (nonatomic, strong) NSDate *{{name}};
+{{/msDateProperties}}
+{{#arrayProperties}}
+{{/comment }}
+@property (nonatomic, strong) NSArray *{{name}};
+{{/arrayProperties}}
+{{#objectProperties}}
+{{/comment }}
+@property (nonatomic, strong) {{base_type}} *{{name}};
+{{/objectProperties}}
+{{#undefinedProperties}}
+{{/comment }}
+@property (nonatomic, strong) id {{name}};
+{{/undefinedProperties}}
 
 + ({{humanClassName}} *){{variableName}}WithDictionary:(NSDictionary *)dic withError:(NSError **)error;
 - (id)initWithDictionary:(NSDictionary *)dic withError:(NSError **)error;
+{{#baseTypeIsObject}}
+#pargma mark - clone
+- (instancetype)clone;
 - (NSDictionary *)propertyDictionary;
+{{/baseTypeIsObject}}
+
+{{#arrayProperties}}
+{{/arrayProperties}}
+
+{{#undefinedProperties}}
+{{/undefinedProperties}}
 
 @end
