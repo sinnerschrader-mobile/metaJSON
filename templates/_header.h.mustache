@@ -16,54 +16,69 @@
 {{^baseTypeIsObject}}
 @interface {{machineClassName}} : {{baseClassName}}
 {{/baseTypeIsObject}}
+
 {{#numberProperties}}
-{{/comment }}
+{{#comment}}
+//{{comment}}
+{{/comment}}
 @property (nonatomic, strong) NSNumber *{{name}};
 {{/numberProperties}}
 {{#stringProperties}}
-{{/comment }}
+{{#comment}}
+//{{comment}}
+{{/comment}}
 @property (nonatomic, strong) NSString *{{name}};
 {{/stringProperties}}
 {{#booleanProperties}}
-{{/comment }}
+{{#comment}}
+//{{comment}}
+{{/comment}}
 @property (nonatomic, assign) BOOL {{name}};
 {{/booleanProperties}}
 {{#dataProperties}}
-{{/comment }}
+{{#comment}}
+//{{comment}}
+{{/comment}}
 @property (nonatomic, strong) NSData *{{name}};
 {{/dataProperties}}
 {{#dateProperties}}
-{{/comment }}
+{{#comment}}
+//{{comment}}
+{{/comment}}
 @property (nonatomic, strong) NSDate *{{name}};
 {{/dateProperties}}
 {{#msDateProperties}}
-{{/comment }}
+{{#comment}}
+//{{comment}}
+{{/comment}}
 @property (nonatomic, strong) NSDate *{{name}};
 {{/msDateProperties}}
 {{#arrayProperties}}
-{{/comment }}
+{{#comment}}
+//{{comment}}
+{{/comment}}
 @property (nonatomic, strong) NSArray *{{name}};
 {{/arrayProperties}}
 {{#objectProperties}}
-{{/comment }}
+{{#comment}}
+//{{comment}}
+{{/comment}}
 @property (nonatomic, strong) {{base_type}} *{{name}};
 {{/objectProperties}}
 {{#undefinedProperties}}
-{{/comment }}
+{{#comment}}
+//{{comment}}
+{{/comment}}
 @property (nonatomic, strong) id {{name}};
 {{/undefinedProperties}}
 
 + ({{humanClassName}} *){{variableName}}WithDictionary:(NSDictionary *)dic withError:(NSError **)error;
 - (id)initWithDictionary:(NSDictionary *)dic withError:(NSError **)error;
 {{#baseTypeIsObject}}
-#pargma mark - clone
-- (instancetype)clone;
 - (NSDictionary *)propertyDictionary;
 {{/baseTypeIsObject}}
-
 {{#arrayProperties}}
 {{/arrayProperties}}
-
 {{#undefinedProperties}}
 {{/undefinedProperties}}
 

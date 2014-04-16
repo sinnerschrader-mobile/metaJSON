@@ -13,14 +13,20 @@
 
 #pragma mark - factory
 
-+ ({{humanClassName}} *){{variableName}}WithDictionary:(NSDictionary *)dic withError:(NSError **)error {
++ ({{humanClassName}} *){{variableName}}WithDictionary:(NSDictionary *)dic withError:(NSError **)error
+{
     return [[{{humanClassName}} alloc] initWithDictionary:dic withError:error];
 }
 
-
 #pragma mark - initialize
-- (id)initWithDictionary:(NSDictionary *)dic  withError:(NSError **)error {
+- (id)initWithDictionary:(NSDictionary *)dic  withError:(NSError **)error
+{
+    {{#baseTypeIsObject}}
+    self = [super init];
+    {{/baseTypeIsObject}}
+    {{^baseTypeIsObject}}
     self = [super initWithDictionary:dic withError:error];
+    {{/baseTypeIsObject}}
     if (self) {
         {{#numberProperties}}
         self.{{varName}} = [{{projectPrefix}}APIParser numberFromResponseDictionary:dic forKey:@"{{name}}" acceptNil:{{#required}}NO{{/required}}{{^required}}YES{{/required}} error:error];
@@ -29,7 +35,7 @@
         }
         {{/numberProperties}}
         {{#stringProperties}}
-        self.{{varName}} = [{{projectPrefix}}APIParser numberFromResponseDictionary:dic forKey:@"{{name}}" acceptNumber:YES acceptNil:{{#required}}NO{{/required}}{{^required}}YES{{/required}} error:error];
+        self.{{varName}} = [{{projectPrefix}}APIParser stringFromResponseDictionary:dic forKey:@"{{name}}" acceptNumber:YES acceptNil:{{#required}}NO{{/required}}{{^required}}YES{{/required}} error:error];
         {{#regex}}
         if (self.{{varName}} && [self.{{varName}} matchesRegExString:@"{{value}}"] == NO) {
             NSDictionary *userInfo = @{@"propertyName" : @"{{varName}}",
@@ -85,25 +91,16 @@
     return self;
 }
 
-{{#baseTypeIsObject}}
-#pargma mark - clone
-- (instancetype)clone
-{
-    NSData *archivedData = [NSKeyedArchiver archivedDataWithRootObject:self];
-    typeof(self) clone = [NSKeyedUnarchiver unarchiveObjectWithData:archivedData];
-    return clone;
-}
-{{/baseTypeIsObject}}
 #pragma mark - getter
-
 {{#arrayProperties}}
 {{/arrayProperties}}
-
 {{#undefinedProperties}}
 {{/undefinedProperties}}
 
 #pragma mark - NSCoding
-- (void)encodeWithCoder:(NSCoder*)coder {
+
+- (void)encodeWithCoder:(NSCoder*)coder
+{
     [super encodeWithCoder:coder];
     {{#numberProperties}}
     [coder encodeObject:self.{{varName}} forKey:@"{{name}}"];
@@ -134,7 +131,8 @@
     {{/undefinedProperties}}
 }
 
-- (id)initWithCoder:(NSCoder *)coder {
+- (id)initWithCoder:(NSCoder *)coder
+{
     self = [super initWithCoder:coder];
     {{#numberProperties}}
     self.{{varName}} = [coder decodeObjectForKey:@"{{name}}"];
@@ -167,12 +165,13 @@
 }
 
 #pragma mark - Object Info
-- (NSDictionary *)propertyDictionary {
+- (NSDictionary *)propertyDictionary
+{
     {{#baseTypeIsObject}}
-    NSMutableDictionary *dic = [[super propertyDictionary] mutableCopy];
+    NSMutableDictionary *dic = [[NSMutableDictionary alloc] init];
     {{/baseTypeIsObject}}
     {{^baseTypeIsObject}}
-    NSMutableDictionary *dic = [[NSMutableDictionary alloc] init];
+    NSMutableDictionary *dic = [[super propertyDictionary] mutableCopy];
     {{/baseTypeIsObject}}
     {{#numberProperties}}
     if (self.{{varName}}) {

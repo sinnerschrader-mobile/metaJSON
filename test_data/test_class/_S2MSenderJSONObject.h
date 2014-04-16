@@ -10,7 +10,6 @@
 
 @interface _S2MSenderJSONObject : NSObject <NSCoding>
 
-
 @property (nonatomic, strong) NSString *senderName;
 @property (nonatomic, strong) NSString *previewImageURL;
 
