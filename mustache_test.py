@@ -18,7 +18,13 @@ class TestMustache(unittest.TestCase):
       templateFile = open(self.template_file_path("machine.m.mustache"), "r")
       today = datetime.date.fromtimestamp(time.time())
 
-      hashParams = {"date": str(today.year), "machineClassName": "_MyObject", "projectPrefix": "S2M", "humanClassName": "MyObject", "variableName": ""}
+      idProp = {'varName': 's2mId', 'name': 'id'}
+      firstName = {'varName': 'firstName', 'name': 'firstName'}
+      myNumber = {'varName': 'myNumber', 'name': 'myNumber'}
+
+      stringProperties = [idProp, firstName]
+      numberProperties = [myNumber]
+      hashParams = {"date": str(today.year), "machineClassName": "_MyObject", "projectPrefix": "S2M", "humanClassName": "MyObject", "variableName": "myObject", "stringProperties": stringProperties, 'numberProperties': numberProperties}
 
       result = Renderer().render(templateFile.read(), hashParams)
       print result
