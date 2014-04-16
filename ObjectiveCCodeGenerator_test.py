@@ -50,15 +50,6 @@ class TestSampleTestStringOptionsCase(TestObjectiveCCodeGenerator):
         self.test_file_path = self.default_folder + 'test_string_options'
         self.scheme_object = pickle.load(open(self.test_file_path + '.p', 'rb'))
 
-
-    def test_human_header_content(self):
-        result = self.gen.human_header_content(self.scheme_object)
-        self.assert_content_file(self.test_file_path + "/S2MLoginJSONObject.h", result)
-
-    def test_human_source_content(self):
-        result = self.gen.human_source_content(self.scheme_object)
-        self.assert_content_file(self.test_file_path + "/S2MLoginJSONObject.m", result)
-
     def test_machine_source_content(self):
         result = self.gen.machine_source_content(self.scheme_object)
         self.assert_content_file(self.test_file_path + "/_S2MLoginJSONObject.m", result)

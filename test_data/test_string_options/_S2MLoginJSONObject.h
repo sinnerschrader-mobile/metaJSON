@@ -10,7 +10,6 @@
 
 @interface _S2MLoginJSONObject : NSObject <NSCoding>
 
-
 @property (nonatomic, strong) NSString *emailString;
 @property (nonatomic, strong) NSString *password;
 
@@ -19,4 +18,3 @@
 - (NSDictionary *)propertyDictionary;
 
 @end
-
