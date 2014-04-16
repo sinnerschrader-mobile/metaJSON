@@ -1,0 +1,28 @@
+[
+    {
+        "name" : "motherClass",
+        "base-type" : "object",
+        "property" :
+        [
+            {
+                "name" : "id",
+                "base-type" :  "string",
+                "required" : 1
+            }
+         ]
+    },
+    {
+        "name" : "subClass",
+        "base-type" : "motherClass",
+        "description" : "subclass of motherClass",
+        "property" :
+        [
+            {
+                "name" : "name",
+                "base-type" :  "string",
+                "required" : 0
+            }
+         ]
+    }
+
+]

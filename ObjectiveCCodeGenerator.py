@@ -27,8 +27,6 @@ import time
 import os
 import sys
 from pystache import Renderer
-# import pickle
-# from cStringIO import StringIO
 
 
 class ObjectiveCCodeGenerator :

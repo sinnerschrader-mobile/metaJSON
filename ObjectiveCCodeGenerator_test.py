@@ -57,18 +57,51 @@ class TestSampleTestStringOptionsCase(TestObjectiveCCodeGenerator):
     def test_machine_header_content(self):
         result = self.gen.machine_header_content(self.scheme_object)
         self.assert_content_file(self.test_file_path + "/_S2MLoginJSONObject.h", result)
-    # def test_make(self):
-    #     result = self.gen.machine_header_content(self.scheme_object)
-    #     self.gen.make(self.scheme_object)
 
-# class TestSampleTestCase(TestObjectiveCCodeGenerator):
-#     def setUp(self):
-#         super(TestSampleTestCase, self).setUp()
-#         self.test_file_path = self.default_folder + 'test_json'
-#         self.scheme_object = pickle.load(open(self.test_file_path + '.p', 'rb'))
-#
-#     def test_machine_source_content(self):
-#         self.gen.make(self.scheme_object)
+class TestSampleTestSubclassMotherCase(TestObjectiveCCodeGenerator):
+    def setUp(self):
+        super(TestSampleTestSubclassMotherCase, self).setUp()
+        self.test_file_path = self.default_folder + 'test_subclass'
+        self.scheme_object = pickle.load(open(self.default_folder + '/save_motherClass.p', 'rb'))
+
+    def test_mother_human_header_content(self):
+        result = self.gen.human_header_content(self.scheme_object)
+        self.assert_content_file(self.test_file_path + "/MotherClassJSONObject.h", result)
+
+    def test_mother_human_source_content(self):
+        result = self.gen.human_source_content(self.scheme_object)
+        self.assert_content_file(self.test_file_path + "/MotherClassJSONObject.m", result)
+
+    def test_mother_machine_source_content(self):
+        result = self.gen.machine_source_content(self.scheme_object)
+        self.assert_content_file(self.test_file_path + "/_MotherClassJSONObject.m", result)
+
+    def test_mother_machine_header_content(self):
+        result = self.gen.machine_header_content(self.scheme_object)
+        self.assert_content_file(self.test_file_path + "/_MotherClassJSONObject.h", result)
+
+class TestSampleTestSubclassSubclassCase(TestObjectiveCCodeGenerator):
+    def setUp(self):
+        super(TestSampleTestSubclassSubclassCase, self).setUp()
+        self.test_file_path = self.default_folder + 'test_subclass'
+        self.scheme_object = pickle.load(open(self.default_folder + '/save_subClass.p', 'rb'))
+
+    def test_subclass_human_header_content(self):
+        result = self.gen.human_header_content(self.scheme_object)
+        self.assert_content_file(self.test_file_path + "/SubClassJSONObject.h", result)
+
+    def test_subclass_human_source_content(self):
+        result = self.gen.human_source_content(self.scheme_object)
+        self.assert_content_file(self.test_file_path + "/SubClassJSONObject.m", result)
+
+    def test_subclass_machine_source_content(self):
+        result = self.gen.machine_source_content(self.scheme_object)
+        self.assert_content_file(self.test_file_path + "/_SubClassJSONObject.m", result)
+
+    def test_subclass_machine_header_content(self):
+        result = self.gen.machine_header_content(self.scheme_object)
+        self.assert_content_file(self.test_file_path + "/_SubClassJSONObject.h", result)
+
 
 if __name__ == '__main__':
     unittest.main()
