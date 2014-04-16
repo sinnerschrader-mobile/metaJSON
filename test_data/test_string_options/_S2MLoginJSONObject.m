@@ -4,7 +4,7 @@
 //  Created by MetaJSONParser.
 //  Copyright (c) 2014 SinnerSchrader Mobile. All rights reserved.
 
-#import "APIParser.h"
+#import "S2MAPIParser.h"
 #import "NSString+RegExValidation.h"
 #import "S2MLoginJSONObject.h"
 
@@ -18,7 +18,6 @@
     return [[S2MLoginJSONObject alloc] initWithDictionary:dic withError:error];
 }
 
-
 #pragma mark - initialize
 - (id)initWithDictionary:(NSDictionary *)dic  withError:(NSError **)error
 {
@@ -29,7 +28,11 @@
             return self;
         }
         if (self.emailString && [self.emailString matchesRegExString:@"[a-z0-9!#$%&'*+/=?^_`{|}~-](?:\\.[a-z0-9!#$%&'*/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?"] == NO) {
-            NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:@"emailString", @"propertyName", @"emailString", @"key", @"validation error", @"reason", NSStringFromClass([self class]), @"objectClass",nil];
+            NSDictionary *userInfo = @{@"propertyName" : @"emailString",
+                                       @"key" : @"emailString",
+                                       @"reason" : @"validation error",
+                                       @"objectClass" : NSStringFromClass([self class])
+                                       };
             *error = [NSError errorWithDomain:kS2MErrorDomain_parser code:kS2MErrorDomain_parser_valueIsNotValid userInfo:userInfo];
             NSLog(@"%@", *error);
             return self;
@@ -39,13 +42,21 @@
             return self;
         }
         if (self.password.length > 12) {
-            NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:@"password", @"propertyName", @"password", @"key", @"validation error", @"reason", NSStringFromClass([self class]), @"objectClass",nil];
+            NSDictionary *userInfo = @{@"propertyName" : @"password",
+                                       @"key" : @"password",
+                                       @"reason" : @"max length validation error",
+                                       @"objectClass" : NSStringFromClass([self class])
+                                       };
             *error = [NSError errorWithDomain:kS2MErrorDomain_parser code:kS2MErrorDomain_parser_valueIsNotValid userInfo:userInfo];
             NSLog(@"%@", *error);
             return self;
         }
         if (self.password.length < 3) {
-            NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:@"password", @"propertyName", @"password", @"key", @"validation error", @"reason", NSStringFromClass([self class]), @"objectClass",nil];
+            NSDictionary *userInfo = @{@"propertyName" : @"password",
+                                       @"key" : @"password",
+                                       @"reason" : @"min length validation error",
+                                       @"objectClass" : NSStringFromClass([self class])
+                                       };
             *error = [NSError errorWithDomain:kS2MErrorDomain_parser code:kS2MErrorDomain_parser_valueIsNotValid userInfo:userInfo];
             NSLog(@"%@", *error);
             return self;

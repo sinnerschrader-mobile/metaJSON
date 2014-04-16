@@ -35,14 +35,18 @@
         }
         {{/numberProperties}}
         {{#stringProperties}}
-        self.{{varName}} = [{{projectPrefix}}APIParser stringFromResponseDictionary:dic forKey:@"{{name}}" acceptNumber:YES acceptNil:{{#required}}NO{{/required}}{{^required}}YES{{/required}} error:error];
+        self.{{varName}} = [{{projectPrefix}}APIParser stringFromResponseDictionary:dic forKey:@"{{name}}" acceptNumber:NO acceptNil:{{#required}}NO{{/required}}{{^required}}YES{{/required}} error:error];
+        if (*error) {
+            return self;
+        }
         {{#regex}}
-        if (self.{{varName}} && [self.{{varName}} matchesRegExString:@"{{value}}"] == NO) {
+        if (self.{{varName}} && [self.{{varName}} matchesRegExString:@"{{& value}}"] == NO) {
             NSDictionary *userInfo = @{@"propertyName" : @"{{varName}}",
-            @"key" : @"{{name}}",
-            @"reason" : @"validation error",
-            @"objectClass" : NSStringFromClass([self class])};
-            *error = [NSError errorWithDomain:kEGMErrorDomain_parser code:kEGMErrorDomain_parser_valueIsNotValid userInfo:userInfo];
+                                       @"key" : @"{{name}}",
+                                       @"reason" : @"validation error",
+                                       @"objectClass" : NSStringFromClass([self class])
+                                       };
+            *error = [NSError errorWithDomain:k{{projectPrefix}}ErrorDomain_parser code:k{{projectPrefix}}ErrorDomain_parser_valueIsNotValid userInfo:userInfo];
             NSLog(@"%@", *error);
             return self;
         }
@@ -50,10 +54,11 @@
         {{#maxLength}}
         if (self.{{varName}}.length > {{value}}) {
             NSDictionary *userInfo = @{@"propertyName" : @"{{varName}}",
-            @"key" : @"{{name}}",
-            @"reason" : @"max length validation error",
-            @"objectClass" : NSStringFromClass([self class])};
-            *error = [NSError errorWithDomain:kEGMErrorDomain_parser code:kEGMErrorDomain_parser_valueIsNotValid userInfo:userInfo];
+                                       @"key" : @"{{name}}",
+                                       @"reason" : @"max length validation error",
+                                       @"objectClass" : NSStringFromClass([self class])
+                                       };
+            *error = [NSError errorWithDomain:k{{projectPrefix}}ErrorDomain_parser code:k{{projectPrefix}}ErrorDomain_parser_valueIsNotValid userInfo:userInfo];
             NSLog(@"%@", *error);
             return self;
         }
@@ -61,17 +66,15 @@
         {{#minLength}}
         if (self.{{varName}}.length < {{value}}) {
             NSDictionary *userInfo = @{@"propertyName" : @"{{varName}}",
-            @"key" : @"{{name}}",
-            @"reason" : @"min length validation error",
-            @"objectClass" : NSStringFromClass([self class])};
-            *error = [NSError errorWithDomain:kEGMErrorDomain_parser code:kEGMErrorDomain_parser_valueIsNotValid userInfo:userInfo];
+                                       @"key" : @"{{name}}",
+                                       @"reason" : @"min length validation error",
+                                       @"objectClass" : NSStringFromClass([self class])
+                                       };
+            *error = [NSError errorWithDomain:k{{projectPrefix}}ErrorDomain_parser code:k{{projectPrefix}}ErrorDomain_parser_valueIsNotValid userInfo:userInfo];
             NSLog(@"%@", *error);
             return self;
         }
         {{/minLength}}
-        if (*error) {
-            return self;
-        }
         {{/stringProperties}}
         {{#booleanProperties}}
         {{/booleanProperties}}

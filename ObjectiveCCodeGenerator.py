@@ -64,13 +64,24 @@ class ObjectiveCCodeGenerator :
         return returnName
 
     def process_properties(self, propObj) :
-        propertyHash = {}
+        propertyHash = {'name' : propObj.type_name, 'varName' : self.makeVarName(propObj)}
         if propObj.type_description and len(propObj.type_description) :
             propertyHash["comment"] = propObj.type_description
-        propertyHash['name'] = propObj.type_name
-        propertyHash['varName'] = self.makeVarName(propObj)
         if propObj.required == 1:
             propertyHash['required'] = True
+
+        hasRegex, regex = propObj.getRegex()
+        if hasRegex:
+            propertyHash['regex'] = {"value": regex}
+
+        hasMax, maxLength = propObj.getMaxLength()
+        if hasMax:
+            propertyHash['maxLength'] = {"value": maxLength}
+
+        hasMin, minLength = propObj.getMinLength()
+        if hasMin:
+            propertyHash['minLength'] = {"value": minLength}
+
         return propertyHash
 
     def human_header_content(self, schemeObj) :
