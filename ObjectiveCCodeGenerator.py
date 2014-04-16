@@ -64,7 +64,7 @@ class ObjectiveCCodeGenerator :
         return returnName
 
     def process_properties(self, propObj) :
-        propertyHash = {"declaration": self.propertyDefinitionString(propObj)}
+        propertyHash = {}
         if propObj.type_description and len(propObj.type_description) :
             propertyHash["comment"] = propObj.type_description
         propertyHash['name'] = propObj.type_name
