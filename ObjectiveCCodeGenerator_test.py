@@ -43,15 +43,18 @@ class TestSampleTestClassCase(TestObjectiveCCodeGenerator):
         result = self.gen.machine_header_content(self.scheme_object)
         self.assert_content_file(self.test_file_path + "/_S2MSenderJSONObject.h", result)
 
-class TestSampleTestCase(TestObjectiveCCodeGenerator):
-    def setUp(self):
-        super(TestSampleTestCase, self).setUp()
-        self.test_file_path = self.default_folder + 'test_json'
-        self.scheme_object = pickle.load(open(self.test_file_path + '.p', 'rb'))
-
-    def test_machine_source_content(self):
+    def test_make(self):
+        result = self.gen.machine_header_content(self.scheme_object)
         self.gen.make(self.scheme_object)
+
+# class TestSampleTestCase(TestObjectiveCCodeGenerator):
+#     def setUp(self):
+#         super(TestSampleTestCase, self).setUp()
+#         self.test_file_path = self.default_folder + 'test_json'
+#         self.scheme_object = pickle.load(open(self.test_file_path + '.p', 'rb'))
+#
+#     def test_machine_source_content(self):
+#         self.gen.make(self.scheme_object)
 
 if __name__ == '__main__':
     unittest.main()
-

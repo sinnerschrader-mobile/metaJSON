@@ -22,11 +22,11 @@
 - (id)initWithDictionary:(NSDictionary *)dic  withError:(NSError **)error {
     self = [super init];
     if (self) {
-        self.senderName = [APIParser stringFromResponseDictionary:dic forKey:@"senderName" acceptNumber:NO acceptNil:NO error:error];
+        self.senderName = [APIParser stringFromResponseDictionary:dic forKey:@"senderName" acceptNumber:YES acceptNil:NO error:error];
         if (*error) {
             return self;
         }
-        self.previewImageURL = [APIParser stringFromResponseDictionary:dic forKey:@"previewImageURL" acceptNumber:NO acceptNil:NO error:error];
+        self.previewImageURL = [APIParser stringFromResponseDictionary:dic forKey:@"previewImageURL" acceptNumber:YES acceptNil:NO error:error];
         if (*error) {
             return self;
         }

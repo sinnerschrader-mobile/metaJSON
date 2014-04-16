@@ -20,14 +20,67 @@
 
 #pragma mark - initialize
 - (id)initWithDictionary:(NSDictionary *)dic  withError:(NSError **)error {
-    self = [super init];
+    self = [super initWithDictionary:dic withError:error];
     if (self) {
-    {{#properties}}
-        self.{{type_name}} = [APIParser stringFromResponseDictionary:dic forKey:@"{{type_name}}" acceptNumber:NO acceptNil:NO error:error];
+        {{#numberProperties}}
+        self.{{varName}} = [{{projectPrefix}}APIParser numberFromResponseDictionary:dic forKey:@"{{name}}" acceptNil:{{#required}}NO{{/required}}{{^required}}YES{{/required}} error:error];
         if (*error) {
             return self;
         }
-    {{/properties}}
+        {{/numberProperties}}
+        {{#stringProperties}}
+        self.{{varName}} = [{{projectPrefix}}APIParser stringFromResponseDictionary:dic forKey:@"{{name}}" acceptNumber:YES acceptNil:{{#required}}NO{{/required}}{{^required}}YES{{/required}} error:error];
+        {{#regex}}
+        if (self.{{varName}} && [self.{{varName}} matchesRegExString:@"{{value}}"] == NO) {
+          NSDictionary *userInfo = @{@"propertyName" : @"{{varName}}",
+          @"key" : @"{{name}}",
+          @"reason" : @"validation error",
+          @"objectClass" : NSStringFromClass([self class])};
+          *error = [NSError errorWithDomain:kEGMErrorDomain_parser code:kEGMErrorDomain_parser_valueIsNotValid userInfo:userInfo];
+          NSLog(@"%@", *error);
+          return self;
+        }
+        {{/regex}}
+        {{#maxLength}}
+        if (self.{{varName}}.length > {{value}}) {
+          NSDictionary *userInfo = @{@"propertyName" : @"{{varName}}",
+          @"key" : @"{{name}}",
+          @"reason" : @"max length validation error",
+          @"objectClass" : NSStringFromClass([self class])};
+          *error = [NSError errorWithDomain:kEGMErrorDomain_parser code:kEGMErrorDomain_parser_valueIsNotValid userInfo:userInfo];
+          NSLog(@"%@", *error);
+          return self;
+        }
+        {{/maxLength}}
+        {{#minLength}}
+        if (self.{{varName}}.length < {{value}}) {
+          NSDictionary *userInfo = @{@"propertyName" : @"{{varName}}",
+          @"key" : @"{{name}}",
+          @"reason" : @"min length validation error",
+          @"objectClass" : NSStringFromClass([self class])};
+          *error = [NSError errorWithDomain:kEGMErrorDomain_parser code:kEGMErrorDomain_parser_valueIsNotValid userInfo:userInfo];
+          NSLog(@"%@", *error);
+          return self;
+        }
+        {{/minLength}}
+        if (*error) {
+            return self;
+        }
+        {{/stringProperties}}
+        {{#booleanProperties}}
+        {{/booleanProperties}}
+        {{#dataProperties}}
+        {{/dataProperties}}
+        {{#dateProperties}}
+        {{/dateProperties}}
+        {{#msDateProperties}}
+        {{/msDateProperties}}
+        {{#arrayProperties}}
+        {{/arrayProperties}}
+        {{#objectProperties}}
+        {{/objectProperties}}
+        {{#undefinedProperties}}
+        {{/undefinedProperties}}
     }
     return self;
 }
@@ -37,26 +90,80 @@
 
 #pragma mark - NSCoding
 - (void)encodeWithCoder:(NSCoder*)coder {
-  {{#properties}}
-    [coder encodeObject:self.{{type_name}} forKey:@"{{type_name}}"];
-  {{/properties}}
+    [super encodeWithCoder:coder];
+    {{#numberProperties}}
+    [coder encodeObject:self.{{varName}} forKey:@"{{name}}"];
+    {{/numberProperties}}
+    {{#stringProperties}}
+    [coder encodeObject:self.{{varName}} forKey:@"{{name}}"];
+    {{/stringProperties}}
+    {{#booleanProperties}}
+    {{/booleanProperties}}
+    {{#dataProperties}}
+    {{/dataProperties}}
+    {{#dateProperties}}
+    {{/dateProperties}}
+    {{#msDateProperties}}
+    {{/msDateProperties}}
+    {{#arrayProperties}}
+    {{/arrayProperties}}
+    {{#objectProperties}}
+    {{/objectProperties}}
+    {{#undefinedProperties}}
+    {{/undefinedProperties}}
 }
 - (id)initWithCoder:(NSCoder *)coder {
-    self = [super init];
-    {{#properties}}
-    self.{{type_name}} = [coder decodeObjectForKey:@"{{type_name}}"];
-    {{/properties}}
+    self = [super initWithCoder:coder];
+    {{#numberProperties}}
+    self.{{varName}} = [coder decodeObjectForKey:@"{{name}}"];
+    {{/numberProperties}}
+    {{#stringProperties}}
+    self.{{varName}} = [coder decodeObjectForKey:@"{{name}}"];
+    {{/stringProperties}}
+    {{#booleanProperties}}
+    {{/booleanProperties}}
+    {{#dataProperties}}
+    {{/dataProperties}}
+    {{#dateProperties}}
+    {{/dateProperties}}
+    {{#msDateProperties}}
+    {{/msDateProperties}}
+    {{#arrayProperties}}
+    {{/arrayProperties}}
+    {{#objectProperties}}
+    {{/objectProperties}}
+    {{#undefinedProperties}}
+    {{/undefinedProperties}}
     return self;
 }
 
 #pragma mark - Object Info
 - (NSDictionary *)propertyDictionary {
-    NSMutableDictionary *dic = [[NSMutableDictionary alloc] init];
-    {{#properties}}
-    if (self.{{type_name}}) {
-        [dic setObject:self.{{type_name}} forKey:@"{{type_name}}"];
+    NSMutableDictionary *dic = [[super propertyDictionary] mutableCopy];
+    {{#numberProperties}}
+    if (self.{{varName}}) {
+        [dic setObject:self.{{varName}} forKey:@"{{name}}"];
     }
-    {{/properties}}
+    {{/numberProperties}}
+    {{#stringProperties}}
+    if (self.{{varName}}) {
+        [dic setObject:self.{{varName}} forKey:@"{{name}}"];
+    }
+    {{/stringProperties}}
+    {{#booleanProperties}}
+    {{/booleanProperties}}
+    {{#dataProperties}}
+    {{/dataProperties}}
+    {{#dateProperties}}
+    {{/dateProperties}}
+    {{#msDateProperties}}
+    {{/msDateProperties}}
+    {{#arrayProperties}}
+    {{/arrayProperties}}
+    {{#objectProperties}}
+    {{/objectProperties}}
+    {{#undefinedProperties}}
+    {{/undefinedProperties}}
     return dic;
 }
 - (NSString *)description {

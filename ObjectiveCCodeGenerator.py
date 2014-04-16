@@ -67,6 +67,10 @@ class ObjectiveCCodeGenerator :
         propertyHash = {"declaration": self.propertyDefinitionString(propObj)}
         if propObj.type_description and len(propObj.type_description) :
             propertyHash["comment"] = propObj.type_description
+        propertyHash['name'] = propObj.type_name
+        propertyHash['varName'] = self.makeVarName(propObj)
+        if propObj.required == 1:
+            propertyHash['required'] = True
         return propertyHash
 
     def human_header_content(self, schemeObj) :
@@ -86,10 +90,17 @@ class ObjectiveCCodeGenerator :
     def machine_header_content(self, schemeObj) :
         templateFile = open(self.template_file_path("_header.h.mustache"), "r")
         today = datetime.date.fromtimestamp(time.time())
-        props = []
+
+        numberProps = []
+        stringProps = []
         for prop in schemeObj.props:
-            props.append(self.process_properties(prop))
-        hashParams = {"date": str(today.year), "machineClassName": schemeObj.getMachineClassName(), "humanClassName": schemeObj.getClassName(), "variableName": self.makeVarName(schemeObj), "properties": props}
+            if prop.base_type == "string":
+                stringProps.append(self.process_properties(prop))
+            if prop.base_type == "number":
+                numberProps.append(self.process_properties(prop))
+
+        hashParams = {"date": str(today.year), "machineClassName": schemeObj.getMachineClassName(), "humanClassName": schemeObj.getClassName(), "variableName": self.makeVarName(schemeObj), "stringProperties": stringProps, "numberProperties": numberProps}
+        print hashParams
         # print "hashParams"
         # print hashParams
 
@@ -99,14 +110,16 @@ class ObjectiveCCodeGenerator :
         templateFile = open(self.template_file_path("_source.m.mustache"), "r")
         today = datetime.date.fromtimestamp(time.time())
 
-        props = []
+        numberProps = []
+        stringProps = []
         for prop in schemeObj.props:
-            props.append(prop.__dict__)
-        print props
+            if prop.base_type == "string":
+                stringProps.append(self.process_properties(prop))
+            if prop.base_type == "number":
+                numberProps.append(self.process_properties(prop))
 
-        # retrieve all params for template
-        hashParams = {"date": str(today.year), "machineClassName": schemeObj.getMachineClassName(), "projectPrefix": self.projectPrefix, "humanClassName": schemeObj.getClassName(), "variableName": self.makeVarName(schemeObj), "properties": props}
-
+        hashParams = {"date": str(today.year), "machineClassName": schemeObj.getMachineClassName(), "humanClassName": schemeObj.getClassName(), "variableName": self.makeVarName(schemeObj), "stringProperties": stringProps, "numberProperties": numberProps}
+        print hashParams
         # render
         sourceString = Renderer().render(templateFile.read(), hashParams)
 
