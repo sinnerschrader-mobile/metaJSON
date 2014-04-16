@@ -71,6 +71,7 @@ class ObjectiveCCodeGenerator :
         propertyHash['varName'] = self.makeVarName(propObj)
         if propObj.required == 1:
             propertyHash['required'] = True
+        print propObj.base_type
         return propertyHash
 
     def human_header_content(self, schemeObj) :
@@ -113,12 +114,14 @@ class ObjectiveCCodeGenerator :
         numberProps = []
         stringProps = []
         for prop in schemeObj.props:
-            if prop.base_type == "string":
+            if prop.rootBaseType() == "string":
                 stringProps.append(self.process_properties(prop))
-            if prop.base_type == "number":
+            if prop.rootBaseType() == "number":
                 numberProps.append(self.process_properties(prop))
 
         hashParams = {"date": str(today.year), "machineClassName": schemeObj.getMachineClassName(), "humanClassName": schemeObj.getClassName(), "variableName": self.makeVarName(schemeObj), "stringProperties": stringProps, "numberProperties": numberProps}
+        if schemeObj.base_type == 'object':
+            hashParams['baseTypeIsObject'] = True
         print hashParams
         # render
         sourceString = Renderer().render(templateFile.read(), hashParams)
