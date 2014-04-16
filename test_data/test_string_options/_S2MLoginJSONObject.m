@@ -4,7 +4,7 @@
 //  Created by MetaJSONParser.
 //  Copyright (c) 2014 SinnerSchrader Mobile. All rights reserved.
 
-#import "S2MAPIParser.h"
+#import "APIParser.h"
 #import "NSString+RegExValidation.h"
 #import "S2MLoginJSONObject.h"
 
@@ -13,13 +13,15 @@
 
 #pragma mark - factory
 
-+ (S2MLoginJSONObject *)loginWithDictionary:(NSDictionary *)dic withError:(NSError **)error {
++ (S2MLoginJSONObject *)loginWithDictionary:(NSDictionary *)dic withError:(NSError **)error
+{
     return [[S2MLoginJSONObject alloc] initWithDictionary:dic withError:error];
 }
 
 
 #pragma mark - initialize
-- (id)initWithDictionary:(NSDictionary *)dic  withError:(NSError **)error {
+- (id)initWithDictionary:(NSDictionary *)dic  withError:(NSError **)error
+{
     self = [super init];
     if (self) {
         self.emailString = [S2MAPIParser stringFromResponseDictionary:dic forKey:@"emailString" acceptNumber:NO acceptNil:YES error:error];
@@ -52,23 +54,28 @@
     return self;
 }
 
-
 #pragma mark - getter
 
 #pragma mark - NSCoding
-- (void)encodeWithCoder:(NSCoder*)coder {
+
+- (void)encodeWithCoder:(NSCoder*)coder
+{
+    [super encodeWithCoder:coder];
     [coder encodeObject:self.emailString forKey:@"emailString"];
     [coder encodeObject:self.password forKey:@"password"];
 }
-- (id)initWithCoder:(NSCoder *)coder {
-    self = [super init];
+
+- (id)initWithCoder:(NSCoder *)coder
+{
+    self = [super initWithCoder:coder];
     self.emailString = [coder decodeObjectForKey:@"emailString"];
     self.password = [coder decodeObjectForKey:@"password"];
     return self;
 }
 
 #pragma mark - Object Info
-- (NSDictionary *)propertyDictionary {
+- (NSDictionary *)propertyDictionary
+{
     NSMutableDictionary *dic = [[NSMutableDictionary alloc] init];
     if (self.emailString) {
         [dic setObject:self.emailString forKey:@"emailString"];
@@ -78,8 +85,10 @@
     }
     return dic;
 }
-- (NSString *)description {
-    return [NSString stringWithFormat:@"%@",[self propertyDictionary]];
+
+- (NSString *)description
+{
+    return [[self propertyDictionary] description];
 }
 
 @end
