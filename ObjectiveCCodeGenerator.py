@@ -129,7 +129,7 @@ class ObjectiveCCodeGenerator :
             if prop.rootBaseType() == "number":
                 numberProps.append(self.process_properties(prop))
 
-        hashParams = {"date": str(today.year), "machineClassName": schemeObj.getMachineClassName(), "humanClassName": schemeObj.getClassName(), "variableName": self.makeVarName(schemeObj), "stringProperties": stringProps, "numberProperties": numberProps}
+        hashParams = {"date": str(today.year), "projectPrefix": schemeObj.projectPrefix,"machineClassName": schemeObj.getMachineClassName(), "humanClassName": schemeObj.getClassName(), "variableName": self.makeVarName(schemeObj), "stringProperties": stringProps, "numberProperties": numberProps}
         if schemeObj.base_type == 'object':
             hashParams['baseTypeIsObject'] = True
         print hashParams
