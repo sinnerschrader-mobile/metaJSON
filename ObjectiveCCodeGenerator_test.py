@@ -58,11 +58,18 @@ class TestSampleTestStringOptionsCase(TestObjectiveCCodeGenerator):
         result = self.gen.machine_header_content(self.scheme_object)
         self.assert_content_file(self.test_file_path + "/_S2MLoginJSONObject.h", result)
 
-class TestSampleTestSubclassMotherCase(TestObjectiveCCodeGenerator):
+class TestSampleTestSubclassCase(TestObjectiveCCodeGenerator):
+    def setUp(self):
+        super(TestSampleTestSubclassCase, self).setUp()
+        scheme = pickle.load(open(self.default_folder + '/test_subclass_scheme.p', 'rb'))
+        JSONScheme.JSONSchemeDic = scheme
+
+
+class TestSampleTestSubclassMotherCase(TestSampleTestSubclassCase):
     def setUp(self):
         super(TestSampleTestSubclassMotherCase, self).setUp()
         self.test_file_path = self.default_folder + 'test_subclass'
-        self.scheme_object = pickle.load(open(self.default_folder + '/save_motherClass.p', 'rb'))
+        self.scheme_object = pickle.load(open(self.default_folder + '/test_subclass_motherClass.p', 'rb'))
 
     def test_mother_human_header_content(self):
         result = self.gen.human_header_content(self.scheme_object)
@@ -80,11 +87,11 @@ class TestSampleTestSubclassMotherCase(TestObjectiveCCodeGenerator):
         result = self.gen.machine_header_content(self.scheme_object)
         self.assert_content_file(self.test_file_path + "/_MotherClassJSONObject.h", result)
 
-class TestSampleTestSubclassSubclassCase(TestObjectiveCCodeGenerator):
+class TestSampleTestSubclassSubclassCase(TestSampleTestSubclassCase):
     def setUp(self):
         super(TestSampleTestSubclassSubclassCase, self).setUp()
         self.test_file_path = self.default_folder + 'test_subclass'
-        self.scheme_object = pickle.load(open(self.default_folder + '/save_subClass.p', 'rb'))
+        self.scheme_object = pickle.load(open(self.default_folder + '/test_subclass_subClass.p', 'rb'))
 
     def test_subclass_human_header_content(self):
         result = self.gen.human_header_content(self.scheme_object)
