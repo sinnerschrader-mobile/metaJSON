@@ -23,7 +23,7 @@
 {
     self = [super init];
     if (self) {
-        self.Id = [APIParser stringFromResponseDictionary:dic forKey:@"id" acceptNumber:NO acceptNil:NO error:error];
+        self.metaId = [APIParser stringFromResponseDictionary:dic forKey:@"id" acceptNumber:NO acceptNil:NO error:error];
         if (*error) {
             return self;
         }
@@ -38,13 +38,13 @@
 - (void)encodeWithCoder:(NSCoder*)coder
 {
     [super encodeWithCoder:coder];
-    [coder encodeObject:self.Id forKey:@"id"];
+    [coder encodeObject:self.metaId forKey:@"id"];
 }
 
 - (id)initWithCoder:(NSCoder *)coder
 {
     self = [super initWithCoder:coder];
-    self.Id = [coder decodeObjectForKey:@"id"];
+    self.metaId = [coder decodeObjectForKey:@"id"];
     return self;
 }
 
@@ -52,8 +52,8 @@
 - (NSDictionary *)propertyDictionary
 {
     NSMutableDictionary *dic = [[NSMutableDictionary alloc] init];
-    if (self.Id) {
-        [dic setObject:self.Id forKey:@"id"];
+    if (self.metaId) {
+        [dic setObject:self.metaId forKey:@"id"];
     }
     return dic;
 }

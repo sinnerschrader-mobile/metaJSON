@@ -48,7 +48,8 @@ class ObjectiveCCodeGenerator :
         if str(schemeObj.type_name) == "id" or str(schemeObj.type_name) == "description" :
             titleName = schemeObj.type_name.upper()
             titleName = titleName[:1] + schemeObj.type_name[1:]
-            returnName = self.projectPrefix.lower() + titleName
+            prefix = self.projectPrefix.lower() if self.projectPrefix else 'meta'
+            returnName = prefix + titleName
         else :
             prefixes = ["new", "alloc", "copy"]
             for prefix in prefixes:

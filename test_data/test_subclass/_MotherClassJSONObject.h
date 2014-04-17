@@ -10,7 +10,7 @@
 
 @interface _MotherClassJSONObject : NSObject <NSCoding>
 
-@property (nonatomic, strong) NSString *id;
+@property (nonatomic, strong) NSString *metaId;
 
 + (MotherClassJSONObject *)motherClassWithDictionary:(NSDictionary *)dic withError:(NSError **)error;
 - (id)initWithDictionary:(NSDictionary *)dic withError:(NSError **)error;
