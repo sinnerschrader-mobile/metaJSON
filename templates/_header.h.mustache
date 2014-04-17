@@ -22,55 +22,55 @@
 {{#comment}}
 //{{comment}}
 {{/comment}}
-@property (nonatomic, strong) NSNumber *{{name}};
+@property (nonatomic, strong) NSNumber *{{varName}};
 {{/numberProperties}}
 {{#stringProperties}}
 {{#comment}}
 //{{comment}}
 {{/comment}}
-@property (nonatomic, strong) NSString *{{name}};
+@property (nonatomic, strong) NSString *{{varName}};
 {{/stringProperties}}
 {{#booleanProperties}}
 {{#comment}}
 //{{comment}}
 {{/comment}}
-@property (nonatomic, assign) BOOL {{name}};
+@property (nonatomic, assign) BOOL {{varName}};
 {{/booleanProperties}}
 {{#dataProperties}}
 {{#comment}}
 //{{comment}}
 {{/comment}}
-@property (nonatomic, strong) NSData *{{name}};
+@property (nonatomic, strong) NSData *{{varName}};
 {{/dataProperties}}
 {{#dateProperties}}
 {{#comment}}
 //{{comment}}
 {{/comment}}
-@property (nonatomic, strong) NSDate *{{name}};
+@property (nonatomic, strong) NSDate *{{varName}};
 {{/dateProperties}}
 {{#msDateProperties}}
 {{#comment}}
 //{{comment}}
 {{/comment}}
-@property (nonatomic, strong) NSDate *{{name}};
+@property (nonatomic, strong) NSDate *{{varName}};
 {{/msDateProperties}}
 {{#arrayProperties}}
 {{#comment}}
 //{{comment}}
 {{/comment}}
-@property (nonatomic, strong) NSArray *{{name}};
+@property (nonatomic, strong) NSArray *{{varName}};
 {{/arrayProperties}}
 {{#objectProperties}}
 {{#comment}}
 //{{comment}}
 {{/comment}}
-@property (nonatomic, strong) {{base_type}} *{{name}};
+@property (nonatomic, strong) {{base_type}} *{{varName}};
 {{/objectProperties}}
 {{#undefinedProperties}}
 {{#comment}}
 //{{comment}}
 {{/comment}}
-@property (nonatomic, strong) id {{name}};
+@property (nonatomic, strong) id {{varName}};
 {{/undefinedProperties}}
 
 + ({{humanClassName}} *){{variableName}}WithDictionary:(NSDictionary *)dic withError:(NSError **)error;
