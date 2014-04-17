@@ -1,0 +1,56 @@
+[
+    {
+        "name": "customNumber",
+        "base-type": "number",
+        "minLength": 1,
+        "maxLength": 10
+    },
+    {
+        "name": "superObject",
+        "base-type": "object",
+        "property": [
+            {
+                "name": "isBoolean",
+                "base-type": "boolean"
+            },
+            {
+                "name": "myData",
+                "base-type": "data"
+            },
+            {
+                "name": "creationDate",
+                "base-type": "date"
+            },
+            {
+                "name": "updateDate",
+                "base-type": "date",
+                "subType": "ms"
+            },
+            {
+                "name": "objectWithoutSubtypes",
+                "base-type": "array"
+            },
+            {
+                "name": "numbers",
+                "base-type": "array",
+                "subType": "number"
+            },
+            {
+                "name": "stringsAndDates",
+                "base-type": "array",
+                "subType": ["string", "date"]
+            },
+            {
+                "name": "customNumbers",
+                "base-type": "array",
+                "subType": "customNumber"
+            },
+            {
+                "name": "stringsAndCustomNumbers",
+                "base-type": "array",
+                "subType": ["string", "customNumber"]
+            }
+
+        ]
+    }
+]
