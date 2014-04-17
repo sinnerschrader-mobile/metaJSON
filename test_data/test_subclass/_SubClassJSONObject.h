@@ -5,11 +5,12 @@
 //  Copyright (c) 2014 SinnerSchrader Mobile. All rights reserved.
 
 #import <Foundation/Foundation.h>
-#import ".h"
+#import "MotherClassJSONObject.h"
 
 @class SubClassJSONObject;
 
-@interface _SubClassJSONObject : 
+@interface _SubClassJSONObject : MotherClassJSONObject
+
 
 @property (nonatomic, strong) NSString *name;
 
