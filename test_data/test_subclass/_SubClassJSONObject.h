@@ -11,7 +11,6 @@
 
 @interface _SubClassJSONObject : MotherClassJSONObject
 
-
 @property (nonatomic, strong) NSString *name;
 
 + (SubClassJSONObject *)subClassWithDictionary:(NSDictionary *)dic withError:(NSError **)error;
