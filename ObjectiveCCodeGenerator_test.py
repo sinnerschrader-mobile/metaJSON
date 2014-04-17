@@ -71,19 +71,19 @@ class TestSampleTestSubclassMotherCase(TestSampleTestSubclassCase):
         self.test_file_path = self.default_folder + 'test_subclass'
         self.scheme_object = pickle.load(open(self.default_folder + '/test_subclass_motherClass.p', 'rb'))
 
-    def test_mother_human_header_content(self):
+    def test_human_header_content(self):
         result = self.gen.human_header_content(self.scheme_object)
         self.assert_content_file(self.test_file_path + "/MotherClassJSONObject.h", result)
 
-    def test_mother_human_source_content(self):
+    def test_human_source_content(self):
         result = self.gen.human_source_content(self.scheme_object)
         self.assert_content_file(self.test_file_path + "/MotherClassJSONObject.m", result)
 
-    def test_mother_machine_source_content(self):
+    def test_machine_source_content(self):
         result = self.gen.machine_source_content(self.scheme_object)
         self.assert_content_file(self.test_file_path + "/_MotherClassJSONObject.m", result)
 
-    def test_mother_machine_header_content(self):
+    def test_machine_header_content(self):
         result = self.gen.machine_header_content(self.scheme_object)
         self.assert_content_file(self.test_file_path + "/_MotherClassJSONObject.h", result)
 
@@ -93,19 +93,19 @@ class TestSampleTestSubclassSubclassCase(TestSampleTestSubclassCase):
         self.test_file_path = self.default_folder + 'test_subclass'
         self.scheme_object = pickle.load(open(self.default_folder + '/test_subclass_subClass.p', 'rb'))
 
-    def test_subclass_human_header_content(self):
+    def test_human_header_content(self):
         result = self.gen.human_header_content(self.scheme_object)
         self.assert_content_file(self.test_file_path + "/SubClassJSONObject.h", result)
 
-    def test_subclass_human_source_content(self):
+    def test_human_source_content(self):
         result = self.gen.human_source_content(self.scheme_object)
         self.assert_content_file(self.test_file_path + "/SubClassJSONObject.m", result)
 
-    def test_subclass_machine_source_content(self):
+    def test_machine_source_content(self):
         result = self.gen.machine_source_content(self.scheme_object)
         self.assert_content_file(self.test_file_path + "/_SubClassJSONObject.m", result)
 
-    def test_subclass_machine_header_content(self):
+    def test_machine_header_content(self):
         result = self.gen.machine_header_content(self.scheme_object)
         self.assert_content_file(self.test_file_path + "/_SubClassJSONObject.h", result)
 
