@@ -34,10 +34,6 @@
         if (*error) {
             return self;
         }
-        self.updateDate = [S2MAPIParser dateWithMilliSecondsTimeIntervalFromResponseDictionary:dic forKey:@"updateDate" acceptNil:YES error:error];
-        if (*error) {
-            return self;
-        }
         self.objectWithoutSubtypes = [S2MAPIParser arrayFromResponseDictionary:dic forKey:@"objectWithoutSubtypes" acceptNil:YES error:error];
         if (*error) {
             return self;
@@ -120,7 +116,6 @@
     [coder encodeBool:self.isBoolean forKey:@"isBoolean"];
     [coder encodeObject:self.myData forKey:@"myData"];
     [coder encodeObject:self.creationDate forKey:@"creationDate"];
-    [coder encodeObject:self.updateDate forKey:@"updateDate"];
     [coder encodeObject:self.objectWithoutSubtypes forKey:@"objectWithoutSubtypes"];
     [coder encodeObject:self.numbers forKey:@"numbers"];
     [coder encodeObject:self.stringsAndDates forKey:@"stringsAndDates"];
@@ -132,7 +127,6 @@
     self.isBoolean = [coder decodeBoolForKey:@"isBoolean"];
     self.myData = [coder decodeObjectForKey:@"myData"];
     self.creationDate = [coder decodeObjectForKey:@"creationDate"];
-    self.updateDate = [coder decodeObjectForKey:@"updateDate"];
     self.objectWithoutSubtypes = [coder decodeObjectForKey:@"objectWithoutSubtypes"];
     self.numbers = [coder decodeObjectForKey:@"numbers"];
     self.stringsAndDates = [coder decodeObjectForKey:@"stringsAndDates"];
@@ -152,15 +146,6 @@
     }
     if (self.creationDate) {
         [dic setObject:[NSNumber numberWithInteger:[[NSNumber numberWithDouble:[self.creationDate timeIntervalSince1970]] longValue]] forKey:@"creationDate"];
-    }
-    if (self.updateDate) {
-        NSNumber* number = @([self.updateDate timeIntervalSince1970] * 1000);
-        NSNumberFormatter *formatter = [[NSNumberFormatter alloc] init];
-        [formatter setNumberStyle:NSNumberFormatterNoStyle];
-        [formatter setNegativeFormat:@"0"];
-        NSString *value = [formatter stringFromNumber:number];
-        NSNumber *convertedNumber = [formatter numberFromString:value];
-        [dic setObject:convertedNumber forKey:@"updateDate"];
     }
     if (self.objectWithoutSubtypes) {
         [dic setObject:self.objectWithoutSubtypes forKey:@"objectWithoutSubtypes"];

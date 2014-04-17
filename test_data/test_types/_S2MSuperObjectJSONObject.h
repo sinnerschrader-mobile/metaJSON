@@ -14,7 +14,6 @@
 @property (nonatomic, assign) BOOL isBoolean;
 @property (nonatomic, strong) NSData *myData;
 @property (nonatomic, strong) NSDate *creationDate;
-@property (nonatomic, strong) NSDate *updateDate;
 @property (nonatomic, strong) NSArray *objectWithoutSubtypes;
 @property (nonatomic, strong) NSArray *numbers;
 @property (nonatomic, strong) NSArray *stringsAndDates;
