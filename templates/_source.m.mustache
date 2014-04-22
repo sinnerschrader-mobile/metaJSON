@@ -287,9 +287,11 @@
     }
     {{/dateProperties}}
     {{#arrayProperties}}
+    {{^hasCustomType}}
     if (self.{{varName}}) {
         [dic setObject:self.{{varName}} forKey:@"{{name}}"];
     }
+    {{/hasCustomType}}
     {{/arrayProperties}}
     {{#objectProperties}}
     {{/objectProperties}}

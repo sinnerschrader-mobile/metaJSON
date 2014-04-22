@@ -171,11 +171,7 @@
         [dic setObject:self.stringsAndDates forKey:@"stringsAndDates"];
     }
     if (self.customNumbers) {
-        NSMutableArray *tmpArray = [[NSMutableArray alloc] init];
-        for (id tmpObj in self.customNumbers) {
-            [tmpArray addObject:tmpObj];
-        }
-        [dic setObject:tmpArray forKey:@"customNumbers"];
+        [dic setObject:self.customNumbers forKey:@"customNumbers"];
     }
     if (self.stringsAndCustomNumbers) {
         [dic setObject:self.stringsAndCustomNumbers forKey:@"stringsAndCustomNumbers"];
