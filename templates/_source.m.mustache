@@ -77,13 +77,23 @@
         {{/minLength}}
         {{/stringProperties}}
         {{#booleanProperties}}
+        self.{{varName}} = [{{projectPrefix}}APIParser boolFromResponseDictionary:dic forKey:@"{{name}}" acceptNil:{{#required}}NO{{/required}}{{^required}}YES{{/required}} error:error];
+        if (*error) {
+            return self;
+        }
         {{/booleanProperties}}
         {{#dataProperties}}
+        self.{{varName}} = [{{projectPrefix}}APIParser dataFromResponseDictionary:dic forKey:@"{{name}}" acceptNil:{{#required}}NO{{/required}}{{^required}}YES{{/required}} error:error];
+        if (*error) {
+            return self;
+        }
         {{/dataProperties}}
         {{#dateProperties}}
+        self.{{varName}} = [{{projectPrefix}}APIParser dateWithTimeIntervalFromResponseDictionary:dic forKey:@"{{name}}" acceptNil:{{#required}}NO{{/required}}{{^required}}YES{{/required}} error:error];
+        if (*error) {
+            return self;
+        }
         {{/dateProperties}}
-        {{#msDateProperties}}
-        {{/msDateProperties}}
         {{#arrayProperties}}
         {{/arrayProperties}}
         {{#objectProperties}}
@@ -192,20 +202,15 @@
     }
     {{/booleanProperties}}
     {{#dataProperties}}
+    if (self.{{varName}}) {
+        [dic setObject:self.{{varName}} forKey:@"{{name}}"];
+    }
     {{/dataProperties}}
     {{#dateProperties}}
-    {{/dateProperties}}
-    {{#msDateProperties}}
     if (self.{{varName}}) {
-        NSNumber* number = @([self.lastModificationTimestamp timeIntervalSince1970] * 1000);
-        NSNumberFormatter *formatter = [[NSNumberFormatter alloc] init];
-        [formatter setNumberStyle:NSNumberFormatterNoStyle];
-        [formatter setNegativeFormat:@"0"];
-        NSString *value = [formatter stringFromNumber:number];
-        NSNumber *convertedNumber = [formatter numberFromString:value];
-        [dic setObject:convertedNumber forKey:@"{{name}}"];
+        [dic setObject:[NSNumber numberWithInteger:[[NSNumber numberWithDouble:[self.{{varName}} timeIntervalSince1970]] longValue]] forKey:@"{{name}}"];
     }
-    {{/msDateProperties}}
+    {{/dateProperties}}
     {{#arrayProperties}}
     {{/arrayProperties}}
     {{#objectProperties}}
