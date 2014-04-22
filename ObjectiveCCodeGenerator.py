@@ -63,7 +63,9 @@ class ObjectiveCCodeGenerator :
         return returnName
 
     def process_properties(self, propObj) :
-        propertyHash = {'name' : propObj.type_name, 'varName' : self.makeVarName(propObj)}
+        capitalizeVarName = self.makeVarName(propObj)
+        capitalizeVarName = capitalizeVarName[:1].upper() + capitalizeVarName[1:]
+        propertyHash = {'name' : propObj.type_name, 'varName' : self.makeVarName(propObj), 'capitalizeVarName': capitalizeVarName}
         if propObj.type_description and len(propObj.type_description) :
             propertyHash["comment"] = propObj.type_description
         if propObj.required == 1:
@@ -80,6 +82,19 @@ class ObjectiveCCodeGenerator :
         hasMin, minLength = propObj.getMinLength()
         if hasMin:
             propertyHash['minLength'] = {"value": minLength}
+
+        # dealing with array property
+        propertyHash['hasMultipleSubtypes'] = len(propObj.getSubType()) > 1
+        for subtype in propObj.getSubType():
+            key = 'hasCustomType'
+            if subtype in propObj.naturalTypeList:
+                key = 'has'+ subtype.capitalize() + 'Type'
+            else:
+                if propObj.getScheme(subtype).base_type in propObj.naturalTypeList:
+                    key = 'has'+ propObj.getScheme(subtype).base_type.capitalize() + 'Type'
+                else:
+                    propertyHash[key]["className"] = propObj.getScheme(subtype).getClassName()
+            propertyHash[key] = {"subtype": subtype}
 
         return propertyHash
 
@@ -122,20 +137,33 @@ class ObjectiveCCodeGenerator :
 
         numberProps = []
         stringProps = []
+        booleanProps = []
+        dataProps = []
+        dateProps = []
+        arrayProps = []
+
         for prop in schemeObj.props:
             if prop.rootBaseType() == "string":
                 stringProps.append(self.process_properties(prop))
             if prop.rootBaseType() == "number":
                 numberProps.append(self.process_properties(prop))
+            if prop.rootBaseType() == "boolean":
+                booleanProps.append(self.process_properties(prop))
+            if prop.rootBaseType() == "data":
+                dataProps.append(self.process_properties(prop))
+            if prop.rootBaseType() == "date":
+                dateProps.append(self.process_properties(prop))
+            if prop.rootBaseType() == "array":
+                arrayProps.append(self.process_properties(prop))
 
-        hashParams = {"date": str(today.year), "projectPrefix": schemeObj.projectPrefix,"machineClassName": schemeObj.getMachineClassName(), "humanClassName": schemeObj.getClassName(), "variableName": self.makeVarName(schemeObj), "stringProperties": stringProps, "numberProperties": numberProps}
+        hashParams = {"date": str(today.year), "projectPrefix": schemeObj.projectPrefix,"machineClassName": schemeObj.getMachineClassName(), "humanClassName": schemeObj.getClassName(), "variableName": self.makeVarName(schemeObj), "stringProperties": stringProps, "numberProperties": numberProps, "booleanProperties": booleanProps, "dataProperties": dataProps, "dateProperties": dateProps, "arrayProperties": arrayProps}
 
         if schemeObj.getScheme(schemeObj.base_type):
             hashParams['baseClassName'] = schemeObj.getScheme(schemeObj.base_type).getClassName()
 
         if schemeObj.base_type == 'object':
             hashParams['baseTypeIsObject'] = True
-        
+
         # render
         sourceString = Renderer().render(template_file.read(), hashParams)
         return sourceString

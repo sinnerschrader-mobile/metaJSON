@@ -10,7 +10,6 @@
 
 @interface _S2MSuperObjectJSONObject : NSObject <NSCoding>
 
-
 @property (nonatomic, assign) BOOL isBoolean;
 @property (nonatomic, strong) NSData *myData;
 @property (nonatomic, strong) NSDate *creationDate;
@@ -25,8 +24,6 @@
 - (NSDictionary *)propertyDictionary;
 - (NSString *)stringInStringsAndDatesAtIndex:(NSUInteger)index withError:(NSError **)error;
 - (NSDate *)dateInStringsAndDatesAtIndex:(NSUInteger)index withError:(NSError **)error;
-- (NSString *)stringInStringsAndCustomNumbersAtIndex:(NSUInteger)index withError:(NSError **)error;
 - (NSNumber *)customNumberInStringsAndCustomNumbersAtIndex:(NSUInteger)index withError:(NSError **)error;
-
+- (NSString *)stringInStringsAndCustomNumbersAtIndex:(NSUInteger)index withError:(NSError **)error;
 @end
-

@@ -48,12 +48,6 @@
 {{/comment}}
 @property (nonatomic, strong) NSDate *{{varName}};
 {{/dateProperties}}
-{{#msDateProperties}}
-{{#comment}}
-//{{comment}}
-{{/comment}}
-@property (nonatomic, strong) NSDate *{{varName}};
-{{/msDateProperties}}
 {{#arrayProperties}}
 {{#comment}}
 //{{comment}}
@@ -79,8 +73,26 @@
 - (NSDictionary *)propertyDictionary;
 {{/baseTypeIsObject}}
 {{#arrayProperties}}
+{{#hasMultipleSubtypes}}
+{{#hasCustomType}}
+{{#className}}
+- ({{className}} *){{subtype}}In{{capitalizeVarName}}AtIndex:(NSUInteger)index withError:(NSError **)error;
+{{/className}}
+{{/hasCustomType}}
+{{#hasNumberType}}
+- (NSNumber *){{subtype}}In{{capitalizeVarName}}AtIndex:(NSUInteger)index withError:(NSError **)error;
+{{/hasNumberType}}
+{{#hasStringType}}
+- (NSString *){{subtype}}In{{capitalizeVarName}}AtIndex:(NSUInteger)index withError:(NSError **)error;
+{{/hasStringType}}
+{{#hasDateType}}
+- (NSDate *){{subtype}}In{{capitalizeVarName}}AtIndex:(NSUInteger)index withError:(NSError **)error;
+{{/hasDateType}}
+{{/hasMultipleSubtypes}}
 {{/arrayProperties}}
 {{#undefinedProperties}}
 {{/undefinedProperties}}
+{{^arrayProperties}}
 
+{{/arrayProperties}}
 @end
