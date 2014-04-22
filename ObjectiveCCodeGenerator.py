@@ -84,7 +84,13 @@ class ObjectiveCCodeGenerator :
             propertyHash['minLength'] = {"value": minLength}
 
         # dealing with array property
-        propertyHash['hasMultipleSubtypes'] = len(propObj.getSubType()) > 1
+        if len(propObj.getSubType()) == 1:
+            propertyHash['hasOneSubtype'] = True
+        elif len(propObj.getSubType()) > 1:
+            propertyHash['hasMultipleSubtypes'] = True
+        else:
+            propertyHash['hasNoSubtypes'] = True
+
         for subtype in propObj.getSubType():
             key = 'hasCustomType'
             if subtype in propObj.naturalTypeList:

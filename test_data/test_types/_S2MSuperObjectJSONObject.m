@@ -13,13 +13,14 @@
 
 #pragma mark - factory
 
-+ (S2MSuperObjectJSONObject *)superObjectWithDictionary:(NSDictionary *)dic withError:(NSError **)error {
++ (S2MSuperObjectJSONObject *)superObjectWithDictionary:(NSDictionary *)dic withError:(NSError **)error
+{
     return [[S2MSuperObjectJSONObject alloc] initWithDictionary:dic withError:error];
 }
 
-
 #pragma mark - initialize
-- (id)initWithDictionary:(NSDictionary *)dic  withError:(NSError **)error {
+- (id)initWithDictionary:(NSDictionary *)dic  withError:(NSError **)error
+{
     self = [super init];
     if (self) {
         self.isBoolean = [S2MAPIParser boolFromResponseDictionary:dic forKey:@"isBoolean" acceptNil:YES error:error];
@@ -80,30 +81,37 @@
     return self;
 }
 
-
 #pragma mark - getter
-- (NSString *)stringInStringsAndDatesAtIndex:(NSUInteger)index withError:(NSError **)error {
+
+- (NSString *)stringInStringsAndDatesAtIndex:(NSUInteger)index withError:(NSError **)error
+{
     NSString *tmpStringsAndDates = [S2MAPIParser stringFromResponseArray:self.stringsAndDates atIndex:index acceptNil:YES error:error];
     if (*error) {
         return nil;
     }
     return tmpStringsAndDates;
 }
-- (NSDate *)dateInStringsAndDatesAtIndex:(NSUInteger)index withError:(NSError **)error {
+
+- (NSDate *)dateInStringsAndDatesAtIndex:(NSUInteger)index withError:(NSError **)error
+{
     NSDate *tmpStringsAndDates = [S2MAPIParser dateWithTimeIntervalFromResponseArray:self.stringsAndDates atIndex:index acceptNil:YES error:error];
     if (*error) {
         return nil;
     }
     return tmpStringsAndDates;
 }
-- (NSString *)stringInStringsAndCustomNumbersAtIndex:(NSUInteger)index withError:(NSError **)error {
+
+- (NSString *)stringInStringsAndCustomNumbersAtIndex:(NSUInteger)index withError:(NSError **)error
+{
     NSString *tmpStringsAndCustomNumbers = [S2MAPIParser stringFromResponseArray:self.stringsAndCustomNumbers atIndex:index acceptNil:YES error:error];
     if (*error) {
         return nil;
     }
     return tmpStringsAndCustomNumbers;
 }
-- (NSNumber *)customNumberInStringsAndCustomNumbersAtIndex:(NSUInteger)index withError:(NSError **)error {
+
+- (NSNumber *)customNumberInStringsAndCustomNumbersAtIndex:(NSUInteger)index withError:(NSError **)error
+{
     NSNumber *tmpStringsAndCustomNumbers = [S2MAPIParser numberFromResponseArray:self.stringsAndCustomNumbers atIndex:index acceptNil:YES error:error];
     if (*error) {
         return nil;
@@ -112,7 +120,10 @@
 }
 
 #pragma mark - NSCoding
-- (void)encodeWithCoder:(NSCoder*)coder {
+
+- (void)encodeWithCoder:(NSCoder*)coder
+{
+    [super encodeWithCoder:coder];
     [coder encodeBool:self.isBoolean forKey:@"isBoolean"];
     [coder encodeObject:self.myData forKey:@"myData"];
     [coder encodeObject:self.creationDate forKey:@"creationDate"];
@@ -122,8 +133,10 @@
     [coder encodeObject:self.customNumbers forKey:@"customNumbers"];
     [coder encodeObject:self.stringsAndCustomNumbers forKey:@"stringsAndCustomNumbers"];
 }
-- (id)initWithCoder:(NSCoder *)coder {
-    self = [super init];
+
+- (id)initWithCoder:(NSCoder *)coder
+{
+    self = [super initWithCoder:coder];
     self.isBoolean = [coder decodeBoolForKey:@"isBoolean"];
     self.myData = [coder decodeObjectForKey:@"myData"];
     self.creationDate = [coder decodeObjectForKey:@"creationDate"];
@@ -136,7 +149,8 @@
 }
 
 #pragma mark - Object Info
-- (NSDictionary *)propertyDictionary {
+- (NSDictionary *)propertyDictionary
+{
     NSMutableDictionary *dic = [[NSMutableDictionary alloc] init];
     if (self.isBoolean) {
         [dic setObject:[NSNumber numberWithBool:self.isBoolean] forKey:@"isBoolean"];
@@ -168,8 +182,10 @@
     }
     return dic;
 }
-- (NSString *)description {
-    return [NSString stringWithFormat:@"%@",[self propertyDictionary]];
+
+- (NSString *)description
+{
+    return [[self propertyDictionary] description];
 }
 
 @end

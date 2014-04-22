@@ -95,6 +95,37 @@
         }
         {{/dateProperties}}
         {{#arrayProperties}}
+        {{^hasOneSubtype}}
+        self.{{varName}} = [{{projectPrefix}}APIParser arrayFromResponseDictionary:dic forKey:@"{{name}}" acceptNil:{{#required}}NO{{/required}}{{^required}}YES{{/required}} error:error];
+        if (*error) {
+            return self;
+        }
+        {{/hasOneSubtype}}
+        {{#hasOneSubtype}}
+        NSArray *tmp{{capitalizeVarName}}Array = [{{projectPrefix}}APIParser arrayFromResponseDictionary:dic forKey:@"{{name}}" acceptNil:{{#required}}NO{{/required}}{{^required}}YES{{/required}} error:error];
+        if (*error) {
+            return self;
+        }
+        NSMutableArray *tmp{{capitalizeVarName}} = [[NSMutableArray alloc] initWithCapacity:tmp{{capitalizeVarName}}Array.count];
+        for (NSUInteger loop = 0; loop < tmp{{capitalizeVarName}}Array.count; loop++) {
+            {{#hasStringType}}
+            NSString *tmpValue = [{{projectPrefix}}APIParser stringFromResponseArray:tmp{{capitalizeVarName}}Array atIndex:loop acceptNil:{{#required}}NO{{/required}}{{^required}}YES{{/required}} error:error];
+            {{/hasStringType}}
+            {{#hasNumberType}}
+            NSNumber *tmpValue = [{{projectPrefix}}APIParser numberFromResponseArray:tmp{{capitalizeVarName}}Array atIndex:loop acceptNil:{{#required}}NO{{/required}}{{^required}}YES{{/required}} error:error];
+            {{/hasNumberType}}
+            {{#hasDateType}}
+            NSDate *tmpValue = [{{projectPrefix}}APIParser dateFromResponseArray:tmp{{capitalizeVarName}}Array atIndex:loop acceptNil:{{#required}}NO{{/required}}{{^required}}YES{{/required}} error:error];
+            {{/hasDateType}}
+            if (*error) {
+                return self;
+            }
+            if (tmpValue) {
+                [tmp{{capitalizeVarName}} addObject:tmpValue];
+            }
+        }
+        self.{{varName}} = [NSArray arrayWithArray:tmp{{capitalizeVarName}}];
+        {{/hasOneSubtype}}
         {{/arrayProperties}}
         {{#objectProperties}}
         {{/objectProperties}}
@@ -106,6 +137,50 @@
 
 #pragma mark - getter
 {{#arrayProperties}}
+{{#hasMultipleSubtypes}}
+{{#hasCustomType}}
+{{#className}}
+
+- ({{className}} *){{subtype}}In{{capitalizeVarName}}AtIndex:(NSUInteger)index withError:(NSError **)error
+{
+
+}
+{{/className}}
+{{/hasCustomType}}
+{{#hasStringType}}
+
+- (NSString *){{subtype}}In{{capitalizeVarName}}AtIndex:(NSUInteger)index withError:(NSError **)error
+{
+    NSString *tmp{{capitalizeVarName}} = [{{projectPrefix}}APIParser stringFromResponseArray:self.{{varName}} atIndex:index acceptNil:{{#required}}NO{{/required}}{{^required}}YES{{/required}} error:error];
+    if (*error) {
+        return nil;
+    }
+    return tmp{{capitalizeVarName}};
+}
+{{/hasStringType}}
+{{#hasNumberType}}
+
+- (NSNumber *){{subtype}}In{{capitalizeVarName}}AtIndex:(NSUInteger)index withError:(NSError **)error
+{
+    NSNumber *tmp{{capitalizeVarName}} = [{{projectPrefix}}APIParser numberFromResponseArray:self.{{varName}} atIndex:index acceptNil:{{#required}}NO{{/required}}{{^required}}YES{{/required}} error:error];
+    if (*error) {
+        return nil;
+    }
+    return tmp{{capitalizeVarName}};
+}
+{{/hasNumberType}}
+{{#hasDateType}}
+
+- (NSDate *){{subtype}}In{{capitalizeVarName}}AtIndex:(NSUInteger)index withError:(NSError **)error
+{
+    NSDate *tmp{{capitalizeVarName}} = [{{projectPrefix}}APIParser dateWithTimeIntervalFromResponseArray:self.{{varName}} atIndex:index acceptNil:{{#required}}NO{{/required}}{{^required}}YES{{/required}} error:error];
+    if (*error) {
+        return nil;
+    }
+    return tmp{{capitalizeVarName}};
+}
+{{/hasDateType}}
+{{/hasMultipleSubtypes}}
 {{/arrayProperties}}
 {{#undefinedProperties}}
 {{/undefinedProperties}}
@@ -212,6 +287,9 @@
     }
     {{/dateProperties}}
     {{#arrayProperties}}
+    if (self.{{varName}}) {
+        [dic setObject:self.{{varName}} forKey:@"{{name}}"];
+    }
     {{/arrayProperties}}
     {{#objectProperties}}
     {{/objectProperties}}
