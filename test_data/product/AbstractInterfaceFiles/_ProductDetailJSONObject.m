@@ -23,11 +23,11 @@
 - (id)initWithDictionary:(NSDictionary *)dic  withError:(NSError **)error {
     self = [super init];
     if (self) {
-        self.title = [APIParser objectFromResponseDictionary:dic forKey:@"title" acceptNil:NO error:error];
-        if (*error) {
-            return nil;
-        }
         self.type = [APIParser numberFromResponseDictionary:dic forKey:@"type" acceptNil:NO error:error];
+        if (*error) {
+            return self;
+        }
+        self.advantage = [APIParser numberFromResponseDictionary:dic forKey:@"advantage" acceptNil:NO error:error];
         if (*error) {
             return self;
         }
@@ -35,15 +35,11 @@
         if (*error) {
             return self;
         }
-        self.download = [APIParser objectFromResponseDictionary:dic forKey:@"download" acceptNil:NO error:error];
-        if (*error) {
-            return nil;
-        }
-        self.upload = [APIParser objectFromResponseDictionary:dic forKey:@"upload" acceptNil:NO error:error];
-        if (*error) {
-            return nil;
-        }
         self.telephoneFlatrate = [APIParser stringFromResponseDictionary:dic forKey:@"telephoneFlatrate" acceptNumber:NO acceptNil:YES error:error];
+        if (*error) {
+            return self;
+        }
+        self.includeHardware = [APIParser boolFromResponseDictionary:dic forKey:@"includeHardware" acceptNil:NO error:error];
         if (*error) {
             return self;
         }
@@ -57,17 +53,21 @@
                 return self;
             }
         }
-        self.includeHardware = [APIParser boolFromResponseDictionary:dic forKey:@"includeHardware" acceptNil:NO error:error];
-        if (*error) {
-            return self;
-        }
         self.anyProperty = [APIParser objectFromResponseDictionary:dic forKey:@"anyProperty" acceptNil:NO error:error];
         if (*error) {
             return nil;
         }
-        self.advantage = [APIParser numberFromResponseDictionary:dic forKey:@"advantage" acceptNil:NO error:error];
+        self.title = [APIParser objectFromResponseDictionary:dic forKey:@"title" acceptNil:NO error:error];
         if (*error) {
-            return self;
+            return nil;
+        }
+        self.download = [APIParser objectFromResponseDictionary:dic forKey:@"download" acceptNil:NO error:error];
+        if (*error) {
+            return nil;
+        }
+        self.upload = [APIParser objectFromResponseDictionary:dic forKey:@"upload" acceptNil:NO error:error];
+        if (*error) {
+            return nil;
         }
     }
     return self;
@@ -153,64 +153,64 @@
 
 #pragma mark - NSCoding
 - (void)encodeWithCoder:(NSCoder*)coder {
-    [coder encodeObject:self.title forKey:@"title"];
     [coder encodeObject:self.type forKey:@"type"];
+    [coder encodeObject:self.advantage forKey:@"advantage"];
     [coder encodeObject:self.teaserURL forKey:@"teaserURL"];
+    [coder encodeObject:self.telephoneFlatrate forKey:@"telephoneFlatrate"];
+    [coder encodeBool:self.includeHardware forKey:@"includeHardware"];
+    [coder encodeObject:self.senderInfo forKey:@"senderInfo"];
+    [coder encodeObject:self.anyProperty forKey:@"anyProperty"];
+    [coder encodeObject:self.title forKey:@"title"];
     [coder encodeObject:self.download forKey:@"download"];
     [coder encodeObject:self.upload forKey:@"upload"];
-    [coder encodeObject:self.telephoneFlatrate forKey:@"telephoneFlatrate"];
-    [coder encodeObject:self.senderInfo forKey:@"senderInfo"];
-    [coder encodeBool:self.includeHardware forKey:@"includeHardware"];
-    [coder encodeObject:self.anyProperty forKey:@"anyProperty"];
-    [coder encodeObject:self.advantage forKey:@"advantage"];
 }
 - (id)initWithCoder:(NSCoder *)coder {
     self = [super init];
-    self.title = [coder decodeObjectForKey:@"title"];
     self.type = [coder decodeObjectForKey:@"type"];
+    self.advantage = [coder decodeObjectForKey:@"advantage"];
     self.teaserURL = [coder decodeObjectForKey:@"teaserURL"];
+    self.telephoneFlatrate = [coder decodeObjectForKey:@"telephoneFlatrate"];
+    self.includeHardware = [coder decodeBoolForKey:@"includeHardware"];
+    self.senderInfo = [coder decodeObjectForKey:@"senderInfo"];
+    self.anyProperty = [coder decodeObjectForKey:@"anyProperty"];
+    self.title = [coder decodeObjectForKey:@"title"];
     self.download = [coder decodeObjectForKey:@"download"];
     self.upload = [coder decodeObjectForKey:@"upload"];
-    self.telephoneFlatrate = [coder decodeObjectForKey:@"telephoneFlatrate"];
-    self.senderInfo = [coder decodeObjectForKey:@"senderInfo"];
-    self.includeHardware = [coder decodeBoolForKey:@"includeHardware"];
-    self.anyProperty = [coder decodeObjectForKey:@"anyProperty"];
-    self.advantage = [coder decodeObjectForKey:@"advantage"];
     return self;
 }
 
 #pragma mark - Object Info
 - (NSDictionary *)propertyDictionary {
     NSMutableDictionary *dic = [[NSMutableDictionary alloc] init];
-    if (self.title) {
-        [dic setObject:self.title forKey:@"title"];
-    }
     if (self.type) {
         [dic setObject:self.type forKey:@"type"];
     }
+    if (self.advantage) {
+        [dic setObject:self.advantage forKey:@"advantage"];
+    }
     if (self.teaserURL) {
         [dic setObject:self.teaserURL forKey:@"teaserURL"];
+    }
+    if (self.telephoneFlatrate) {
+        [dic setObject:self.telephoneFlatrate forKey:@"telephoneFlatrate"];
+    }
+    if (self.includeHardware) {
+        [dic setObject:[NSNumber numberWithBool:self.includeHardware] forKey:@"includeHardware"];
+    }
+    if (self.senderInfo) {
+        [dic setObject:[self.senderInfo propertyDictionary] forKey:@"senderInfo"];
+    }
+    if (self.anyProperty) {
+        [dic setObject:self.anyProperty forKey:@"anyProperty"];
+    }
+    if (self.title) {
+        [dic setObject:self.title forKey:@"title"];
     }
     if (self.download) {
         [dic setObject:self.download forKey:@"download"];
     }
     if (self.upload) {
         [dic setObject:self.upload forKey:@"upload"];
-    }
-    if (self.telephoneFlatrate) {
-        [dic setObject:self.telephoneFlatrate forKey:@"telephoneFlatrate"];
-    }
-    if (self.senderInfo) {
-        [dic setObject:[self.senderInfo propertyDictionary] forKey:@"senderInfo"];
-    }
-    if (self.includeHardware) {
-        [dic setObject:[NSNumber numberWithBool:self.includeHardware] forKey:@"includeHardware"];
-    }
-    if (self.anyProperty) {
-        [dic setObject:self.anyProperty forKey:@"anyProperty"];
-    }
-    if (self.advantage) {
-        [dic setObject:self.advantage forKey:@"advantage"];
     }
     return dic;
 }

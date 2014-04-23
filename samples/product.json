@@ -104,15 +104,14 @@
         "property" :
         [
             {
-                "name" : "title",
-                "base-type" : ["titleString","string"],
-                "description" : "the title of product",
-                "required" : 1
-            },
-            {
                 "name" : "type",
                 "base-type" : "number",
                 "description" : "the type of product",
+                "required" : 1
+            },
+            {
+                "name" : "advantage",
+                "base-type" : "number",
                 "required" : 1
             },
             {
@@ -121,6 +120,32 @@
                 "description" : "teaser image url of product",
                 "required" : 1
             },
+            {
+                "name" : "telephoneFlatrate",
+                "base-type" : "string",
+                "description" : "telephone Flatrate option string"
+            },
+            {
+                "name" : "includeHardware",
+                "base-type" : "boolean",
+                "required" : 1
+            },
+            {
+                "name" : "senderInfo",
+                "base-type" : "senderGroup"
+            },
+	        {
+                "name" : "anyProperty",
+                "base-type" : "any",
+                "required" : 1
+            },
+            {
+                "name" : "title",
+                "base-type" : ["titleString","string"],
+                "description" : "the title of product",
+                "required" : 1
+            },
+
             {
                 "name" : "download",
                 "base-type" : ["number", "string"],
@@ -132,31 +157,8 @@
                 "base-type" : ["number", "string"],
                 "description" : "upload speed (Mbit/s)",
                 "required" : 1
-            },
-            {
-                "name" : "telephoneFlatrate",
-                "base-type" : "string",
-                "description" : "telephone Flatrate option string"
-            },
-            {
-                "name" : "senderInfo",
-                "base-type" : "senderGroup"
-            },
-            {
-                "name" : "includeHardware",
-                "base-type" : "boolean",
-                "required" : 1
-            },
-	        {
-                "name" : "anyProperty",
-                "base-type" : "any",
-                "required" : 1
-            },
-            {
-                "name" : "advantage",
-                "base-type" : "number",
-                "required" : 1
             }
+
          ]
     }
 ]
