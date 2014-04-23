@@ -13,4 +13,4 @@ class TestReadJSON(unittest.TestCase):
         os.system("python readJSON.py -i " + json_file)
         # ignoring template files
         os.system("rm -rf src/Utilities")
-        return os.system("diff src/ " + test_data/product)
+        return os.system("diff src/ " + output_dir)
