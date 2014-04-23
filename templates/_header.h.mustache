@@ -78,23 +78,11 @@
 {{/baseTypeIsObject}}
 {{#arrayProperties}}
 {{#hasMultipleSubtypes}}
-{{#hasCustomType}}
-{{#className}}
-- ({{className}} *){{subtype}}In{{capitalizeVarName}}AtIndex:(NSUInteger)index withError:(NSError **)error;
-{{/className}}
-{{/hasCustomType}}
-{{#hasNumberType}}
-- (NSNumber *){{subtype}}In{{capitalizeVarName}}AtIndex:(NSUInteger)index withError:(NSError **)error;
-{{/hasNumberType}}
-{{#hasStringType}}
-- (NSString *){{subtype}}In{{capitalizeVarName}}AtIndex:(NSUInteger)index withError:(NSError **)error;
-{{/hasStringType}}
-{{#hasDateType}}
-- (NSDate *){{subtype}}In{{capitalizeVarName}}AtIndex:(NSUInteger)index withError:(NSError **)error;
-{{/hasDateType}}
+{{> templates/array_property}}
 {{/hasMultipleSubtypes}}
 {{/arrayProperties}}
 {{#undefinedProperties}}
+{{> templates/multiple_property}}
 {{/undefinedProperties}}
 {{^arrayProperties}}
 

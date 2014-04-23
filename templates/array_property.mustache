@@ -1,0 +1,14 @@
+{{#hasCustomType}}
+{{#className}}
+- ({{className}} *){{type}}In{{capitalizeVarName}}AtIndex:(NSUInteger)index withError:(NSError **)error;
+{{/className}}
+{{/hasCustomType}}
+{{#hasNumberType}}
+- (NSNumber *){{type}}In{{capitalizeVarName}}AtIndex:(NSUInteger)index withError:(NSError **)error;
+{{/hasNumberType}}
+{{#hasStringType}}
+- (NSString *){{type}}In{{capitalizeVarName}}AtIndex:(NSUInteger)index withError:(NSError **)error;
+{{/hasStringType}}
+{{#hasDateType}}
+- (NSDate *){{type}}In{{capitalizeVarName}}AtIndex:(NSUInteger)index withError:(NSError **)error;
+{{/hasDateType}}

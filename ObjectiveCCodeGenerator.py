@@ -26,6 +26,7 @@ import datetime
 import time
 import os
 import sys
+import re
 from pystache import Renderer
 from cStringIO import StringIO
 
@@ -38,6 +39,32 @@ class ObjectiveCCodeGenerator :
     def __init__(self):
         projectPrefix = ""
         dirPath = "classes"
+        self.mustache_renderer = Renderer()
+
+    # BEGIN template available functions
+    def lambda_uppercase(self, text):
+        return text.upper()
+    def lambda_lowercase(self, text):
+        return text.lower()
+
+    def lambda_capitalize(self, text):
+        return text.capitalize()
+
+    def lambda_camelcase(self, text):
+        process_text = self.mustache_renderer.render(text, self.mustache_renderer.context)
+        words = process_text.split('_')
+        return ''.join(word.title() if i else word for i, word in enumerate(words))
+
+    def lambda_upper_camelcase(self, text):
+        camelcased_text = self.lambda_camelcase(text)
+        return camelcased_text[:1].upper() + camelcased_text[1:]
+
+    def lambda_snakecase(self, text):
+        return re.sub('([a-z0-9])([A-Z])', r'\1_\2', string).lower()
+    def lambda_upper_snakecase(self, text):
+        return re.sub('([a-z0-9])([A-Z])', r'\1_\2', string).upper()
+
+    # END template available functions
 
     def template_file_path(self, filename) :
         templatePath = os.path.realpath( __file__ )
@@ -60,8 +87,53 @@ class ObjectiveCCodeGenerator :
                     returnName = self.projectPrefix.lower() + titleName
                     #print returnName
                     break
-
         return returnName
+
+    def process_basetypes(self, propObj, propertyHash) :
+        # dealing with array property
+        if len(propObj.getBaseTypes()) == 1:
+            propertyHash['hasOneBasetype'] = True
+        elif len(propObj.getBaseTypes()) > 1:
+            propertyHash['hasMultipleBasetypes'] = True
+        else:
+            propertyHash['hasNoBasetypes'] = True
+        for subtype in propObj.getBaseTypes():
+            key = 'hasCustomType'
+            if subtype in propObj.naturalTypeList:
+                key = 'has'+ subtype.capitalize() + 'Type'
+                propertyHash[key] = {"type": subtype}
+            elif subtype == "any":
+                print "skip 'any' type for" + propertyHash['name']
+            else:
+                # print subtype
+                if propObj.getScheme(subtype).base_type in propObj.naturalTypeList:
+                    # key = 'has'+ propObj.getScheme(subtype).base_type.capitalize() + 'Type'
+                    propertyHash[key] = {"type": subtype}
+                else:
+                    propertyHash[key] = {"type": subtype, "className": propObj.getScheme(subtype).getClassName()}
+
+    def process_subtypes(self, propObj, propertyHash) :
+        # dealing with array property
+        if len(propObj.getSubType()) == 1:
+            propertyHash['hasOneSubtype'] = True
+        elif len(propObj.getSubType()) > 1:
+            propertyHash['hasMultipleSubtypes'] = True
+        else:
+            propertyHash['hasNoSubtypes'] = True
+
+        for subtype in propObj.getSubType():
+            key = 'hasCustomType'
+            if subtype in propObj.naturalTypeList:
+                key = 'has'+ subtype.capitalize() + 'Type'
+                propertyHash[key] = {"type": subtype}
+            elif subtype == "any":
+                print "skip 'any' type for" + propertyHash['name']
+            else:
+                if propObj.getScheme(subtype).base_type in propObj.naturalTypeList:
+                    key = 'has'+ propObj.getScheme(subtype).base_type.capitalize() + 'Type'
+                    propertyHash[key] = {"type": subtype}
+                else:
+                    propertyHash[key] = {"type": subtype, "className": propObj.getScheme(subtype).getClassName()}
 
     def process_properties(self, propObj, undefined = False) :
         capitalizeVarName = self.makeVarName(propObj)
@@ -76,45 +148,23 @@ class ObjectiveCCodeGenerator :
             propertyHash['className'] = propObj.getClassName()
             return propertyHash
 
-        if undefined:
-            return propertyHash
+        if not undefined:
+            hasRegex, regex = propObj.getRegex()
+            if hasRegex:
+                propertyHash['regex'] = {"value": regex}
 
-        hasRegex, regex = propObj.getRegex()
-        if hasRegex:
-            propertyHash['regex'] = {"value": regex}
+            hasMax, maxLength = propObj.getMaxLength()
+            if hasMax:
+                propertyHash['maxLength'] = {"value": maxLength}
 
-        hasMax, maxLength = propObj.getMaxLength()
-        if hasMax:
-            propertyHash['maxLength'] = {"value": maxLength}
-
-        hasMin, minLength = propObj.getMinLength()
-        if hasMin:
-            propertyHash['minLength'] = {"value": minLength}
+            hasMin, minLength = propObj.getMinLength()
+            if hasMin:
+                propertyHash['minLength'] = {"value": minLength}
 
         # dealing with array property
-        if len(propObj.getSubType()) == 1:
-            propertyHash['hasOneSubtype'] = True
-        elif len(propObj.getSubType()) > 1:
-            propertyHash['hasMultipleSubtypes'] = True
-        else:
-            propertyHash['hasNoSubtypes'] = True
-
-        for subtype in propObj.getSubType():
-            key = 'hasCustomType'
-            if subtype in propObj.naturalTypeList:
-                key = 'has'+ subtype.capitalize() + 'Type'
-                propertyHash[key] = {"subtype": subtype}
-            elif subtype == "any":
-                print "skip 'any' type for" + propertyHash['name']
-            else:
-                print subtype
-                if propObj.getScheme(subtype).base_type in propObj.naturalTypeList:
-                    key = 'has'+ propObj.getScheme(subtype).base_type.capitalize() + 'Type'
-                    propertyHash[key] = {"subtype": subtype}
-                else:
-                    propertyHash[key] = {"subtype": subtype, "className": propObj.getScheme(subtype).getClassName()}
-
-
+        self.process_subtypes(propObj, propertyHash)
+        if propObj.rootBaseType() == "multi":
+            self.process_basetypes(propObj, propertyHash)
         return propertyHash
 
     def human_header_content(self, schemeObj) :
@@ -122,14 +172,14 @@ class ObjectiveCCodeGenerator :
         today = datetime.date.fromtimestamp(time.time())
 
         hashParams = {"date": str(today.year), "machineClassName": schemeObj.getMachineClassName(), "humanClassName": schemeObj.getClassName()}
-        return Renderer().render(templateFile.read(), hashParams)
+        return self.mustache_renderer.render(templateFile.read(), hashParams)
 
     def human_source_content(self, schemeObj) :
         templateFile = open(self.template_file_path("source.m.mustache"), "r")
         today = datetime.date.fromtimestamp(time.time())
 
         hashParams = {"date": str(today.year), "machineClassName": schemeObj.getMachineClassName(), "humanClassName": schemeObj.getClassName()}
-        return Renderer().render(templateFile.read(), hashParams)
+        return self.mustache_renderer.render(templateFile.read(), hashParams)
 
     def machine_header_content(self, schemeObj) :
         template_file = open(self.template_file_path("_header.h.mustache"), "r")
@@ -179,13 +229,22 @@ class ObjectiveCCodeGenerator :
             elif prop.rootBaseType() == "array":
                 arrayProps.append(self.process_properties(prop))
             elif prop.rootBaseType() == "multi":
-                undefineProps.append(self.process_properties(prop, True))
+                propHash = self.process_properties(prop, True)
+                undefineProps.append(propHash)
             else:
                 undefineProps.append(self.process_properties(prop, True))
 
 
         hashParams = {"date": str(today.year), "projectPrefix": schemeObj.projectPrefix,"machineClassName": schemeObj.getMachineClassName(), "humanClassName": schemeObj.getClassName(), "variableName": self.makeVarName(schemeObj), "stringProperties": stringProps, "numberProperties": numberProps, "booleanProperties": booleanProps, "dataProperties": dataProps, "dateProperties": dateProps, "arrayProperties": arrayProps, "undefinedProperties": undefineProps, "objectProperties": objectProps}
 
+
+        hashParams["_uppercase"] =  self.lambda_uppercase
+        hashParams["_lowercase"] =  self.lambda_lowercase
+        hashParams["_capitalize"] =  self.lambda_capitalize
+        hashParams["_upper_camelcase"] =  self.lambda_upper_camelcase
+        hashParams["_camelcase"] =  self.lambda_camelcase
+        hashParams["_snakecase"] =  self.lambda_snakecase
+        hashParams["_upper_snakecase"] =  self.lambda_upper_snakecase
         if schemeObj.getScheme(schemeObj.base_type):
             hashParams['baseClassName'] = schemeObj.getScheme(schemeObj.base_type).getClassName()
 
@@ -193,7 +252,7 @@ class ObjectiveCCodeGenerator :
             hashParams['baseTypeIsObject'] = True
 
         # render
-        sourceString = Renderer().render(template_file.read(), hashParams)
+        sourceString = self.mustache_renderer.render(template_file.read(), hashParams)
         return sourceString
 
 
