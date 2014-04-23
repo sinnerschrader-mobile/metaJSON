@@ -63,7 +63,7 @@ class ObjectiveCCodeGenerator :
 
         return returnName
 
-    def process_properties(self, propObj) :
+    def process_properties(self, propObj, undefined = False) :
         capitalizeVarName = self.makeVarName(propObj)
         capitalizeVarName = capitalizeVarName[:1].upper() + capitalizeVarName[1:]
         propertyHash = {'name' : propObj.type_name, 'varName' : self.makeVarName(propObj), 'capitalizeVarName': capitalizeVarName}
@@ -71,6 +71,13 @@ class ObjectiveCCodeGenerator :
             propertyHash["comment"] = propObj.type_description
         if propObj.required == 1:
             propertyHash['required'] = True
+
+        if propObj.rootBaseType() == "object":
+            propertyHash['className'] = propObj.getClassName()
+            return propertyHash
+
+        if undefined:
+            return propertyHash
 
         hasRegex, regex = propObj.getRegex()
         if hasRegex:
@@ -98,7 +105,7 @@ class ObjectiveCCodeGenerator :
                 key = 'has'+ subtype.capitalize() + 'Type'
                 propertyHash[key] = {"subtype": subtype}
             elif subtype == "any":
-                print "skip 'any' type"
+                print "skip 'any' type for" + propertyHash['name']
             else:
                 print subtype
                 if propObj.getScheme(subtype).base_type in propObj.naturalTypeList:
@@ -153,22 +160,31 @@ class ObjectiveCCodeGenerator :
         dataProps = []
         dateProps = []
         arrayProps = []
+        undefineProps = []
+        objectProps = []
 
         for prop in schemeObj.props:
-            if prop.rootBaseType() == "string":
+            if prop.rootBaseType() == "object":
+                objectProps.append(self.process_properties(prop))
+            elif prop.rootBaseType() == "string":
                 stringProps.append(self.process_properties(prop))
-            if prop.rootBaseType() == "number":
+            elif prop.rootBaseType() == "number":
                 numberProps.append(self.process_properties(prop))
-            if prop.rootBaseType() == "boolean":
+            elif prop.rootBaseType() == "boolean":
                 booleanProps.append(self.process_properties(prop))
-            if prop.rootBaseType() == "data":
+            elif prop.rootBaseType() == "data":
                 dataProps.append(self.process_properties(prop))
-            if prop.rootBaseType() == "date":
+            elif prop.rootBaseType() == "date":
                 dateProps.append(self.process_properties(prop))
-            if prop.rootBaseType() == "array":
+            elif prop.rootBaseType() == "array":
                 arrayProps.append(self.process_properties(prop))
+            elif prop.rootBaseType() == "multi":
+                undefineProps.append(self.process_properties(prop, True))
+            else:
+                undefineProps.append(self.process_properties(prop, True))
 
-        hashParams = {"date": str(today.year), "projectPrefix": schemeObj.projectPrefix,"machineClassName": schemeObj.getMachineClassName(), "humanClassName": schemeObj.getClassName(), "variableName": self.makeVarName(schemeObj), "stringProperties": stringProps, "numberProperties": numberProps, "booleanProperties": booleanProps, "dataProperties": dataProps, "dateProperties": dateProps, "arrayProperties": arrayProps}
+
+        hashParams = {"date": str(today.year), "projectPrefix": schemeObj.projectPrefix,"machineClassName": schemeObj.getMachineClassName(), "humanClassName": schemeObj.getClassName(), "variableName": self.makeVarName(schemeObj), "stringProperties": stringProps, "numberProperties": numberProps, "booleanProperties": booleanProps, "dataProperties": dataProps, "dateProperties": dateProps, "arrayProperties": arrayProps, "undefinedProperties": undefineProps, "objectProperties": objectProps}
 
         if schemeObj.getScheme(schemeObj.base_type):
             hashParams['baseClassName'] = schemeObj.getScheme(schemeObj.base_type).getClassName()
