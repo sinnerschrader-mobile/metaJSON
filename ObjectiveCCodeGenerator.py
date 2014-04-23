@@ -125,15 +125,15 @@ class ObjectiveCCodeGenerator :
             key = 'hasCustomType'
             if subtype in propObj.naturalTypeList:
                 key = 'has'+ subtype.capitalize() + 'Type'
-                propertyHash[key] = {"type": subtype}
+                propertyHash[key] = {"subtype": subtype}
             elif subtype == "any":
                 print "skip 'any' type for" + propertyHash['name']
             else:
                 if propObj.getScheme(subtype).base_type in propObj.naturalTypeList:
                     key = 'has'+ propObj.getScheme(subtype).base_type.capitalize() + 'Type'
-                    propertyHash[key] = {"type": subtype}
+                    propertyHash[key] = {"subtype": subtype}
                 else:
-                    propertyHash[key] = {"type": subtype, "className": propObj.getScheme(subtype).getClassName()}
+                    propertyHash[key] = {"subtype": subtype, "className": propObj.getScheme(subtype).getClassName()}
 
     def process_properties(self, propObj, undefined = False) :
         capitalizeVarName = self.makeVarName(propObj)
