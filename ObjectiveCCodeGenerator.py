@@ -27,6 +27,7 @@ import time
 import os
 import sys
 from pystache import Renderer
+from cStringIO import StringIO
 
 
 class ObjectiveCCodeGenerator :
@@ -95,12 +96,17 @@ class ObjectiveCCodeGenerator :
             key = 'hasCustomType'
             if subtype in propObj.naturalTypeList:
                 key = 'has'+ subtype.capitalize() + 'Type'
+                propertyHash[key] = {"subtype": subtype}
+            elif subtype == "any":
+                print "skip 'any' type"
             else:
+                print subtype
                 if propObj.getScheme(subtype).base_type in propObj.naturalTypeList:
                     key = 'has'+ propObj.getScheme(subtype).base_type.capitalize() + 'Type'
+                    propertyHash[key] = {"subtype": subtype}
                 else:
-                    propertyHash[key]["className"] = propObj.getScheme(subtype).getClassName()
-            propertyHash[key] = {"subtype": subtype}
+                    propertyHash[key] = {"subtype": subtype, "className": propObj.getScheme(subtype).getClassName()}
+
 
         return propertyHash
 
