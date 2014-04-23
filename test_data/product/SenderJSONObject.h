@@ -8,4 +8,3 @@
 @interface SenderJSONObject : _SenderJSONObject
 
 @end
-

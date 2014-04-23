@@ -5,7 +5,11 @@
 //  Copyright (c) 2014 SinnerSchrader Mobile. All rights reserved.
 
 #import "SenderJSONObject.h"
-@implementation SenderJSONObject
+
+@interface SenderJSONObject ()
 
 @end
 
+@implementation SenderJSONObject
+
+@end

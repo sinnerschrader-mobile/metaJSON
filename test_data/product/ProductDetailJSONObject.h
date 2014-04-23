@@ -8,4 +8,3 @@
 @interface ProductDetailJSONObject : _ProductDetailJSONObject
 
 @end
-
