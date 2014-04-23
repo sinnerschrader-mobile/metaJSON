@@ -60,7 +60,8 @@
         [
             {
                 "name" : "digitalSenders",
-                "base-type" : ["senderList", "senderList2", "number", "string", "boolean", "date", "data"],
+                "base-type" : "array",
+                "subType" : ["senderList", "senderList2", "number", "string", "boolean", "date", "data"],
                 "description" : "the array of sender list"
             },
             {
