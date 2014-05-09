@@ -13,6 +13,16 @@
 @class {{className}};
 
 {{/objectProperties}}
+{{#arrayProperties}}
+
+{{#hasCustomType}}
+{{.}}
+{{#subtypes}}
+@class {{className}};
+{{/subtypes}}
+{{/hasCustomType}}
+{{/arrayProperties}}
+
 @class {{humanClassName}};
 
 {{#baseTypeIsObject}}
@@ -77,9 +87,7 @@
 - (NSDictionary *)propertyDictionary;
 {{/baseTypeIsObject}}
 {{#arrayProperties}}
-{{#hasMultipleSubtypes}}
 {{> templates/array_property}}
-{{/hasMultipleSubtypes}}
 {{/arrayProperties}}
 {{#undefinedProperties}}
 {{> templates/multiple_property}}

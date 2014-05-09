@@ -14,5 +14,6 @@ class TestReadJSON(unittest.TestCase):
         # ignoring template files
         os.system("rm -rf src/Utilities")
         # return os.system("diff -r src/ " + output_dir)
-        common_file = "/AbstractInterfaceFiles/_ProductDetailJSONObject.h"
+        # common_file = "/AbstractInterfaceFiles/_ProductDetailJSONObject.h"
+        common_file = "/AbstractInterfaceFiles/_SenderGroupJSONObject.h"
         return os.system("diff -r -B src" + common_file + " " + output_dir + common_file)

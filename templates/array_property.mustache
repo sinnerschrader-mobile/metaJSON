@@ -1,3 +1,4 @@
+{{#hasMultipleSubtypes}}
 {{#hasCustomType}}
 {{#className}}
 - ({{className}} *){{subtype}}In{{capitalizeVarName}}AtIndex:(NSUInteger)index withError:(NSError **)error;
@@ -9,6 +10,17 @@
 {{#hasStringType}}
 - (NSString *){{subtype}}In{{capitalizeVarName}}AtIndex:(NSUInteger)index withError:(NSError **)error;
 {{/hasStringType}}
+{{#hasBooleanType}}
+- (BOOL ){{subtype}}In{{capitalizeVarName}}AtIndex:(NSUInteger)index withError:(NSError **)error;
+{{/hasBooleanType}}
 {{#hasDateType}}
 - (NSDate *){{subtype}}In{{capitalizeVarName}}AtIndex:(NSUInteger)index withError:(NSError **)error;
 {{/hasDateType}}
+{{#hasDataType}}
+- (NSData *){{subtype}}In{{capitalizeVarName}}AtIndex:(NSUInteger)index withError:(NSError **)error;
+{{/hasDataType}}
+{{/hasMultipleSubtypes}}
+{{#hasAnyType}}
+- (id){{subtype}}In{{capitalizeVarName}}AtIndex:(NSUInteger)index withError:(NSError **)error;
+{{/hasAnyType}}
+{{.}}
