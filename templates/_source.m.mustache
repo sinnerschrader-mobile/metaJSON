@@ -345,6 +345,17 @@
 {{/subtypes}}
 {{/hasDataType}}
 {{/hasMultipleSubtypes}}
+{{#hasAnyType}}
+- (id)objectIn{{capitalizeVarName}}AtIndex:(NSUInteger)index withError:(NSError **)error
+{
+    id tmp{{capitalizeVarName}} = [APIParser objectFromResponseArray:self.{{varName}} atIndex:index acceptNil:YES error:error];
+    if (*error) {
+        return nil;
+    }
+    return tmp{{capitalizeVarName}};
+}
+
+{{/hasAnyType}}
 {{/arrayProperties}}
 {{#undefinedProperties}}
 {{/undefinedProperties}}
