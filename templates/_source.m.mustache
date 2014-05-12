@@ -223,24 +223,25 @@
 
 - ({{className}} *){{subtype}}In{{capitalizeVarName}}AtIndex:(NSUInteger)index withError:(NSError **)error
 {
-
+    NSDictionary *tmp{{capitalizeVarName}}Dic = [APIParser dictionaryFromResponseArray:self.{{varName}} atIndex:index acceptNil:YES error:error];
+    if (*error) {
+        return nil;
+    }
+    {{className}} *tmp{{capitalizeVarName}} = nil;
+    if (tmp{{capitalizeVarName}}Dic== nil) {
+        return nil;
+    }
+    if (tmp{{capitalizeVarName}}Dic) {
+        tmp{{capitalizeVarName}}= [[{{className}} alloc] initWithDictionary:tmp{{capitalizeVarName}}Dic withError:error];
+        if (*error) {
+            return nil;
+        }
+    }
+    return tmp{{capitalizeVarName}};
 }
 {{/className}}
 {{/subtypes}}
 {{/hasCustomType}}
-{{#hasStringType}}
-{{#subtypes}}
-
-- (NSString *){{subtype}}In{{capitalizeVarName}}AtIndex:(NSUInteger)index withError:(NSError **)error
-{
-    NSString *tmp{{capitalizeVarName}} = [{{projectPrefix}}APIParser stringFromResponseArray:self.{{varName}} atIndex:index acceptNil:{{#required}}NO{{/required}}{{^required}}YES{{/required}} error:error];
-    if (*error) {
-        return nil;
-    }
-    return tmp{{capitalizeVarName}};
-}
-{{/subtypes}}
-{{/hasStringType}}
 {{#hasNumberType}}
 {{#subtypes}}
 
@@ -254,6 +255,69 @@
 }
 {{/subtypes}}
 {{/hasNumberType}}
+{{#hasStringType}}
+{{#subtypes}}
+
+- (NSString *){{subtype}}In{{capitalizeVarName}}AtIndex:(NSUInteger)index withError:(NSError **)error
+{
+    NSString *tmp{{capitalizeVarName}} = [{{projectPrefix}}APIParser stringFromResponseArray:self.{{varName}} atIndex:index acceptNil:{{#required}}NO{{/required}}{{^required}}YES{{/required}} error:error];
+    if (*error) {
+        return nil;
+    }
+    {{#maxLength}}
+    if (self.{{varName}}.length > {{value}}) {
+        NSDictionary *userInfo = @{@"propertyName" : @"{{varName}}",
+                                   @"key" : @"{{name}}",
+                                   @"reason" : @"max length validation error",
+                                   @"objectClass" : NSStringFromClass([self class])
+                                   };
+        *error = [NSError errorWithDomain:k{{projectPrefix}}ErrorDomain_parser code:k{{projectPrefix}}ErrorDomain_parser_valueIsNotValid userInfo:userInfo];
+        NSLog(@"%@", *error);
+        return self;
+    }
+    {{/maxLength}}
+    {{#minLength}}
+    if (self.{{varName}}.length < {{value}}) {
+        NSDictionary *userInfo = @{@"propertyName" : @"{{varName}}",
+                                   @"key" : @"{{name}}",
+                                   @"reason" : @"min length validation error",
+                                   @"objectClass" : NSStringFromClass([self class])
+                                   };
+        *error = [NSError errorWithDomain:k{{projectPrefix}}ErrorDomain_parser code:k{{projectPrefix}}ErrorDomain_parser_valueIsNotValid userInfo:userInfo];
+        NSLog(@"%@", *error);
+        return self;
+    }
+    {{/minLength}}
+    {{! to finish need to pass customClass regex...}}
+    {{#regex}}
+    if (self.{{varName}} && [self.{{varName}} matchesRegExString:@"{{& value}}"] == NO) {
+        NSDictionary *userInfo = @{@"propertyName" : @"{{varName}}",
+                                   @"key" : @"{{name}}",
+                                   @"reason" : @"validation error",
+                                   @"objectClass" : NSStringFromClass([self class])
+                                   };
+        *error = [NSError errorWithDomain:k{{projectPrefix}}ErrorDomain_parser code:k{{projectPrefix}}ErrorDomain_parser_valueIsNotValid userInfo:userInfo];
+        NSLog(@"%@", *error);
+        return self;
+    }
+    {{/regex}}
+    return tmp{{capitalizeVarName}};
+}
+{{/subtypes}}
+{{/hasStringType}}
+{{#hasBooleanType}}
+{{#subtypes}}
+
+- (BOOL){{subtype}}In{{capitalizeVarName}}AtIndex:(NSUInteger)index withError:(NSError **)error
+{
+    BOOL tmp{{capitalizeVarName}} = [{{projectPrefix}}APIParser boolFromResponseArray:self.{{varName}} atIndex:index acceptNil:{{#required}}NO{{/required}}{{^required}}YES{{/required}} error:error];
+    if (*error) {
+        return nil;
+    }
+    return tmp{{capitalizeVarName}};
+}
+{{/subtypes}}
+{{/hasBooleanType}}
 {{#hasDateType}}
 {{#subtypes}}
 
@@ -267,6 +331,19 @@
 }
 {{/subtypes}}
 {{/hasDateType}}
+{{#hasDataType}}
+{{#subtypes}}
+
+- (NSData*){{subtype}}In{{capitalizeVarName}}AtIndex:(NSUInteger)index withError:(NSError **)error
+{
+    NSData* tmp{{capitalizeVarName}} = [{{projectPrefix}}APIParser dataFromResponseArray:self.{{varName}} atIndex:index acceptNil:{{#required}}NO{{/required}}{{^required}}YES{{/required}} error:error];
+    if (*error) {
+        return nil;
+    }
+    return tmp{{capitalizeVarName}};
+}
+{{/subtypes}}
+{{/hasDataType}}
 {{/hasMultipleSubtypes}}
 {{/arrayProperties}}
 {{#undefinedProperties}}
@@ -374,6 +451,12 @@
     }
     {{/dateProperties}}
     {{#arrayProperties}}
+    {{#hasMultipleSubtypes}}
+    if (self.{{varName}}) {
+        [dic setObject:self.{{varName}} forKey:@"{{name}}"];
+    }
+    {{/hasMultipleSubtypes}}
+    {{^hasMultipleSubtypes}}
     {{#hasCustomType}}
     {{#subtypes}}
     if (self.{{varName}}) {
@@ -390,6 +473,7 @@
         [dic setObject:self.{{varName}} forKey:@"{{name}}"];
     }
     {{/hasCustomType}}
+    {{/hasMultipleSubtypes}}
     {{/arrayProperties}}
     {{#objectProperties}}
     if (self.{{varName}}) {
