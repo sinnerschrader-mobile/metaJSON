@@ -89,6 +89,48 @@ class ObjectiveCCodeGenerator :
                     break
         return returnName
 
+    def meta_property(self, schemeObj):
+        meta_hash = {}
+        meta_hash['name'] = schemeObj.type_name
+        if schemeObj.base_type_list:
+            meta_hash['base-type'] = schemeObj.base_type_list
+        else:
+            meta_hash['base-type'] = schemeObj.base_type
+        meta_hash['description'] = schemeObj.type_description
+        meta_hash['subType'] = schemeObj.sub_type
+        if schemeObj.rootBaseType() == "string":
+            hasRegex, regex = schemeObj.getRegex()
+            if hasRegex:
+                meta_hash['regex'] = regex
+
+            hasMax, maxLength = schemeObj.getMaxLength()
+            if hasMax:
+                meta_hash['maxLength'] = maxLength
+
+            hasMin, minLength = schemeObj.getMinLength()
+            if hasMin:
+                meta_hash['minLength'] = minLength
+
+        if schemeObj.rootBaseType() == "number":
+            hasMax, maxLength = schemeObj.getMaxValue()
+            if hasMax:
+                meta_hash['maxValue'] = maxLength
+
+            hasMin, minLength = schemeObj.getMinValue()
+            if hasMin:
+                meta_hash['minValue'] = minLength
+
+        if schemeObj.rootBaseType() == "array":
+            hasMax, maxLength = schemeObj.getMaxCount()
+            if hasMax:
+                meta_hash['maxCount'] = maxLength
+
+            hasMin, minLength = schemeObj.getMinCount()
+            if hasMin:
+                meta_hash['minCount'] = minLength
+
+        return meta_hash
+
     def process_basetypes(self, propObj, propertyHash) :
         # dealing with array property
         if len(propObj.getBaseTypes()) == 1:
@@ -133,12 +175,20 @@ class ObjectiveCCodeGenerator :
             elif subtype == "any":
                 propertyHash['hasAnyType'] = {"subtype": "object"}
             else:
+                # derivate baseType
                 if propObj.getScheme(subtype).base_type in propObj.naturalTypeList:
                     key = 'has'+ propObj.getScheme(subtype).base_type.capitalize() + 'Type'
+                    subtype_infos = {"subtype": subtype}
+                    # nothing, subtype_definition = self.process_properties(propObj.getScheme(subtype))
+                    subtype_definition = self.meta_property(propObj.getScheme(subtype))
+                    print "subtype_definition"
+                    print subtype_definition
+                    subtype_infos =  {"subtype": subtype, "_subtype": subtype_definition}
                     if key not in propertyHash:
-                      propertyHash[key] = {"subtypes": [{"subtype": subtype}]}
+                      propertyHash[key] = {"subtypes": [subtype_infos]}
                     else:
-                      propertyHash[key]["subtypes"].append({"subtype": subtype})
+                      propertyHash[key]["subtypes"].append(subtype_infos)
+
                 else:
                   if key in propertyHash:
                     propertyHash[key]["subtypes"].append({"subtype": subtype, "className": propObj.getScheme(subtype).getClassName()})

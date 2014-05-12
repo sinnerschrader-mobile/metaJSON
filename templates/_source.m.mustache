@@ -264,43 +264,43 @@
     if (*error) {
         return nil;
     }
-    {{#maxLength}}
-    if (self.{{varName}}.length > {{value}}) {
-        NSDictionary *userInfo = @{@"propertyName" : @"{{varName}}",
-                                   @"key" : @"{{name}}",
+    {{#_subtype.maxLength}}
+    if (tmp{{capitalizeVarName}}.length > {{_subtype.maxLength}}) {
+        NSDictionary *userInfo = @{@"propertyName" : @"{{_subtype.name}}",
+                                   @"key" : @"{{_subtype.name}}",
                                    @"reason" : @"max length validation error",
                                    @"objectClass" : NSStringFromClass([self class])
                                    };
         *error = [NSError errorWithDomain:k{{projectPrefix}}ErrorDomain_parser code:k{{projectPrefix}}ErrorDomain_parser_valueIsNotValid userInfo:userInfo];
         NSLog(@"%@", *error);
-        return self;
+        return nil;
     }
-    {{/maxLength}}
-    {{#minLength}}
-    if (self.{{varName}}.length < {{value}}) {
-        NSDictionary *userInfo = @{@"propertyName" : @"{{varName}}",
-                                   @"key" : @"{{name}}",
+    {{/_subtype.maxLength}}
+    {{#_subtype.minLength}}
+    if (tmp{{capitalizeVarName}}.length < {{_subtype.minLength}}) {
+        NSDictionary *userInfo = @{@"propertyName" : @"{{_subtype.name}}",
+                                   @"key" : @"{{_subtype.name}}",
                                    @"reason" : @"min length validation error",
                                    @"objectClass" : NSStringFromClass([self class])
                                    };
         *error = [NSError errorWithDomain:k{{projectPrefix}}ErrorDomain_parser code:k{{projectPrefix}}ErrorDomain_parser_valueIsNotValid userInfo:userInfo];
         NSLog(@"%@", *error);
-        return self;
+        return nil;
     }
-    {{/minLength}}
+    {{/_subtype.minLength}}
     {{! to finish need to pass customClass regex...}}
-    {{#regex}}
-    if (self.{{varName}} && [self.{{varName}} matchesRegExString:@"{{& value}}"] == NO) {
-        NSDictionary *userInfo = @{@"propertyName" : @"{{varName}}",
-                                   @"key" : @"{{name}}",
+    {{#_subtype.regex}}
+    if (tmp{{capitalizeVarName}} && [tmp{{capitalizeVarName}} matchesRegExString:@"{{& _subtype.regex}}"] == NO) {
+        NSDictionary *userInfo = @{@"propertyName" : @"{{_subtype.name}}",
+                                   @"key" : @"{{_subtype.name}}",
                                    @"reason" : @"validation error",
                                    @"objectClass" : NSStringFromClass([self class])
                                    };
         *error = [NSError errorWithDomain:k{{projectPrefix}}ErrorDomain_parser code:k{{projectPrefix}}ErrorDomain_parser_valueIsNotValid userInfo:userInfo];
         NSLog(@"%@", *error);
-        return self;
+        return nil;
     }
-    {{/regex}}
+    {{/_subtype.regex}}
     return tmp{{capitalizeVarName}};
 }
 {{/subtypes}}
