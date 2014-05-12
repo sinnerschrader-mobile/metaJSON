@@ -181,8 +181,6 @@ class ObjectiveCCodeGenerator :
                     subtype_infos = {"subtype": subtype}
                     # nothing, subtype_definition = self.process_properties(propObj.getScheme(subtype))
                     subtype_definition = self.meta_property(propObj.getScheme(subtype))
-                    print "subtype_definition"
-                    print subtype_definition
                     subtype_infos =  {"subtype": subtype, "_subtype": subtype_definition}
                     if key not in propertyHash:
                       propertyHash[key] = {"subtypes": [subtype_infos]}
@@ -210,7 +208,7 @@ class ObjectiveCCodeGenerator :
 
         if propObj.rootBaseType() == "object":
             propertyHash['className'] = propObj.getClassName()
-            return [], propertyHash
+            return [propertyHash['className']], propertyHash
 
         if propObj.rootBaseType() == "string":
             hasRegex, regex = propObj.getRegex()
@@ -317,7 +315,6 @@ class ObjectiveCCodeGenerator :
                 dateProps.append(prop_hash)
             elif prop.rootBaseType() == "array":
                 classes, prop_hash = self.process_properties(prop)
-                print prop_hash
                 arrayProps.append(prop_hash)
             elif prop.rootBaseType() == "multi":
                 classes, prop_hash = self.process_properties(prop, True)
@@ -327,7 +324,9 @@ class ObjectiveCCodeGenerator :
                 undefineProps.append(prop_hash)
             if(len(classes) > 0):
               custom_classes.extend(classes)
-
+            if prop_hash['varName'] == 'senderInfo':
+              print prop_hash
+              print prop.rootBaseType()
 
         hashParams = {"date": str(today.year), "projectPrefix": schemeObj.projectPrefix,"machineClassName": schemeObj.getMachineClassName(), "humanClassName": schemeObj.getClassName(), "variableName": self.makeVarName(schemeObj), "stringProperties": stringProps, "numberProperties": numberProps, "booleanProperties": booleanProps, "dataProperties": dataProps, "dateProperties": dateProps, "arrayProperties": arrayProps, "undefinedProperties": undefineProps, "objectProperties": objectProps}
         hashParams["custom_classes"] = []

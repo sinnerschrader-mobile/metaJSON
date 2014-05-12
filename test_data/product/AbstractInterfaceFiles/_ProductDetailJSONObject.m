@@ -75,7 +75,6 @@
     return self;
 }
 
-
 #pragma mark - getter
 
 - (NSString *)titleAsTitleString:(NSError **)error
@@ -121,7 +120,8 @@
     return tmpTitle;
 }
 
-- (NSNumber *)downloadAsNumber:(NSError **)error {
+- (NSNumber *)downloadAsNumber:(NSError **)error
+{
     if (!self.download) return nil;
     NSDictionary *newdownloadDic = @{@"download" : self.download};
     NSNumber *tmpDownload = [APIParser numberFromResponseDictionary:newdownloadDic forKey:@"download" acceptNil:NO error:error];
@@ -131,7 +131,8 @@
     return tmpDownload;
 }
 
-- (NSString *)downloadAsString:(NSError **)error {
+- (NSString *)downloadAsString:(NSError **)error
+{
     if (!self.download) return nil;
     NSDictionary *newdownloadDic = @{@"download" : self.download};
     NSString *tmpDownload = [APIParser stringFromResponseDictionary:newdownloadDic forKey:@"download" acceptNumber:NO acceptNil:NO error:error];
@@ -141,7 +142,8 @@
     return tmpDownload;
 }
 
-- (NSNumber *)uploadAsNumber:(NSError **)error {
+- (NSNumber *)uploadAsNumber:(NSError **)error
+{
     if (!self.upload) return nil;
     NSDictionary *newuploadDic = @{@"upload" : self.upload};
     NSNumber *tmpUpload = [APIParser numberFromResponseDictionary:newuploadDic forKey:@"upload" acceptNil:NO error:error];
@@ -151,7 +153,8 @@
     return tmpUpload;
 }
 
-- (NSString *)uploadAsString:(NSError **)error {
+- (NSString *)uploadAsString:(NSError **)error
+{
     if (!self.upload) return nil;
     NSDictionary *newuploadDic = @{@"upload" : self.upload};
     NSString *tmpUpload = [APIParser stringFromResponseDictionary:newuploadDic forKey:@"upload" acceptNumber:NO acceptNil:NO error:error];

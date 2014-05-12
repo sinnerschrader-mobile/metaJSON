@@ -1,0 +1,37 @@
+{{#hasCustomType}}
+{{#className}}
+
+- ({{className}} *){{name}}As{{#_upper_camelcase}}{{type}}{{/_upper_camelcase}}:(NSError **)error
+{
+d
+}
+{{/className}}
+{{^className}}
+
+- (NSString *){{name}}As{{#_upper_camelcase}}{{type}}{{/_upper_camelcase}}:(NSError **)error
+{
+    {{> templates/string_property}}
+}
+{{/className}}
+{{/hasCustomType}}
+{{#hasNumberType}}
+
+- (NSNumber *){{name}}AsNumber:(NSError **)error
+{
+
+}
+{{/hasNumberType}}
+{{#hasStringType}}
+
+- (NSString *){{name}}AsString:(NSError **)error
+{
+    {{> templates/string_property}}
+}
+{{/hasStringType}}
+{{#hasDateType}}
+
+- (NSDate *){{name}}AsDate:(NSError **)error
+{
+
+}
+{{/hasDateType}}

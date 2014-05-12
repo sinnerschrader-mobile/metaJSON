@@ -1,0 +1,7 @@
+if (!self.{{varName}}) return nil;
+NSDictionary *new{{varName}}Dic = @{@"{{varName}}" : self.{{varName}}};
+NSString *tmp{{capitalizeVarName}} = [APIParser stringFromResponseDictionary:new{{varName}}Dic forKey:@"{{name}}" acceptNumber:NO acceptNil:{{#required}}NO{{/required}}{{^required}}YES{{/required}} error:error];
+if (*error) {
+    return nil;
+}
+return tmp{{capitalizeVarName}};

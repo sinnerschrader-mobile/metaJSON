@@ -207,8 +207,22 @@
         {{/minCount}}
         {{/arrayProperties}}
         {{#objectProperties}}
+        NSDictionary *tmp{{capitalizeVarName}} = [APIParser dictionaryFromResponseDictionary:dic forKey:@"{{name}}" acceptNil:{{#required}}NO{{/required}}{{^required}}YES{{/required}} error:error];
+        if (*error) {
+            return self;
+        }
+        if (tmp{{capitalizeVarName}}) {
+            self.{{varName}}= [[{{className}} alloc] initWithDictionary:tmp{{capitalizeVarName}} withError:error];
+            if (*error) {
+                return self;
+            }
+        }
         {{/objectProperties}}
         {{#undefinedProperties}}
+        self.{{varName}} = [APIParser objectFromResponseDictionary:dic forKey:@"{{name}}" acceptNil:NO error:error];
+        if (*error) {
+             return nil;
+        }
         {{/undefinedProperties}}
     }
     return self;
@@ -358,8 +372,8 @@
 {{/hasAnyType}}
 {{/arrayProperties}}
 {{#undefinedProperties}}
+{{> templates/multiple_property_implementation}}
 {{/undefinedProperties}}
-
 #pragma mark - NSCoding
 
 - (void)encodeWithCoder:(NSCoder*)coder
@@ -488,10 +502,13 @@
     {{/arrayProperties}}
     {{#objectProperties}}
     if (self.{{varName}}) {
-        [dic setObject:self.{{varName}} forKey:@"{{name}}"];
+        [dic setObject:[self.{{varName}} propertyDictionary] forKey:@"{{name}}"];
     }
     {{/objectProperties}}
     {{#undefinedProperties}}
+    if (self.{{varName}}) {
+        [dic setObject:self.{{varName}} forKey:@"{{name}}"];
+    }
     {{/undefinedProperties}}
     return dic;
 }
