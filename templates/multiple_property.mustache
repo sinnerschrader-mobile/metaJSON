@@ -1,10 +1,12 @@
 {{#hasCustomType}}
+{{#types}}
 {{#className}}
 - ({{className}} *){{name}}As{{#_upper_camelcase}}{{type}}{{/_upper_camelcase}}:(NSError **)error;
 {{/className}}
 {{^className}}
 - (NSString *){{name}}As{{#_upper_camelcase}}{{type}}{{/_upper_camelcase}}:(NSError **)error;
 {{/className}}
+{{/types}}
 {{/hasCustomType}}
 {{#hasNumberType}}
 - (NSNumber *){{name}}AsNumber:(NSError **)error;
