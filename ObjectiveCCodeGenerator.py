@@ -126,14 +126,19 @@ class ObjectiveCCodeGenerator :
             key = 'hasCustomType'
             if subtype in propObj.naturalTypeList:
                 key = 'has'+ subtype.capitalize() + 'Type'
-                propertyHash[key] = {"subtype": subtype}
+                if key not in propertyHash:
+                  propertyHash[key] = {"subtypes": [{"subtype": subtype}]}
+                else:
+                  propertyHash[key]["subtypes"].append({"subtype": subtype})
             elif subtype == "any":
-                print "skip 'any' type for" + propertyHash['name']
                 propertyHash['hasAnyType'] = {"subtype": "object"}
             else:
                 if propObj.getScheme(subtype).base_type in propObj.naturalTypeList:
                     key = 'has'+ propObj.getScheme(subtype).base_type.capitalize() + 'Type'
-                    propertyHash[key] = {"subtype": subtype}
+                    if key not in propertyHash:
+                      propertyHash[key] = {"subtypes": [{"subtype": subtype}]}
+                    else:
+                      propertyHash[key]["subtypes"].append({"subtype": subtype})
                 else:
                   if key in propertyHash:
                     propertyHash[key]["subtypes"].append({"subtype": subtype, "className": propObj.getScheme(subtype).getClassName()})
@@ -244,6 +249,7 @@ class ObjectiveCCodeGenerator :
                 dateProps.append(prop_hash)
             elif prop.rootBaseType() == "array":
                 classes, prop_hash = self.process_properties(prop)
+                print prop_hash
                 arrayProps.append(prop_hash)
             elif prop.rootBaseType() == "multi":
                 classes, prop_hash = self.process_properties(prop, True)

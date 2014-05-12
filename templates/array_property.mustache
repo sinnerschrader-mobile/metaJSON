@@ -1,23 +1,35 @@
 {{#hasMultipleSubtypes}}
 {{#hasCustomType}}
+{{#subtypes}}
 {{#className}}
 - ({{className}} *){{subtype}}In{{capitalizeVarName}}AtIndex:(NSUInteger)index withError:(NSError **)error;
 {{/className}}
+{{/subtypes}}
 {{/hasCustomType}}
 {{#hasNumberType}}
+{{#subtypes}}
 - (NSNumber *){{subtype}}In{{capitalizeVarName}}AtIndex:(NSUInteger)index withError:(NSError **)error;
+{{/subtypes}}
 {{/hasNumberType}}
 {{#hasStringType}}
+{{#subtypes}}
 - (NSString *){{subtype}}In{{capitalizeVarName}}AtIndex:(NSUInteger)index withError:(NSError **)error;
+{{/subtypes}}
 {{/hasStringType}}
 {{#hasBooleanType}}
+{{#subtypes}}
 - (BOOL ){{subtype}}In{{capitalizeVarName}}AtIndex:(NSUInteger)index withError:(NSError **)error;
+{{/subtypes}}
 {{/hasBooleanType}}
 {{#hasDateType}}
+{{#subtypes}}
 - (NSDate *){{subtype}}In{{capitalizeVarName}}AtIndex:(NSUInteger)index withError:(NSError **)error;
+{{/subtypes}}
 {{/hasDateType}}
 {{#hasDataType}}
+{{#subtypes}}
 - (NSData *){{subtype}}In{{capitalizeVarName}}AtIndex:(NSUInteger)index withError:(NSError **)error;
+{{/subtypes}}
 {{/hasDataType}}
 {{/hasMultipleSubtypes}}
 {{#hasAnyType}}
