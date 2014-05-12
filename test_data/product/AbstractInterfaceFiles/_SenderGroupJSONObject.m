@@ -7,21 +7,24 @@
 #import "APIParser.h"
 #import "NSString+RegExValidation.h"
 #import "SenderGroupJSONObject.h"
-#import "SenderList2JSONObject.h"
 #import "SenderListJSONObject.h"
+#import "SenderList2JSONObject.h"
+
 
 
 @implementation _SenderGroupJSONObject
 
 #pragma mark - factory
 
-+ (SenderGroupJSONObject *)senderGroupWithDictionary:(NSDictionary *)dic withError:(NSError **)error {
++ (SenderGroupJSONObject *)senderGroupWithDictionary:(NSDictionary *)dic withError:(NSError **)error
+{
     return [[SenderGroupJSONObject alloc] initWithDictionary:dic withError:error];
 }
 
 
 #pragma mark - initialize
-- (id)initWithDictionary:(NSDictionary *)dic  withError:(NSError **)error {
+- (id)initWithDictionary:(NSDictionary *)dic  withError:(NSError **)error
+{
     self = [super init];
     if (self) {
         self.digitalSenders = [APIParser arrayFromResponseDictionary:dic forKey:@"digitalSenders" acceptNil:YES error:error];
@@ -70,7 +73,8 @@
 
 
 #pragma mark - getter
-- (SenderListJSONObject *)senderListInDigitalSendersAtIndex:(NSUInteger)index withError:(NSError **)error {
+- (SenderListJSONObject *)senderListInDigitalSendersAtIndex:(NSUInteger)index withError:(NSError **)error
+{
     NSDictionary *tmpDigitalSendersDic = [APIParser dictionaryFromResponseArray:self.digitalSenders atIndex:index acceptNil:YES error:error];
     if (*error) {
         return nil;
@@ -87,7 +91,8 @@
     }
     return tmpDigitalSenders;
 }
-- (SenderList2JSONObject *)senderList2InDigitalSendersAtIndex:(NSUInteger)index withError:(NSError **)error {
+- (SenderList2JSONObject *)senderList2InDigitalSendersAtIndex:(NSUInteger)index withError:(NSError **)error
+{
     NSDictionary *tmpDigitalSendersDic = [APIParser dictionaryFromResponseArray:self.digitalSenders atIndex:index acceptNil:YES error:error];
     if (*error) {
         return nil;
@@ -104,42 +109,48 @@
     }
     return tmpDigitalSenders;
 }
-- (NSNumber *)numberInDigitalSendersAtIndex:(NSUInteger)index withError:(NSError **)error {
+- (NSNumber *)numberInDigitalSendersAtIndex:(NSUInteger)index withError:(NSError **)error
+{
     NSNumber *tmpDigitalSenders = [APIParser numberFromResponseArray:self.digitalSenders atIndex:index acceptNil:YES error:error];
     if (*error) {
         return nil;
     }
     return tmpDigitalSenders;
 }
-- (NSString *)stringInDigitalSendersAtIndex:(NSUInteger)index withError:(NSError **)error {
+- (NSString *)stringInDigitalSendersAtIndex:(NSUInteger)index withError:(NSError **)error
+{
     NSString *tmpDigitalSenders = [APIParser stringFromResponseArray:self.digitalSenders atIndex:index acceptNil:YES error:error];
     if (*error) {
         return nil;
     }
     return tmpDigitalSenders;
 }
-- (BOOL )booleanInDigitalSendersAtIndex:(NSUInteger)index withError:(NSError **)error {
+- (BOOL )booleanInDigitalSendersAtIndex:(NSUInteger)index withError:(NSError **)error
+{
     BOOL tmpDigitalSenders = [APIParser boolFromResponseArray:self.digitalSenders atIndex:index acceptNil:YES error:error];
     if (*error) {
         return nil;
     }
     return tmpDigitalSenders;
 }
-- (NSDate *)dateInDigitalSendersAtIndex:(NSUInteger)index withError:(NSError **)error {
+- (NSDate *)dateInDigitalSendersAtIndex:(NSUInteger)index withError:(NSError **)error
+{
     NSDate *tmpDigitalSenders = [APIParser dateWithTimeIntervalFromResponseArray:self.digitalSenders atIndex:index acceptNil:YES error:error];
     if (*error) {
         return nil;
     }
     return tmpDigitalSenders;
 }
-- (NSData *)dataInDigitalSendersAtIndex:(NSUInteger)index withError:(NSError **)error {
+- (NSData *)dataInDigitalSendersAtIndex:(NSUInteger)index withError:(NSError **)error
+{
     NSData *tmpDigitalSenders = [APIParser dataFromResponseArray:self.digitalSenders atIndex:index acceptNil:YES error:error];
     if (*error) {
         return nil;
     }
     return tmpDigitalSenders;
 }
-- (SenderListJSONObject *)senderListInHDOptionsAtIndex:(NSUInteger)index withError:(NSError **)error {
+- (SenderListJSONObject *)senderListInHDOptionsAtIndex:(NSUInteger)index withError:(NSError **)error
+{
     NSDictionary *tmpHDOptionsDic = [APIParser dictionaryFromResponseArray:self.HDOptions atIndex:index acceptNil:YES error:error];
     if (*error) {
         return nil;
@@ -156,7 +167,8 @@
     }
     return tmpHDOptions;
 }
-- (SenderList2JSONObject *)senderList2InHDOptionsAtIndex:(NSUInteger)index withError:(NSError **)error {
+- (SenderList2JSONObject *)senderList2InHDOptionsAtIndex:(NSUInteger)index withError:(NSError **)error
+{
     NSDictionary *tmpHDOptionsDic = [APIParser dictionaryFromResponseArray:self.HDOptions atIndex:index acceptNil:YES error:error];
     if (*error) {
         return nil;
@@ -173,14 +185,16 @@
     }
     return tmpHDOptions;
 }
-- (NSString *)stringInDTVHighlightsAtIndex:(NSUInteger)index withError:(NSError **)error {
+- (NSString *)stringInDTVHighlightsAtIndex:(NSUInteger)index withError:(NSError **)error
+{
     NSString *tmpDTVHighlights = [APIParser stringFromResponseArray:self.DTVHighlights atIndex:index acceptNil:YES error:error];
     if (*error) {
         return nil;
     }
     return tmpDTVHighlights;
 }
-- (NSString *)titleStringInDTVHighlightsAtIndex:(NSUInteger)index withError:(NSError **)error {
+- (NSString *)titleStringInDTVHighlightsAtIndex:(NSUInteger)index withError:(NSError **)error
+{
     NSString *tmpDTVHighlights = [APIParser stringFromResponseArray:self.DTVHighlights atIndex:index acceptNil:YES error:error];
     if (*error) {
         return nil;
@@ -205,7 +219,8 @@
     }
     return tmpDTVHighlights;
 }
-- (id)objectInIPTVSendersAtIndex:(NSUInteger)index withError:(NSError **)error {
+- (id)objectInIPTVSendersAtIndex:(NSUInteger)index withError:(NSError **)error
+{
     id tmpIPTVSenders = [APIParser objectFromResponseArray:self.IPTVSenders atIndex:index acceptNil:YES error:error];
     if (*error) {
         return nil;
@@ -214,14 +229,17 @@
 }
 
 #pragma mark - NSCoding
-- (void)encodeWithCoder:(NSCoder*)coder {
+- (void)encodeWithCoder:(NSCoder*)coder
+{
+    [super encodeWithCoder:coder];
     [coder encodeObject:self.digitalSenders forKey:@"digitalSenders"];
     [coder encodeObject:self.HDOptions forKey:@"HDOptions"];
     [coder encodeObject:self.DTVHighlights forKey:@"DTVHighlights"];
     [coder encodeObject:self.IPTVSenders forKey:@"IPTVSenders"];
 }
-- (id)initWithCoder:(NSCoder *)coder {
-    self = [super init];
+- (id)initWithCoder:(NSCoder *)coder
+{
+    self = [super initWithCoder:coder];
     self.digitalSenders = [coder decodeObjectForKey:@"digitalSenders"];
     self.HDOptions = [coder decodeObjectForKey:@"HDOptions"];
     self.DTVHighlights = [coder decodeObjectForKey:@"DTVHighlights"];
@@ -230,7 +248,8 @@
 }
 
 #pragma mark - Object Info
-- (NSDictionary *)propertyDictionary {
+- (NSDictionary *)propertyDictionary
+{
     NSMutableDictionary *dic = [[NSMutableDictionary alloc] init];
     if (self.digitalSenders) {
         [dic setObject:self.digitalSenders forKey:@"digitalSenders"];
@@ -246,8 +265,9 @@
     }
     return dic;
 }
-- (NSString *)description {
-    return [NSString stringWithFormat:@"%@",[self propertyDictionary]];
+- (NSString *)description
+{
+    return [[self propertyDictionary] description];
 }
 
 @end
