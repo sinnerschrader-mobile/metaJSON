@@ -3,7 +3,7 @@
 
 - ({{className}} *){{name}}As{{#_upper_camelcase}}{{type}}{{/_upper_camelcase}}:(NSError **)error
 {
-d
+    {{> templates/number_property}}
 }
 {{/className}}
 {{^className}}
@@ -18,15 +18,16 @@ d
 
 - (NSNumber *){{name}}AsNumber:(NSError **)error
 {
-
+    {{> templates/number_property}}
 }
 {{/hasNumberType}}
 {{#hasStringType}}
-
+{{#types}}
 - (NSString *){{name}}AsString:(NSError **)error
 {
     {{> templates/string_property}}
 }
+{{/types}}
 {{/hasStringType}}
 {{#hasDateType}}
 

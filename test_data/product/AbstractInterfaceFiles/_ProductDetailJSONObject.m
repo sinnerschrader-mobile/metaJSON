@@ -89,19 +89,31 @@
         return nil;
     }
     if (tmpTitle.length > 20) {
-        NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:@"titleString", @"propertyName", @"titleString", @"key", @"validation error", @"reason", NSStringFromClass([self class]), @"objectClass",nil];
+        NSDictionary *userInfo = @{@"propertyName" : @"titleString",
+                                   @"key" : @"titleString",
+                                   @"reason" : @"max length validation error",
+                                   @"objectClass" : NSStringFromClass([self class])
+                                   };
         *error = [NSError errorWithDomain:kErrorDomain_parser code:kErrorDomain_parser_valueIsNotValid userInfo:userInfo];
         NSLog(@"%@", *error);
         return nil;
     }
     if (tmpTitle.length < 10) {
-        NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:@"titleString", @"propertyName", @"titleString", @"key", @"validation error", @"reason", NSStringFromClass([self class]), @"objectClass",nil];
+        NSDictionary *userInfo = @{@"propertyName" : @"titleString",
+                                   @"key" : @"titleString",
+                                   @"reason" : @"min length validation error",
+                                   @"objectClass" : NSStringFromClass([self class])
+                                   };
         *error = [NSError errorWithDomain:kErrorDomain_parser code:kErrorDomain_parser_valueIsNotValid userInfo:userInfo];
         NSLog(@"%@", *error);
         return nil;
     }
     if (tmpTitle && [tmpTitle matchesRegExString:@"[a-z0-9]:10"] == NO) {
-        NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:@"titleString", @"propertyName", @"titleString", @"key", @"validation error", @"reason", NSStringFromClass([self class]), @"objectClass",nil];
+        NSDictionary *userInfo = @{@"propertyName" : @"titleString",
+                                   @"key" : @"titleString",
+                                   @"reason" : @"validation error",
+                                   @"objectClass" : NSStringFromClass([self class])
+                                   };
         *error = [NSError errorWithDomain:kErrorDomain_parser code:kErrorDomain_parser_valueIsNotValid userInfo:userInfo];
         NSLog(@"%@", *error);
         return nil;

@@ -4,4 +4,41 @@ NSString *tmp{{capitalizeVarName}} = [APIParser stringFromResponseDictionary:new
 if (*error) {
     return nil;
 }
+{{#_type.maxLength}}
+if (tmp{{capitalizeVarName}}.length > {{_type.maxLength}}) {
+    NSDictionary *userInfo = @{@"propertyName" : @"{{_type.name}}",
+                               @"key" : @"{{_type.name}}",
+                               @"reason" : @"max length validation error",
+                               @"objectClass" : NSStringFromClass([self class])
+                               };
+    *error = [NSError errorWithDomain:k{{projectPrefix}}ErrorDomain_parser code:k{{projectPrefix}}ErrorDomain_parser_valueIsNotValid userInfo:userInfo];
+    NSLog(@"%@", *error);
+    return nil;
+}
+{{/_type.maxLength}}
+{{#_type.minLength}}
+if (tmp{{capitalizeVarName}}.length < {{_type.minLength}}) {
+    NSDictionary *userInfo = @{@"propertyName" : @"{{_type.name}}",
+                               @"key" : @"{{_type.name}}",
+                               @"reason" : @"min length validation error",
+                               @"objectClass" : NSStringFromClass([self class])
+                               };
+    *error = [NSError errorWithDomain:k{{projectPrefix}}ErrorDomain_parser code:k{{projectPrefix}}ErrorDomain_parser_valueIsNotValid userInfo:userInfo];
+    NSLog(@"%@", *error);
+    return nil;
+}
+{{/_type.minLength}}
+{{! to finish need to pass customClass regex...}}
+{{#_type.regex}}
+if (tmp{{capitalizeVarName}} && [tmp{{capitalizeVarName}} matchesRegExString:@"{{& _type.regex}}"] == NO) {
+    NSDictionary *userInfo = @{@"propertyName" : @"{{_type.name}}",
+                               @"key" : @"{{_type.name}}",
+                               @"reason" : @"validation error",
+                               @"objectClass" : NSStringFromClass([self class])
+                               };
+    *error = [NSError errorWithDomain:k{{projectPrefix}}ErrorDomain_parser code:k{{projectPrefix}}ErrorDomain_parser_valueIsNotValid userInfo:userInfo];
+    NSLog(@"%@", *error);
+    return nil;
+}
+{{/_type.regex}}
 return tmp{{capitalizeVarName}};

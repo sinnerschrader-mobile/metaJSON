@@ -131,6 +131,7 @@ class ObjectiveCCodeGenerator :
 
         return meta_hash
 
+
     def process_basetypes(self, propObj, propertyHash) :
         # dealing with array property
         if len(propObj.getBaseTypes()) == 1:
@@ -139,20 +140,37 @@ class ObjectiveCCodeGenerator :
             propertyHash['hasMultipleBasetypes'] = True
         else:
             propertyHash['hasNoBasetypes'] = True
+
         for subtype in propObj.getBaseTypes():
             key = 'hasCustomType'
             if subtype in propObj.naturalTypeList:
                 key = 'has'+ subtype.capitalize() + 'Type'
-                propertyHash[key] = {"type": subtype}
-            elif subtype == "any":
-                print "skip 'any' type for" + propertyHash['name']
-            else:
-                # print subtype
-                if propObj.getScheme(subtype).base_type in propObj.naturalTypeList:
-                    # key = 'has'+ propObj.getScheme(subtype).base_type.capitalize() + 'Type'
-                    propertyHash[key] = {"type": subtype}
+                if key not in propertyHash:
+                  propertyHash[key] = {"types": [{"type": subtype}]}
                 else:
-                    propertyHash[key] = {"type": subtype, "className": propObj.getScheme(subtype).getClassName()}
+                  propertyHash[key]["types"].append({"type": subtype})
+            elif subtype == "any":
+                propertyHash['hasAnyType'] = {"type": "object"}
+            else:
+                # derivate baseType
+                if propObj.getScheme(subtype).base_type in propObj.naturalTypeList:
+                    key = 'has'+ propObj.getScheme(subtype).base_type.capitalize() + 'Type'
+                    subtype_infos = {"type": subtype}
+                    # nothing, subtype_definition = self.process_properties(propObj.getScheme(subtype))
+                    subtype_definition = self.meta_property(propObj.getScheme(subtype))
+                    subtype_infos =  {"type": subtype, "_type": subtype_definition}
+                    if key not in propertyHash:
+                      propertyHash[key] = {"types": [subtype_infos]}
+                    else:
+                      propertyHash[key]["types"].append(subtype_infos)
+
+                else:
+                  if key in propertyHash:
+                    propertyHash[key]["subtypes"].append({"type": subtype, "className": propObj.getScheme(subtype).getClassName()})
+                    classes.append(propObj.getScheme(subtype).getClassName())
+                  else:
+                    propertyHash[key] = { "subtypes": [{"type": subtype, "className": propObj.getScheme(subtype).getClassName()}]}
+                    classes.append(propObj.getScheme(subtype).getClassName())
 
     def process_subtypes(self, propObj, propertyHash) :
         classes = []
@@ -242,9 +260,11 @@ class ObjectiveCCodeGenerator :
                 propertyHash['minCount'] = {"value": minLength}
 
         # dealing with array property
-        classes = self.process_subtypes(propObj, propertyHash)
         if propObj.rootBaseType() == "multi":
             self.process_basetypes(propObj, propertyHash)
+
+        classes = self.process_subtypes(propObj, propertyHash)
+        print propertyHash
         return classes, propertyHash
 
     def human_header_content(self, schemeObj) :
