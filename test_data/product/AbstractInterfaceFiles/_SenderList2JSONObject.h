@@ -17,7 +17,5 @@
 
 + (SenderList2JSONObject *)senderList2WithDictionary:(NSDictionary *)dic withError:(NSError **)error;
 - (id)initWithDictionary:(NSDictionary *)dic withError:(NSError **)error;
-- (NSDictionary *)propertyDictionary;
 
 @end
-
