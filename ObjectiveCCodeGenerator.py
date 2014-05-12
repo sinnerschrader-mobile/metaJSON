@@ -51,7 +51,7 @@ class ObjectiveCCodeGenerator :
         return text.capitalize()
 
     def lambda_camelcase(self, text):
-        process_text = self.mustache_renderer.render(text, self.mustache_renderer.context)
+        process_text = Renderer().render(text, self.mustache_renderer.context)
         words = process_text.split('_')
         return ''.join(word.title() if i else word for i, word in enumerate(words))
 
@@ -113,6 +113,7 @@ class ObjectiveCCodeGenerator :
                     propertyHash[key] = {"type": subtype, "className": propObj.getScheme(subtype).getClassName()}
 
     def process_subtypes(self, propObj, propertyHash) :
+        classes = []
         # dealing with array property
         if len(propObj.getSubType()) == 1:
             propertyHash['hasOneSubtype'] = True
@@ -136,8 +137,12 @@ class ObjectiveCCodeGenerator :
                 else:
                   if key in propertyHash:
                     propertyHash[key]["subtypes"].append({"subtype": subtype, "className": propObj.getScheme(subtype).getClassName()})
+                    classes.append(propObj.getScheme(subtype).getClassName())
                   else:
                     propertyHash[key] = { "subtypes": [{"subtype": subtype, "className": propObj.getScheme(subtype).getClassName()}]}
+                    classes.append(propObj.getScheme(subtype).getClassName())
+
+        return classes
 
     def process_properties(self, propObj, undefined = False) :
         capitalizeVarName = self.makeVarName(propObj)
@@ -150,7 +155,7 @@ class ObjectiveCCodeGenerator :
 
         if propObj.rootBaseType() == "object":
             propertyHash['className'] = propObj.getClassName()
-            return propertyHash
+            return [], propertyHash
 
         if not undefined:
             hasRegex, regex = propObj.getRegex()
@@ -166,10 +171,10 @@ class ObjectiveCCodeGenerator :
                 propertyHash['minLength'] = {"value": minLength}
 
         # dealing with array property
-        self.process_subtypes(propObj, propertyHash)
+        classes = self.process_subtypes(propObj, propertyHash)
         if propObj.rootBaseType() == "multi":
             self.process_basetypes(propObj, propertyHash)
-        return propertyHash
+        return classes, propertyHash
 
     def human_header_content(self, schemeObj) :
         templateFile = open(self.template_file_path("header.h.mustache"), "r")
@@ -216,32 +221,45 @@ class ObjectiveCCodeGenerator :
         arrayProps = []
         undefineProps = []
         objectProps = []
-
+        custom_classes = []
         for prop in schemeObj.props:
+            classes = []
             if prop.rootBaseType() == "object":
-                objectProps.append(self.process_properties(prop))
+                classes, prop_hash = self.process_properties(prop)
+                objectProps.append(prop_hash)
             elif prop.rootBaseType() == "string":
-                stringProps.append(self.process_properties(prop))
+                classes, prop_hash = self.process_properties(prop)
+                stringProps.append(prop_hash)
             elif prop.rootBaseType() == "number":
-                numberProps.append(self.process_properties(prop))
+                classes, prop_hash = self.process_properties(prop)
+                numberProps.append(prop_hash)
             elif prop.rootBaseType() == "boolean":
-                booleanProps.append(self.process_properties(prop))
+                classes, prop_hash = self.process_properties(prop)
+                booleanProps.append(prop_hash)
             elif prop.rootBaseType() == "data":
-                dataProps.append(self.process_properties(prop))
+                classes, prop_hash = self.process_properties(prop)
+                dataProps.append(prop_hash)
             elif prop.rootBaseType() == "date":
-                dateProps.append(self.process_properties(prop))
+                classes, prop_hash = self.process_properties(prop)
+                dateProps.append(prop_hash)
             elif prop.rootBaseType() == "array":
-                arrayProps.append(self.process_properties(prop))
+                classes, prop_hash = self.process_properties(prop)
+                arrayProps.append(prop_hash)
             elif prop.rootBaseType() == "multi":
-                propHash = self.process_properties(prop, True)
-                undefineProps.append(propHash)
+                classes, prop_hash = self.process_properties(prop, True)
+                undefineProps.append(prop_hash)
             else:
-                undefineProps.append(self.process_properties(prop, True))
+                classes, prop_hash = self.process_properties(prop, True)
+                undefineProps.append(prop_hash)
+            if(len(classes) > 0):
+              custom_classes.extend(classes)
 
 
         hashParams = {"date": str(today.year), "projectPrefix": schemeObj.projectPrefix,"machineClassName": schemeObj.getMachineClassName(), "humanClassName": schemeObj.getClassName(), "variableName": self.makeVarName(schemeObj), "stringProperties": stringProps, "numberProperties": numberProps, "booleanProperties": booleanProps, "dataProperties": dataProps, "dateProperties": dateProps, "arrayProperties": arrayProps, "undefinedProperties": undefineProps, "objectProperties": objectProps}
-
-
+        hashParams["custom_classes"] = []
+        for classname in custom_classes:
+          if classname not in hashParams["custom_classes"]:
+            hashParams["custom_classes"].append(classname)
         hashParams["_uppercase"] =  self.lambda_uppercase
         hashParams["_lowercase"] =  self.lambda_lowercase
         hashParams["_capitalize"] =  self.lambda_capitalize

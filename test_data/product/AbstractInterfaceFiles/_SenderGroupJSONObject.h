@@ -6,8 +6,8 @@
 
 #import <Foundation/Foundation.h>
 
-@class SenderList2JSONObject;
 @class SenderListJSONObject;
+@class SenderList2JSONObject;
 
 @class SenderGroupJSONObject;
 
@@ -40,4 +40,3 @@
 - (id)objectInIPTVSendersAtIndex:(NSUInteger)index withError:(NSError **)error;
 
 @end
-
