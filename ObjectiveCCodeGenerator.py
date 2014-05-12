@@ -162,7 +162,7 @@ class ObjectiveCCodeGenerator :
             propertyHash['className'] = propObj.getClassName()
             return [], propertyHash
 
-        if not undefined:
+        if propObj.rootBaseType() == "string":
             hasRegex, regex = propObj.getRegex()
             if hasRegex:
                 propertyHash['regex'] = {"value": regex}
@@ -174,6 +174,24 @@ class ObjectiveCCodeGenerator :
             hasMin, minLength = propObj.getMinLength()
             if hasMin:
                 propertyHash['minLength'] = {"value": minLength}
+
+        if propObj.rootBaseType() == "number":
+            hasMax, maxLength = propObj.getMaxValue()
+            if hasMax:
+                propertyHash['maxValue'] = {"value": maxLength}
+
+            hasMin, minLength = propObj.getMinValue()
+            if hasMin:
+                propertyHash['minValue'] = {"value": minLength}
+
+        if propObj.rootBaseType() == "array":
+            hasMax, maxLength = propObj.getMaxCount()
+            if hasMax:
+                propertyHash['maxCount'] = {"value": maxLength}
+
+            hasMin, minLength = propObj.getMinCount()
+            if hasMin:
+                propertyHash['minCount'] = {"value": minLength}
 
         # dealing with array property
         classes = self.process_subtypes(propObj, propertyHash)

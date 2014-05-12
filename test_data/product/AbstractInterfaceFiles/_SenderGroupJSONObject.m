@@ -40,13 +40,21 @@
             return self;
         }
         if (self.DTVHighlights.count > 6) {
-            NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:@"DTVHighlights", @"propertyName", @"DTVHighlights", @"key", @"validation error", @"reason", NSStringFromClass([self class]), @"objectClass",nil];
+            NSDictionary *userInfo = @{@"propertyName" : @"DTVHighlights",
+                                     @"key" : @"DTVHighlights",
+                                     @"reason" : @"max count validation error",
+                                     @"objectClass" : NSStringFromClass([self class])
+                                     };
             *error = [NSError errorWithDomain:kErrorDomain_parser code:kErrorDomain_parser_valueIsNotValid userInfo:userInfo];
             NSLog(@"%@", *error);
             return self;
         }
         if (self.DTVHighlights.count < 2) {
-            NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:@"DTVHighlights", @"propertyName", @"DTVHighlights", @"key", @"validation error", @"reason", NSStringFromClass([self class]), @"objectClass",nil];
+            NSDictionary *userInfo = @{@"propertyName" : @"DTVHighlights",
+                                     @"key" : @"DTVHighlights",
+                                     @"reason" : @"min count validation error",
+                                     @"objectClass" : NSStringFromClass([self class])
+                                     };
             *error = [NSError errorWithDomain:kErrorDomain_parser code:kErrorDomain_parser_valueIsNotValid userInfo:userInfo];
             NSLog(@"%@", *error);
             return self;
@@ -56,13 +64,21 @@
             return self;
         }
         if (self.IPTVSenders.count > 6) {
-            NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:@"IPTVSenders", @"propertyName", @"IPTVSenders", @"key", @"validation error", @"reason", NSStringFromClass([self class]), @"objectClass",nil];
+            NSDictionary *userInfo = @{@"propertyName" : @"IPTVSenders",
+                                     @"key" : @"IPTVSenders",
+                                     @"reason" : @"max count validation error",
+                                     @"objectClass" : NSStringFromClass([self class])
+                                     };
             *error = [NSError errorWithDomain:kErrorDomain_parser code:kErrorDomain_parser_valueIsNotValid userInfo:userInfo];
             NSLog(@"%@", *error);
             return self;
         }
         if (self.IPTVSenders.count < 2) {
-            NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:@"IPTVSenders", @"propertyName", @"IPTVSenders", @"key", @"validation error", @"reason", NSStringFromClass([self class]), @"objectClass",nil];
+            NSDictionary *userInfo = @{@"propertyName" : @"IPTVSenders",
+                                                 @"key" : @"IPTVSenders",
+                                                 @"reason" : @"min count validation error",
+                                                 @"objectClass" : NSStringFromClass([self class])
+                                                 };
             *error = [NSError errorWithDomain:kErrorDomain_parser code:kErrorDomain_parser_valueIsNotValid userInfo:userInfo];
             NSLog(@"%@", *error);
             return self;
