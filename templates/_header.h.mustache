@@ -5,18 +5,16 @@
 //  Copyright (c) {{date}} SinnerSchrader Mobile. All rights reserved.
 
 #import <Foundation/Foundation.h>
-
 {{^baseTypeIsObject}}
 #import "{{baseClassName}}.h"
-
 {{/baseTypeIsObject}}
+
 {{#objectProperties}}
 @class {{className}};
 {{/objectProperties}}
 {{#custom_classes}}
 @class {{.}};
 {{/custom_classes}}
-
 @class {{humanClassName}};
 
 {{#baseTypeIsObject}}
