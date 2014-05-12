@@ -14,13 +14,15 @@
 
 #pragma mark - factory
 
-+ (ProductDetailJSONObject *)ProductDetailWithDictionary:(NSDictionary *)dic withError:(NSError **)error {
++ (ProductDetailJSONObject *)ProductDetailWithDictionary:(NSDictionary *)dic withError:(NSError **)error
+{
     return [[ProductDetailJSONObject alloc] initWithDictionary:dic withError:error];
 }
 
 
 #pragma mark - initialize
-- (id)initWithDictionary:(NSDictionary *)dic  withError:(NSError **)error {
+- (id)initWithDictionary:(NSDictionary *)dic  withError:(NSError **)error
+{
     self = [super init];
     if (self) {
         self.type = [APIParser numberFromResponseDictionary:dic forKey:@"type" acceptNil:NO error:error];
@@ -75,7 +77,9 @@
 
 
 #pragma mark - getter
-- (NSString *)titleAsTitleString:(NSError **)error {
+
+- (NSString *)titleAsTitleString:(NSError **)error
+{
     if (!self.title) return nil;
     NSDictionary *newtitleDic = @{@"title" : self.title};
     NSString *tmpTitle = [APIParser stringFromResponseDictionary:newtitleDic forKey:@"title" acceptNumber:NO acceptNil:NO error:error];
@@ -105,7 +109,9 @@
     }
     return tmpTitle;
 }
-- (NSString *)titleAsString:(NSError **)error {
+
+- (NSString *)titleAsString:(NSError **)error
+{
     if (!self.title) return nil;
     NSDictionary *newtitleDic = @{@"title" : self.title};
     NSString *tmpTitle = [APIParser stringFromResponseDictionary:newtitleDic forKey:@"title" acceptNumber:NO acceptNil:NO error:error];
@@ -114,6 +120,7 @@
     }
     return tmpTitle;
 }
+
 - (NSNumber *)downloadAsNumber:(NSError **)error {
     if (!self.download) return nil;
     NSDictionary *newdownloadDic = @{@"download" : self.download};
@@ -123,6 +130,7 @@
     }
     return tmpDownload;
 }
+
 - (NSString *)downloadAsString:(NSError **)error {
     if (!self.download) return nil;
     NSDictionary *newdownloadDic = @{@"download" : self.download};
@@ -132,6 +140,7 @@
     }
     return tmpDownload;
 }
+
 - (NSNumber *)uploadAsNumber:(NSError **)error {
     if (!self.upload) return nil;
     NSDictionary *newuploadDic = @{@"upload" : self.upload};
@@ -141,6 +150,7 @@
     }
     return tmpUpload;
 }
+
 - (NSString *)uploadAsString:(NSError **)error {
     if (!self.upload) return nil;
     NSDictionary *newuploadDic = @{@"upload" : self.upload};
@@ -152,7 +162,10 @@
 }
 
 #pragma mark - NSCoding
-- (void)encodeWithCoder:(NSCoder*)coder {
+
+- (void)encodeWithCoder:(NSCoder*)coder
+{
+    [super encodeWithCoder:coder];
     [coder encodeObject:self.type forKey:@"type"];
     [coder encodeObject:self.advantage forKey:@"advantage"];
     [coder encodeObject:self.teaserURL forKey:@"teaserURL"];
@@ -164,8 +177,10 @@
     [coder encodeObject:self.download forKey:@"download"];
     [coder encodeObject:self.upload forKey:@"upload"];
 }
-- (id)initWithCoder:(NSCoder *)coder {
-    self = [super init];
+
+- (id)initWithCoder:(NSCoder *)coder
+{
+    self = [super initWithCoder:coder];
     self.type = [coder decodeObjectForKey:@"type"];
     self.advantage = [coder decodeObjectForKey:@"advantage"];
     self.teaserURL = [coder decodeObjectForKey:@"teaserURL"];
@@ -180,7 +195,8 @@
 }
 
 #pragma mark - Object Info
-- (NSDictionary *)propertyDictionary {
+- (NSDictionary *)propertyDictionary
+{
     NSMutableDictionary *dic = [[NSMutableDictionary alloc] init];
     if (self.type) {
         [dic setObject:self.type forKey:@"type"];
@@ -214,8 +230,9 @@
     }
     return dic;
 }
-- (NSString *)description {
-    return [NSString stringWithFormat:@"%@",[self propertyDictionary]];
+- (NSString *)description
+{
+    return [[self propertyDictionary] description];
 }
 
 @end

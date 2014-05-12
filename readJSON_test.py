@@ -15,10 +15,12 @@ class TestReadJSON(unittest.TestCase):
         os.system("rm -rf src/Utilities")
         # return os.system("diff -r src/ " + output_dir)
         # common_file = "/AbstractInterfaceFiles/_ProductDetailJSONObject.h"
+        common_file = "/AbstractInterfaceFiles/_ProductDetailJSONObject.m"
         # common_file = "/AbstractInterfaceFiles/_SenderGroupJSONObject.h"
         # common_file = "/AbstractInterfaceFiles/_SenderList2JSONObject.h"
         # common_file = "/AbstractInterfaceFiles/_SenderListJSONObject.m"
         # common_file = "/AbstractInterfaceFiles/_SenderList2JSONObject.m"
         # common_file = "/AbstractInterfaceFiles/_SenderJSONObject.m"
-        common_file = "/AbstractInterfaceFiles/_SenderGroupJSONObject.m"
+        # common_file = "/AbstractInterfaceFiles/_SenderGroupJSONObject.m"
+        # return os.system("diff -r -w -b -B src " + output_dir)
         return os.system("diff -r -w -b -B src" + common_file + " " + output_dir + common_file)
