@@ -7,6 +7,9 @@
 #import "{{projectPrefix}}APIParser.h"
 #import "NSString+RegExValidation.h"
 #import "{{humanClassName}}.h"
+{{#custom_classes}}
+#import "{{.}}.h"
+{{/custom_classes}}
 
 
 @implementation {{machineClassName}}
@@ -117,12 +120,32 @@
             {{#hasDateType}}
             NSDate *tmpValue = [{{projectPrefix}}APIParser dateFromResponseArray:tmp{{capitalizeVarName}}Array atIndex:loop acceptNil:{{#required}}NO{{/required}}{{^required}}YES{{/required}} error:error];
             {{/hasDateType}}
+            {{^hasCustomType}}
             if (*error) {
                 return self;
             }
             if (tmpValue) {
                 [tmp{{capitalizeVarName}} addObject:tmpValue];
             }
+            {{/hasCustomType}}
+            {{#hasCustomType}}
+            NSDictionary *tmpDic = [APIParser dictionaryFromResponseArray:tmp{{capitalizeVarName}}Array atIndex:loop acceptNil:NO error:error];
+            if (*error) {
+                return self;
+            }
+            {{#subtypes}}
+            {{className}}*tmpObject = nil;
+            if (tmpDic) {
+                 tmpObject= [[{{className}} alloc] initWithDictionary:tmpDic withError:error];
+                 if (*error) {
+                     return self;
+                 }
+            }
+            if (tmpObject) {
+                 [tmp{{capitalizeVarName}} addObject:tmpObject];
+            }
+            {{/subtypes}}
+            {{/hasCustomType}}
         }
         self.{{varName}} = [NSArray arrayWithArray:tmp{{capitalizeVarName}}];
         {{/hasOneSubtype}}
@@ -295,6 +318,17 @@
     }
     {{/dateProperties}}
     {{#arrayProperties}}
+    {{#hasCustomType}}
+    {{#subtypes}}
+    if (self.{{varName}}) {
+        NSMutableArray *tmpArray = [[NSMutableArray alloc] init];
+        for ({{className}} *tmpObj in self.{{varName}}) {
+          [tmpArray addObject:[tmpObj propertyDictionary]];
+        }
+        [dic setObject:tmpArray forKey:@"{{name}}"];
+    }
+    {{/subtypes}}
+    {{/hasCustomType}}
     {{^hasCustomType}}
     if (self.{{varName}}) {
         [dic setObject:self.{{varName}} forKey:@"{{name}}"];
@@ -302,6 +336,9 @@
     {{/hasCustomType}}
     {{/arrayProperties}}
     {{#objectProperties}}
+    if (self.{{varName}}) {
+        [dic setObject:self.{{varName}} forKey:@"{{name}}"];
+    }
     {{/objectProperties}}
     {{#undefinedProperties}}
     {{/undefinedProperties}}

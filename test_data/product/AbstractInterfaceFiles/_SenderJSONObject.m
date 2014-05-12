@@ -13,13 +13,14 @@
 
 #pragma mark - factory
 
-+ (SenderJSONObject *)senderWithDictionary:(NSDictionary *)dic withError:(NSError **)error {
++ (SenderJSONObject *)senderWithDictionary:(NSDictionary *)dic withError:(NSError **)error
+{
     return [[SenderJSONObject alloc] initWithDictionary:dic withError:error];
 }
 
-
 #pragma mark - initialize
-- (id)initWithDictionary:(NSDictionary *)dic  withError:(NSError **)error {
+- (id)initWithDictionary:(NSDictionary *)dic  withError:(NSError **)error
+{
     self = [super init];
     if (self) {
         self.senderName = [APIParser stringFromResponseDictionary:dic forKey:@"senderName" acceptNumber:NO acceptNil:NO error:error];
@@ -34,23 +35,28 @@
     return self;
 }
 
-
 #pragma mark - getter
 
 #pragma mark - NSCoding
-- (void)encodeWithCoder:(NSCoder*)coder {
+
+- (void)encodeWithCoder:(NSCoder*)coder
+{
+    [super encodeWithCoder:coder];
     [coder encodeObject:self.senderName forKey:@"senderName"];
     [coder encodeObject:self.previewImageURL forKey:@"previewImageURL"];
 }
-- (id)initWithCoder:(NSCoder *)coder {
-    self = [super init];
+
+- (id)initWithCoder:(NSCoder *)coder
+{
+    self = [super initWithCoder:coder];
     self.senderName = [coder decodeObjectForKey:@"senderName"];
     self.previewImageURL = [coder decodeObjectForKey:@"previewImageURL"];
     return self;
 }
 
 #pragma mark - Object Info
-- (NSDictionary *)propertyDictionary {
+- (NSDictionary *)propertyDictionary
+{
     NSMutableDictionary *dic = [[NSMutableDictionary alloc] init];
     if (self.senderName) {
         [dic setObject:self.senderName forKey:@"senderName"];
@@ -60,8 +66,10 @@
     }
     return dic;
 }
-- (NSString *)description {
-    return [NSString stringWithFormat:@"%@",[self propertyDictionary]];
+
+- (NSString *)description
+{
+    return [[self propertyDictionary] description];
 }
 
 @end

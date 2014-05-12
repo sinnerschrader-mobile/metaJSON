@@ -17,5 +17,5 @@ class TestReadJSON(unittest.TestCase):
         # common_file = "/AbstractInterfaceFiles/_ProductDetailJSONObject.h"
         # common_file = "/AbstractInterfaceFiles/_SenderGroupJSONObject.h"
         # common_file = "/AbstractInterfaceFiles/_SenderList2JSONObject.h"
-        common_file = "/AbstractInterfaceFiles/_SenderListJSONObject.h"
-        return os.system("diff -r -B src" + common_file + " " + output_dir + common_file)
+        common_file = "/AbstractInterfaceFiles/_SenderListJSONObject.m"
+        return os.system("diff -r -w -b -B src" + common_file + " " + output_dir + common_file)
