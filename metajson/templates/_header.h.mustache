@@ -76,10 +76,10 @@
 - (NSDictionary *)propertyDictionary;
 {{/baseTypeIsObject}}
 {{#arrayProperties}}
-{{> templates/array_property}}
+{{> metajson/templates/array_property}}
 {{/arrayProperties}}
 {{#undefinedProperties}}
-{{> templates/multiple_property}}
+{{> metajson/templates/multiple_property}}
 {{/undefinedProperties}}
 {{^arrayProperties}}
 

@@ -4,6 +4,11 @@ NSString *tmp{{capitalizeVarName}} = [APIParser stringFromResponseDictionary:new
 if (*error) {
     return nil;
 }
+{{#_type}}
+if (tmp{{capitalizeVarName}} == nil) {
+    return nil;
+}
+{{/_type}}
 {{#_type.maxLength}}
 if (tmp{{capitalizeVarName}}.length > {{_type.maxLength}}) {
     NSDictionary *userInfo = @{@"propertyName" : @"{{_type.name}}",
