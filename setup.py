@@ -1,11 +1,28 @@
 #!/usr/bin/env python
+import re
+from setuptools import setup
 
-from distutils.core import setup
 
-setup(name='metaJSON',
-      version='1.0.0',
-      description='metaJSON provides a meta language to generate object models for several languages. The generated classes can easily be used for the client-server communication.',
-      url='https://github.com/sinnerschrader-mobile/metaJSON.git',
-      license='MIT',
-      scripts=['readJSON.py']
-      )
+version = re.search(
+    '^__version__\s*=\s*"(.*)"',
+    open('metajson/readJSON.py').read(),
+    re.M
+    ).group(1)
+
+
+with open("README.md", "rb") as f:
+    long_descr = f.read().decode("utf-8")
+
+
+setup(
+    name = "metaJSON",
+    packages = ["metajson"],
+    entry_points = {
+        "console_scripts": ['metajson = metajson.readJSON:main']
+        },
+    version = version,
+    description='metaJSON provides a meta language to generate object models for several languages. The generated classes can easily be used for the client-server communication.',
+    url='https://github.com/sinnerschrader-mobile/metaJSON.git',
+    license='MIT',
+    long_description = long_descr,
+    )
