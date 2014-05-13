@@ -42,14 +42,14 @@ class JSONScheme :
     hasMaxLength = False
     hasMinLength = False
     required = False
-    
+
     maxCount = 0
     minCount = 0
     maxValue = 0
     minValue = 0
     maxLength = 0
     minLength = 0
-    
+
     domain = ["ROOT"]
 
     def __init__(self):
@@ -85,12 +85,12 @@ class JSONScheme :
         tmpDomainList = list(self.domain)
         tmpDomainList.append(self.type_name)
         #print "find : " + schemeName + ", at : " + str(tmpDomainList)
-        
+
         for nn in range(0,len(tmpDomainList)) :
             tmpDomainKey = ""
             for mm in range(0,len(tmpDomainList) - nn) :
                 tmpDomainKey += str(tmpDomainList[mm])
-            
+
             if JSONScheme.JSONSchemeDic.has_key(tmpDomainKey) :
                 tmpDomainDic = JSONScheme.JSONSchemeDic[tmpDomainKey]
                 if tmpDomainDic.has_key(schemeName) :
@@ -109,7 +109,7 @@ class JSONScheme :
             tmpDomainKey = ""
             for mm in range(0,len(tmpDomainList) - nn) :
                 tmpDomainKey += str(tmpDomainList[mm])
-            
+
             if JSONScheme.JSONSchemeDic.has_key(tmpDomainKey) :
                 tmpDomainDic = JSONScheme.JSONSchemeDic[tmpDomainKey]
                 if tmpDomainDic.has_key(schemeName) :
@@ -117,16 +117,16 @@ class JSONScheme :
 
 
         return False
-    
+
     def getDomainString(self) :
         domainString = ""
         for index in range(0, len(self.domain)) :
             domainString += self.domain[index]
             if index in range(0,len(self.domain) - 1) :
                 domainString += "."
-        
+
         return domainString
-    
+
     def getDomain(self) :
         domainString = ""
         for index in range(0, len(self.domain)) :
@@ -136,114 +136,114 @@ class JSONScheme :
     def setMaxValue(self, maxVal):
         self.maxValue = maxVal
         self.hasMaxValue = True
-    
+
     def setMinValue(self, minVal):
         self.minValue = minVal
         self.hasMinValue = True
-    
+
     def setMaxLength(self, maxLen):
         self.maxLength = maxLen
         self.hasMaxLength = True
-    
+
     def setMinLength(self, minLen):
         self.minLength = minLen
         self.hasMinLength = True
-    
+
     def setMaxCount(self, maxCnt):
         self.maxCount = maxCnt
         self.hasMaxCount = True
-    
+
     def setMinCount(self, minCnt):
         self.minCount = minCnt
         self.hasMinCount = True
-    
+
     def getMaxValue(self) :
         if self.hasMaxValue :
             return [True, self.maxValue]
-        
+
         if self.base_type in self.naturalTypeList :
             return [False, 0];
-        
+
         parentSchemeObj = self.getScheme(self.base_type)
-        
+
         return parentSchemeObj.getMaxValue()
-    
+
     def getMinValue(self) :
         if self.hasMinValue :
             return [True, self.minValue]
-    
+
         if self.base_type in self.naturalTypeList :
             return [False, 0];
-        
+
         parentSchemeObj = self.getScheme(self.base_type)
-        
+
         return parentSchemeObj.getMinValue()
-    
+
     def getMaxCount(self) :
         if self.hasMaxCount :
             return [True, self.maxCount]
-        
+
         if self.base_type in self.naturalTypeList :
             return [False, 0];
-        
+
         parentSchemeObj = self.getScheme(self.base_type)
-        
+
         return parentSchemeObj.getMaxCount()
-    
+
     def getMinCount(self) :
         if self.hasMinCount :
             return [True, self.minCount]
-        
+
         if self.base_type in self.naturalTypeList :
             return [False, 0];
-        
+
         parentSchemeObj = self.getScheme(self.base_type)
-        
+
         return parentSchemeObj.getMinCount()
-    
+
     def getMaxLength(self) :
         if self.hasMaxLength :
             return [True, self.maxLength]
-        
+
         if self.base_type in self.naturalTypeList :
             return [False, 0];
-        
+
         parentSchemeObj = self.getScheme(self.base_type)
-        
+
         return parentSchemeObj.getMaxLength()
-    
+
     def getMinLength(self) :
         if self.hasMinLength :
             return [True, self.minLength]
-        
+
         if self.base_type in self.naturalTypeList :
             return [False, 0];
-        
+
         parentSchemeObj = self.getScheme(self.base_type)
-        
+
         return parentSchemeObj.getMinLength()
-    
+
     def getRegex(self) :
         if len(self.regex) > 0 :
             return [True, self.regex]
-        
+
         if self.base_type in self.naturalTypeList :
             return [False, 0];
-        
+
         parentSchemeObj = self.getScheme(self.base_type)
 
         if parentSchemeObj :
             return parentSchemeObj.getRegex()
         else :
             return [False, 0];
-    
+
     def getClassName(self):
-        
+
         if self.rootBaseType() == "object" :
-            if self.props : 
+            if self.props :
                 className = self.type_name.upper()
                 className = self.projectPrefix + className[:1] + self.type_name[1:] + self.objectSuffix
-            else : # it means, this scheme descripe just property info, not class info. 
+            else : # it means, this scheme descripe just property info, not class info.
                 className = self.base_type.upper()
                 className = self.projectPrefix + className[:1] + self.base_type[1:] + self.objectSuffix
             return className
@@ -252,15 +252,15 @@ class JSONScheme :
         return ""
 
     def getMachineClassName(self):
-        
+
         className = self.getClassName()
         if len(className) :
-            machineClassName = "_" + className 
+            machineClassName = "_" + className
             return machineClassName
 
         print "error : " + self.type_name + " has no Class Name."
         return ""
-    
+
     def rootBaseType(self) :
         if self.base_type in JSONScheme.naturalTypeList or self.base_type == "object" or self.base_type == "multi" or self.base_type == "any":
             return self.base_type
@@ -268,24 +268,24 @@ class JSONScheme :
             if self.hasScheme(self.base_type) :
                 parentTypeScheme = self.getScheme(self.base_type)
                 return parentTypeScheme.rootBaseType()
-                
+
         return self.base_type
 
     def isNaturalType(self) :
-        
+
         root = self.rootBaseType()
-        
+
         if root in JSONScheme.naturalTypeList :
             return True
-                
+
         return False
-    
+
     def canHaveProperty(self) :
         if self.rootBaseType() == "object" :
             return True
 
         return False
-    
+
     def getSubType(self) :
         if self.isNaturalType() :
             return self.sub_type
@@ -298,12 +298,12 @@ class JSONScheme :
             return parentTypeScheme.getSubType()
 
         return self.sub_type
-        
+
     def getBaseTypes(self) :
-        
+
         if self.isNaturalType() :
             return self.base_type_list
-        
+
 
         if len(self.base_type_list) :
             return self.base_type_list
@@ -316,7 +316,7 @@ class JSONScheme :
     """
         make new Scheme Object
     """
-    
+
     def makeNewScheme(self, jsonDic):
         newScheme = JSONScheme()
         newScheme.projectPrefix = self.projectPrefix
@@ -349,10 +349,10 @@ class JSONScheme :
 
         elif type(jsonObj) == list :
             self.base_type = "multi"
-            for multiType in jsonObj :            
+            for multiType in jsonObj :
                 if type(multiType) == dict :
                     newScheme = self.makeNewScheme(multiType)
-                                
+
                     if newScheme :
                         tmpList.append(newScheme.type_name)
                     else :
@@ -368,16 +368,16 @@ class JSONScheme :
                         self.base_type = any
                         tmpList = []
                         return tmpList
-                            
+
                     tmpList.append(multiType)
-                
-                    
+
+
         elif type(jsonObj) == str or type(jsonObj) == unicode:
             self.base_type = str(jsonObj)
-    
+
         return tmpList
 
-            
+
     """
     read sub type
     """
@@ -385,7 +385,7 @@ class JSONScheme :
         tmpList = []
         if type(jsonObj) == dict :
             newScheme = self.makeNewScheme(jsonObj)
-            
+
             if newScheme :
                 tmpList.append(newScheme.type_name)
             else :
@@ -396,7 +396,7 @@ class JSONScheme :
             for multiType in jsonObj :
                 if type(multiType) == dict :
                     newScheme = self.makeNewScheme(multiType)
-                    
+
                     if newScheme :
                         if newScheme.type_name in tmpList :
                             print "warning - ignore same type ("+ newScheme.type_name +") in subTypes of ", self.type_name
@@ -414,8 +414,8 @@ class JSONScheme :
                         return tmpList
                     tmpList.append(str(multiType))
 
-            
-            
+
+
         else :
             if str(jsonObj) == "any" :
                 tmpList = ["any"]
@@ -463,7 +463,7 @@ class JSONScheme :
             return False
 
         tmpDomainDic[self.type_name] = self
-        
+
         if jsonDic.has_key('base-type') :
             tmpBaseType = jsonDic['base-type']
             tmpBaseTypeList = self.parseBaseType(tmpBaseType)
@@ -473,37 +473,37 @@ class JSONScheme :
             self.base_type_list = tmpBaseTypeList
         else :
             print "error - no base-type : ", self.type_name
-            return False        
-        
+            return False
+
         if jsonDic.has_key('description') :
             self.type_description = str(jsonDic['description'])
-        
+
         if jsonDic.has_key('required') :
             self.required = jsonDic['required']
-        
+
         if jsonDic.has_key('maxValue') :
             self.setMaxValue(jsonDic['maxValue'])
-        
+
         if jsonDic.has_key('minValue') :
             self.setMinValue(jsonDic['minValue'])
-        
+
         if jsonDic.has_key('maxCount') :
             self.setMaxCount(jsonDic['maxCount'])
-        
+
         if jsonDic.has_key('minCount') :
             self.setMinCount(jsonDic['minCount'])
-        
+
         if jsonDic.has_key('maxLength') :
             self.setMaxLength(jsonDic['maxLength'])
-        
+
         if jsonDic.has_key('minLength') :
             self.setMinLength(jsonDic['minLength'])
-        
+
         if jsonDic.has_key('regex') :
             self.regex = str(jsonDic['regex'])
 
         tmpPropList = []
-        
+
         if jsonDic.has_key('property') :
             tmpPropList = self.parseProperty(jsonDic['property'])
             if  tmpPropList == False :
@@ -517,20 +517,8 @@ class JSONScheme :
             if tmpSubTypeList == False:
                 return False
             self.sub_type = tmpSubTypeList
-        
+
         if self.base_type == "array" and not jsonDic.has_key('subType') :
             print "warning - " + self.type_name + "(array type) has no subType. treat as any. "
 
         return True
-
-
-
-
-
-
-
-
-
-
-
-
