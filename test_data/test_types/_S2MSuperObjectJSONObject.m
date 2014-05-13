@@ -101,18 +101,18 @@
     return tmpStringsAndDates;
 }
 
-- (NSString *)stringInStringsAndCustomNumbersAtIndex:(NSUInteger)index withError:(NSError **)error
+- (NSNumber *)customNumberInStringsAndCustomNumbersAtIndex:(NSUInteger)index withError:(NSError **)error
 {
-    NSString *tmpStringsAndCustomNumbers = [S2MAPIParser stringFromResponseArray:self.stringsAndCustomNumbers atIndex:index acceptNil:YES error:error];
+    NSNumber *tmpStringsAndCustomNumbers = [S2MAPIParser numberFromResponseArray:self.stringsAndCustomNumbers atIndex:index acceptNil:YES error:error];
     if (*error) {
         return nil;
     }
     return tmpStringsAndCustomNumbers;
 }
 
-- (NSNumber *)customNumberInStringsAndCustomNumbersAtIndex:(NSUInteger)index withError:(NSError **)error
+- (NSString *)stringInStringsAndCustomNumbersAtIndex:(NSUInteger)index withError:(NSError **)error
 {
-    NSNumber *tmpStringsAndCustomNumbers = [S2MAPIParser numberFromResponseArray:self.stringsAndCustomNumbers atIndex:index acceptNil:YES error:error];
+    NSString *tmpStringsAndCustomNumbers = [S2MAPIParser stringFromResponseArray:self.stringsAndCustomNumbers atIndex:index acceptNil:YES error:error];
     if (*error) {
         return nil;
     }
