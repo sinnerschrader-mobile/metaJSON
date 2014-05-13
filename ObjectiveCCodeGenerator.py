@@ -264,7 +264,6 @@ class ObjectiveCCodeGenerator :
             self.process_basetypes(propObj, propertyHash)
 
         classes = self.process_subtypes(propObj, propertyHash)
-        print propertyHash
         return classes, propertyHash
 
     def human_header_content(self, schemeObj) :

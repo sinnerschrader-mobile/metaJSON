@@ -55,7 +55,7 @@ if __name__ == "__main__":
     try:
         opts, args = getopt.getopt(argv,"ho:p:s:t:i:",["prefix=","suffix=","target=","input=","output="])
     except getopt.GetoptError:
-        print usageString
+        print(usageString)
         sys.exit(2)
 
     for opt, arg in opts:
