@@ -4,7 +4,7 @@ p1
 (dp2
 S'customNumber'
 p3
-(iJSONScheme
+(imetajson.JSONScheme
 JSONScheme
 p4
 (dp5
@@ -40,7 +40,7 @@ p18
 I01
 sbsS'superObject'
 p19
-(iJSONScheme
+(imetajson.JSONScheme
 JSONScheme
 p20
 (dp21
@@ -56,7 +56,7 @@ p23
 sS'props'
 p24
 (lp25
-(iJSONScheme
+(imetajson.JSONScheme
 JSONScheme
 p26
 (dp27
@@ -77,7 +77,7 @@ sg6
 (lp32
 sg16
 g17
-sba(iJSONScheme
+sba(imetajson.JSONScheme
 JSONScheme
 p33
 (dp34
@@ -97,7 +97,7 @@ sg6
 (lp38
 sg16
 g17
-sba(iJSONScheme
+sba(imetajson.JSONScheme
 JSONScheme
 p39
 (dp40
@@ -117,7 +117,7 @@ sg6
 (lp44
 sg16
 g17
-sba(iJSONScheme
+sba(imetajson.JSONScheme
 JSONScheme
 p45
 (dp46
@@ -137,7 +137,7 @@ sg6
 (lp50
 sg16
 g17
-sba(iJSONScheme
+sba(imetajson.JSONScheme
 JSONScheme
 p51
 (dp52
@@ -162,7 +162,7 @@ p57
 (lp58
 S'number'
 p59
-asba(iJSONScheme
+asba(imetajson.JSONScheme
 JSONScheme
 p60
 (dp61
@@ -188,7 +188,7 @@ S'string'
 p67
 aS'date'
 p68
-asba(iJSONScheme
+asba(imetajson.JSONScheme
 JSONScheme
 p69
 (dp70
@@ -212,7 +212,7 @@ sg57
 (lp75
 S'customNumber'
 p76
-asba(iJSONScheme
+asba(imetajson.JSONScheme
 JSONScheme
 p77
 (dp78

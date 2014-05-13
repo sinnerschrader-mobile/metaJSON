@@ -1,4 +1,4 @@
-(iJSONScheme
+(imetajson.JSONScheme
 JSONScheme
 p0
 (dp1
@@ -28,7 +28,7 @@ p13
 sS'props'
 p14
 (lp15
-(iJSONScheme
+(imetajson.JSONScheme
 JSONScheme
 p16
 (dp17
@@ -54,7 +54,7 @@ sg10
 (lp25
 sg12
 g13
-sba(iJSONScheme
+sba(imetajson.JSONScheme
 JSONScheme
 p26
 (dp27
@@ -86,7 +86,7 @@ aS'userAddress'
 p36
 aS'string'
 p37
-asba(iJSONScheme
+asba(imetajson.JSONScheme
 JSONScheme
 p38
 (dp39
@@ -108,7 +108,7 @@ sg10
 (lp43
 sg12
 g13
-sba(iJSONScheme
+sba(imetajson.JSONScheme
 JSONScheme
 p44
 (dp45
@@ -130,7 +130,7 @@ sg10
 (lp49
 sg12
 g13
-sba(iJSONScheme
+sba(imetajson.JSONScheme
 JSONScheme
 p50
 (dp51

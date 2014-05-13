@@ -1,5 +1,5 @@
-from ObjectiveCCodeGenerator import *
-from JSONScheme import *
+from metajson.ObjectiveCCodeGenerator import ObjectiveCCodeGenerator
+from metajson.JSONScheme import *
 
 import pickle
 import unittest

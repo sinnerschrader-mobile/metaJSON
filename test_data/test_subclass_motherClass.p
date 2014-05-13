@@ -1,4 +1,4 @@
-(iJSONScheme
+(imetajson.JSONScheme
 JSONScheme
 p0
 (dp1
@@ -20,7 +20,7 @@ p9
 sS'props'
 p10
 (lp11
-(iJSONScheme
+(imetajson.JSONScheme
 JSONScheme
 p12
 (dp13

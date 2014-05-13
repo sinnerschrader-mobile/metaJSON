@@ -4,7 +4,7 @@ p1
 (dp2
 S'id'
 p3
-(iJSONScheme
+(imetajson.JSONScheme
 JSONScheme
 p4
 (dp5
@@ -41,7 +41,7 @@ p20
 (dp21
 S'name'
 p22
-(iJSONScheme
+(imetajson.JSONScheme
 JSONScheme
 p23
 (dp24
@@ -66,7 +66,7 @@ g19
 sbssg8
 (dp29
 g9
-(iJSONScheme
+(imetajson.JSONScheme
 JSONScheme
 p30
 (dp31
@@ -86,7 +86,7 @@ g4
 asg18
 g19
 sbsg26
-(iJSONScheme
+(imetajson.JSONScheme
 JSONScheme
 p36
 (dp37
