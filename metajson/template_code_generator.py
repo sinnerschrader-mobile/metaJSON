@@ -6,14 +6,16 @@ class TemplateCodeGenerator :
 
     projectPrefix = ""
     dirPath = ""
-    templatePath = "./templates"
+    templatePath = "./metajson/templates"
 
     def __init__(self):
         projectPrefix = "S2M"
         dirPath = "classes"
-        templatePath = "./templates"
+        templatePath = "./metajson/templates"
+
     def writeNSStringCategory(self) :
         today = datetime.date.fromtimestamp(time.time())
+
         if not os.path.exists(self.dirPath):
             os.makedirs(self.dirPath)
 

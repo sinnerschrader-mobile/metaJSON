@@ -51,7 +51,6 @@ def main(argv=sys.argv):
     usageString += '  -i, --input=          meta-JSON file to read\n'
     usageString += '  -o, --output=         ouput path of generated source codes\n'
 
-    print("Executing metajson version %s." % __version__)
     argv = sys.argv[1:]
     try:
         opts, args = getopt.getopt(argv,"ho:p:s:t:i:",["prefix=","suffix=","target=","input=","output="])
@@ -100,13 +99,9 @@ def main(argv=sys.argv):
         print(usageString)
         sys.exit()
 
-
-
-    templatePath = os.path.abspath( __file__ )
-    templatePath = templatePath.replace('/readJSON.py', '/templates')
-
     if not os.path.exists(dirPathToSaveCodes):
         os.makedirs(dirPathToSaveCodes)
+
     iOS = False
     Android = False
     if target == 'iOS' :
@@ -118,18 +113,16 @@ def main(argv=sys.argv):
         print(usageString)
         sys.exit()
 
-
     hasError = False
 
     if iOS :
         if dirPathToSaveCodes.endswith("/") :
                 dirPathToSaveCodes = dirPathToSaveCodes[:-1]
 
-        if os.path.exists(dirPathToSaveCodes+ "/abstractInterfaceFiles"):
-            shutil.rmtree(dirPathToSaveCodes + "/abstractInterfaceFiles")
+        if os.path.exists(dirPathToSaveCodes + "/AbstractInterfaceFiles"):
+            shutil.rmtree(dirPathToSaveCodes + "/AbstractInterfaceFiles")
 
         templateCodeGen = TemplateCodeGenerator()
-        templateCodeGen.templatePath = templatePath
         templateCodeGen.projectPrefix = projectPrefix
         templateCodeGen.dirPath = dirPathToSaveCodes
         templateCodeGen.writeTemplates()
@@ -201,6 +194,9 @@ def openFileAndParseJSON(filePath):
         f.close()
 
     return obj
+
+def version():
+    print("Running metajson version %s." % __version__)
 
 if __name__ == '__main__':
     sys.exit(main(sys.argv))
