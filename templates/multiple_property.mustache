@@ -1,18 +1,18 @@
 {{#hasCustomType}}
-{{#types}}
 {{#className}}
 - ({{className}} *){{name}}As{{#_upper_camelcase}}{{type}}{{/_upper_camelcase}}:(NSError **)error;
 {{/className}}
 {{^className}}
 - (NSString *){{name}}As{{#_upper_camelcase}}{{type}}{{/_upper_camelcase}}:(NSError **)error;
 {{/className}}
-{{/types}}
 {{/hasCustomType}}
 {{#hasNumberType}}
 - (NSNumber *){{name}}AsNumber:(NSError **)error;
 {{/hasNumberType}}
 {{#hasStringType}}
-- (NSString *){{name}}AsString:(NSError **)error;
+{{#types}}
+- (NSString *){{name}}As{{#_upper_camelcase}}{{type}}{{/_upper_camelcase}}:(NSError **)error;
+{{/types}}
 {{/hasStringType}}
 {{#hasDateType}}
 - (NSDate *){{name}}AsDate:(NSError **)error;
