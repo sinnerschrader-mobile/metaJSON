@@ -31,7 +31,7 @@ import shutil
 import sys, getopt
 from JSONScheme import *
 from ObjectiveCCodeGenerator import *
-from JavaCodeGenerator import *   
+from JavaCodeGenerator import *
 
 
 jsonfiles = []
@@ -60,7 +60,7 @@ if __name__ == "__main__":
 
     for opt, arg in opts:
         if opt in ("-h", "--help"):
-            print usageString
+            print(usageString)
             sys.exit()
         elif opt in ("-p", "--prefix"):
             projectPrefix = arg
@@ -91,12 +91,12 @@ if __name__ == "__main__":
 
 if target == 'none' :
     print 'error - target platform is not defined'
-    print usageString
+    print(usageString)
     sys.exit()
 
 if len(jsonfiles) == 0 :
     print 'error - meta JSON file is not defined'
-    print usageString
+    print(usageString)
     sys.exit()
 
 
@@ -114,7 +114,7 @@ def openFileAndParseJSON(filePath):
 	    obj = json.load(f)
 	finally:
 	    f.close()
-	
+
 	return obj
 
 iOS = False
@@ -125,7 +125,7 @@ elif target == 'Android' :
     Android = True
 else :
     print 'error - unknown target platform : ' + target
-    print usageString
+    print(usageString)
     sys.exit()
 
 
@@ -148,13 +148,13 @@ JSONScheme.projectPrefix = projectPrefix
 JSONScheme.objectSuffix = objectSuffix
 
 print "\nGenerate source codes for " + target + ", with Project Prefix \'" + projectPrefix + "\' and suffix \'" + objectSuffix + "\'"
-print "Output path : \'" + dirPathToSaveCodes + "\'\n" 
+print "Output path : \'" + dirPathToSaveCodes + "\'\n"
 
 for filePath in jsonfiles :
     print "read " + filePath + " to parse ...."
-    
+
     jsonObj = openFileAndParseJSON(filePath)
-    
+
     if type(jsonObj) == list :
         for dic in jsonObj :
             schemeObj = JSONScheme()
@@ -194,7 +194,7 @@ for filePath in jsonfiles :
         codeGen.objectSuffix = objectSuffix
         allSchemes = JSONScheme.JSONSchemeDic
         codeGen.JSONSchemeDic = allSchemes
-    
+
         rootDic = allSchemes["ROOT"]
         allRootKeys = rootDic.keys()
         for typeName in rootDic :
