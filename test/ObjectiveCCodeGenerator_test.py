@@ -10,7 +10,7 @@ class TestObjectiveCCodeGenerator(unittest.TestCase):
         self.gen = ObjectiveCCodeGenerator()
         self.gen.dirPath = './src'
         self.maxDiff = None
-        self.default_folder = 'test_data/'
+        self.default_folder = 'test/data/'
 
     def tearDown(self):
         del self.gen
