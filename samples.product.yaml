@@ -1,0 +1,33 @@
+-
+  name: sender
+  base-type: object
+  description: 'sender info.'
+  property: [{ name: senderName, base-type: string, required: 1 }, { name: previewImageURL, base-type: string, required: 1 }]
+-
+  name: senderList
+  base-type: object
+  description: 'the list of senders.'
+  property: [{ name: listTitle, base-type: string, description: 'the title of sender list', required: 1 }, { name: senders, base-type: array, description: 'the array of Sender', subType: sender, required: 1 }]
+-
+  name: senderList2
+  base-type: senderList
+  description: 'the list of senders2.'
+  property: [{ name: listSubTitle, base-type: string, description: 'the title of sender list', required: 1 }]
+-
+  name: senderGroup
+  base-type: object
+  description: 'the list of senders.'
+  property: [{ name: digitalSenders, base-type: array, subType: [senderList, senderList2, number, string, boolean, date, data], description: 'the array of sender list' }, { name: HDOptions, base-type: array, description: 'the array of sender list', subType: [senderList, senderList2] }, { name: DTVHighlights, base-type: array, description: 'the array of sender list', subType: [string, titleString], maxCount: 6, minCount: 2 }, { name: IPTVSenders, base-type: array, description: 'the array of sender list', subType: any, maxCount: 6, minCount: 2 }]
+-
+  name: titleString
+  base-type: string
+  description: 'the title of product'
+  minLength: 10
+  maxLength: 20
+  regex: '[a-z0-9]:10'
+  required: 1
+-
+  name: ProductDetail
+  base-type: object
+  description: 'Product details.'
+  property: [{ name: type, base-type: number, description: 'the type of product', required: 1 }, { name: advantage, base-type: number, required: 1 }, { name: teaserURL, base-type: string, description: 'teaser image url of product', required: 1 }, { name: telephoneFlatrate, base-type: string, description: 'telephone Flatrate option string' }, { name: includeHardware, base-type: boolean, required: 1 }, { name: senderInfo, base-type: senderGroup }, { name: anyProperty, base-type: any, required: 1 }, { name: title, base-type: [titleString, string], description: 'the title of product', required: 1 }, { name: download, base-type: [number, string], description: 'download speed (Mbit/s)', required: 1 }, { name: upload, base-type: [number, string], description: 'upload speed (Mbit/s)', required: 1 }]

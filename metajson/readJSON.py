@@ -47,7 +47,7 @@ def main(argv=sys.argv):
 
     argv = sys.argv[1:]
     try:
-        opts, args = getopt.getopt(argv,"vhp:s:t:i:o",["version", "help", "prefix=", "suffix=", "target=", "input=", "output="])
+        opts, args = getopt.getopt(argv,"vhp:s:t:i:o:",["version", "help", "prefix=", "suffix=", "target=", "input=", "output="])
     except getopt.GetoptError:
         usage()
         sys.exit(2)
