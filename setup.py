@@ -20,9 +20,11 @@ setup(
     entry_points = {
         "console_scripts": ['metajson = metajson.readJSON:main']
         },
+    install_requires = ['pystache'],
+    tests_require = ['nose'],
     version = version,
-    description='metaJSON provides a meta language to generate object models for several languages. The generated classes can easily be used for the client-server communication.',
-    url='https://github.com/sinnerschrader-mobile/metaJSON.git',
-    license='MIT',
+    description = 'metaJSON provides a meta language to generate object models for several languages. The generated classes can easily be used for the client-server communication.',
+    url = 'https://github.com/sinnerschrader-mobile/metaJSON.git',
+    license = 'MIT',
     long_description = long_descr,
     )
