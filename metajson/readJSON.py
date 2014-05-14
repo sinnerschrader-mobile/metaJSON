@@ -22,7 +22,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 '''
 
-__version__ = "2.7.2"
+__version__ = "1.0.0"
 
 import json
 import os
