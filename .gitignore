@@ -4,3 +4,5 @@
 # Default ouptut folder
 src/
 build/
+dist/
+*.egg-info
