@@ -35,6 +35,7 @@ from ObjectiveCCodeGenerator import *
 from JavaCodeGenerator import *
 
 def main(argv=sys.argv):
+    # parse Options
     jsonfiles = []
     inputfile = 'do you have files?'
     projectPrefix = 'S2M'
@@ -42,26 +43,16 @@ def main(argv=sys.argv):
     dirPathToSaveCodes = './src'
     objectSuffix = "JSONObject"
 
-    usageString = '\nreadJSON.py [ -p | -t | -o | -s ] [-i]\n'
-    usageString += 'Options:\n'
-    usageString += '  -v, --version         shows version\n'
-    usageString += '  -h, --help            shows help\n'
-    usageString += '  -p, --prefix=         project prefix (default: S2M)\n'
-    usageString += '  -s, --suffix=         classname suffix (default: JSONObject). Use "-s false" for no suffix\n'
-    usageString += '  -t, --target=         target platform iOS or Android (default: iOS)\n'
-    usageString += '  -i, --input=          meta-JSON file to read\n'
-    usageString += '  -o, --output=         ouput path of generated source codes (default: src)\n'
-
     argv = sys.argv[1:]
     try:
         opts, args = getopt.getopt(argv,"vhp:s:t:i:o",["version", "help", "prefix=", "suffix=", "target=", "input=", "output="])
     except getopt.GetoptError:
-        print(usageString)
+        usage()
         sys.exit(2)
 
     for opt, arg in opts:
         if opt in ("-h", "--help"):
-            print(usageString)
+            usage()
             sys.exit()
         elif opt in ("-v", "--version"):
             version()
@@ -94,13 +85,11 @@ def main(argv=sys.argv):
 
     if target == 'none' :
         print 'error - target platform is not defined'
-        print(usageString)
-        sys.exit()
+        usage()
 
     if len(jsonfiles) == 0 :
         print 'error - meta JSON file is not defined'
-        print(usageString)
-        sys.exit()
+        usage()
 
     if not os.path.exists(dirPathToSaveCodes):
         os.makedirs(dirPathToSaveCodes)
@@ -113,29 +102,20 @@ def main(argv=sys.argv):
         Android = True
     else :
         print 'error - unknown target platform : ' + target
-        print(usageString)
-        sys.exit()
+        usage()
 
     hasError = False
 
+    # write templates
     if iOS :
-        if dirPathToSaveCodes.endswith("/") :
-                dirPathToSaveCodes = dirPathToSaveCodes[:-1]
+      generate_template_files(dirPathToSaveCodes, projectPrefix)
 
-        if os.path.exists(dirPathToSaveCodes + "/AbstractInterfaceFiles"):
-            shutil.rmtree(dirPathToSaveCodes + "/AbstractInterfaceFiles")
-
-        templateCodeGen = TemplateCodeGenerator()
-        templateCodeGen.projectPrefix = projectPrefix
-        templateCodeGen.dirPath = dirPathToSaveCodes
-        templateCodeGen.writeTemplates()
-
-    JSONScheme.projectPrefix = projectPrefix
-    JSONScheme.objectSuffix = objectSuffix
-
+    # read JSON file
     print "\nGenerate source codes for " + target + ", with Project Prefix \'" + projectPrefix + "\' and suffix \'" + objectSuffix + "\'"
     print "Output path : \'" + dirPathToSaveCodes + "\'\n"
 
+    JSONScheme.projectPrefix = projectPrefix
+    JSONScheme.objectSuffix = objectSuffix
     for filePath in jsonfiles :
         print "read " + filePath + " to parse ...."
 
@@ -188,14 +168,38 @@ def main(argv=sys.argv):
                 if obj.isNaturalType() == False :
                     codeGen.make(obj)
 
+def generate_template_files(dirPathToSaveCodes, projectPrefix):
+    if dirPathToSaveCodes.endswith("/") :
+            dirPathToSaveCodes = dirPathToSaveCodes[:-1]
+
+    if os.path.exists(dirPathToSaveCodes + "/AbstractInterfaceFiles"):
+        shutil.rmtree(dirPathToSaveCodes + "/AbstractInterfaceFiles")
+
+    templateCodeGen = TemplateCodeGenerator()
+    templateCodeGen.projectPrefix = projectPrefix
+    templateCodeGen.dirPath = dirPathToSaveCodes
+    templateCodeGen.writeTemplates()
+
+def usage():
+    usageString = '\n'+__file__+' [ -p | -t | -o | -s ] [-i]\n'
+    usageString += 'Options:\n'
+    usageString += '  -v, --version         shows version\n'
+    usageString += '  -h, --help            shows help\n'
+    usageString += '  -p, --prefix=         project prefix (default: S2M)\n'
+    usageString += '  -s, --suffix=         classname suffix (default: JSONObject). Use "-s false" for no suffix\n'
+    usageString += '  -t, --target=         target platform iOS or Android (default: iOS)\n'
+    usageString += '  -i, --input=          meta-JSON file to read\n'
+    usageString += '  -o, --output=         ouput path of generated source codes (default: src)\n'
+    print(usageString)
+    sys.exit()
+
+"Opens and read content of json file"
 def openFileAndParseJSON(filePath):
     f = open(filePath)
-
     try:
         obj = json.load(f)
     finally:
         f.close()
-
     return obj
 
 def version():
