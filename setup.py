@@ -18,7 +18,7 @@ setup(
     entry_points = {
         "console_scripts": ['metajson = metajson.readJSON:main']
         },
-    install_requires = ['pystache'],
+    install_requires = ['pystache', 'pyyaml'],
     tests_require = ['nose'],
     include_package_data = True, #will include files listed in MANIFEST.in
     version = version,

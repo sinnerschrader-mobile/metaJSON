@@ -24,6 +24,8 @@ THE SOFTWARE.
 
 __version__ = "1.0.0"
 
+import yaml
+
 import json
 import os
 import glob
@@ -119,9 +121,10 @@ def main(argv=sys.argv):
     for filePath in jsonfiles :
         print "read " + filePath + " to parse ...."
 
-        jsonObj = openFileAndParseJSON(filePath)
+        jsonObj = read_file(filePath)
 
         if type(jsonObj) == list :
+            print "list"
             for dic in jsonObj :
                 schemeObj = JSONScheme()
                 schemeObj.projectPrefix = projectPrefix
@@ -131,6 +134,7 @@ def main(argv=sys.argv):
                     break
 
         elif type(jsonObj) == dict :
+            print "dict"
             schemeObj = JSONScheme()
             if schemeObj.parseDictionary(jsonObj) == False :
                 hasError = True
@@ -192,6 +196,22 @@ def usage():
     usageString += '  -o, --output=         ouput path of generated source codes (default: src)\n'
     print(usageString)
     sys.exit()
+
+def read_file(file_path):
+    basename, extension = os.path.splitext(file_path)
+    if extension == '.yaml':
+        return open_yaml_file(file_path)
+    else:
+        return openFileAndParseJSON(file_path)
+
+"Opens and read content of yaml file"
+def open_yaml_file(file_path):
+    f = open(file_path)
+    try:
+        obj = yaml.load(f)
+    finally:
+        f.close()
+    return obj
 
 "Opens and read content of json file"
 def openFileAndParseJSON(filePath):
