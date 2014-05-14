@@ -37,23 +37,24 @@ from JavaCodeGenerator import *
 def main(argv=sys.argv):
     jsonfiles = []
     inputfile = 'do you have files?'
-    projectPrefix = ''
+    projectPrefix = 'S2M'
     target = 'iOS'
     dirPathToSaveCodes = './src'
     objectSuffix = "JSONObject"
 
     usageString = '\nreadJSON.py [ -p | -t | -o | -s ] [-i]\n'
     usageString += 'Options:\n'
+    usageString += '  -v, --version         shows version\n'
     usageString += '  -h, --help            shows help\n'
     usageString += '  -p, --prefix=         project prefix (default: S2M)\n'
     usageString += '  -s, --suffix=         classname suffix (default: JSONObject). Use "-s false" for no suffix\n'
     usageString += '  -t, --target=         target platform iOS or Android (default: iOS)\n'
     usageString += '  -i, --input=          meta-JSON file to read\n'
-    usageString += '  -o, --output=         ouput path of generated source codes\n'
+    usageString += '  -o, --output=         ouput path of generated source codes (default: src)\n'
 
     argv = sys.argv[1:]
     try:
-        opts, args = getopt.getopt(argv,"ho:p:s:t:i:",["prefix=","suffix=","target=","input=","output="])
+        opts, args = getopt.getopt(argv,"vhp:s:t:i:o",["version", "help", "prefix=", "suffix=", "target=", "input=", "output="])
     except getopt.GetoptError:
         print(usageString)
         sys.exit(2)
@@ -62,6 +63,8 @@ def main(argv=sys.argv):
         if opt in ("-h", "--help"):
             print(usageString)
             sys.exit()
+        elif opt in ("-v", "--version"):
+            version()
         elif opt in ("-p", "--prefix"):
             projectPrefix = arg
         elif opt in ("-t", "--target"):
@@ -196,7 +199,8 @@ def openFileAndParseJSON(filePath):
     return obj
 
 def version():
-    print("Running metajson version %s." % __version__)
+    print("metaJSON version %s." % __version__)
+    sys.exit(0)
 
 if __name__ == '__main__':
     sys.exit(main(sys.argv))
