@@ -38,6 +38,7 @@ from JavaCodeGenerator import *
 
 def main(argv=sys.argv):
     # parse Options
+    template_dir = None
     jsonfiles = []
     inputfile = 'do you have files?'
     projectPrefix = 'S2M'
@@ -108,14 +109,12 @@ def main(argv=sys.argv):
 
     hasError = False
 
-    # write templates
-    if iOS :
-      generate_template_files(dirPathToSaveCodes, projectPrefix)
-
-    # read JSON file
     print "\nGenerate source codes for " + target + ", with Project Prefix \'" + projectPrefix + "\' and suffix \'" + objectSuffix + "\'"
     print "Output path : \'" + dirPathToSaveCodes + "\'\n"
+    # write templates
+    generate_template_files(dirPathToSaveCodes, projectPrefix, target, template_dir)
 
+    # read JSON file
     JSONScheme.projectPrefix = projectPrefix
     JSONScheme.objectSuffix = objectSuffix
     for filePath in jsonfiles :
@@ -124,7 +123,6 @@ def main(argv=sys.argv):
         jsonObj = read_file(filePath)
 
         if type(jsonObj) == list :
-            print "list"
             for dic in jsonObj :
                 schemeObj = JSONScheme()
                 schemeObj.projectPrefix = projectPrefix
@@ -134,11 +132,9 @@ def main(argv=sys.argv):
                     break
 
         elif type(jsonObj) == dict :
-            print "dict"
             schemeObj = JSONScheme()
             if schemeObj.parseDictionary(jsonObj) == False :
                 hasError = True
-
         else :
             hasError = True
             print "error : no JSON Scheme"
@@ -147,11 +143,7 @@ def main(argv=sys.argv):
         if hasError :
             print "error - Fail to make scheme object."
             break;
-
-        if hasError :
-            break
-
-        if not hasError:
+        else:
             codeGen = 0
 
             if Android :
@@ -172,14 +164,12 @@ def main(argv=sys.argv):
                 if obj.isNaturalType() == False :
                     codeGen.make(obj)
 
-def generate_template_files(dirPathToSaveCodes, projectPrefix, template_dir = None):
+def generate_template_files(dirPathToSaveCodes, projectPrefix, target, template_dir = None):
     if dirPathToSaveCodes.endswith("/") :
             dirPathToSaveCodes = dirPathToSaveCodes[:-1]
 
-    # if os.path.exists(dirPathToSaveCodes + "/AbstractInterfaceFiles"):
-    #     shutil.rmtree(dirPathToSaveCodes + "/AbstractInterfaceFiles")
     if template_dir == None:
-        template_dir = TemplateCodeGenerator.DEFAULT_TEMPLATE_PATH
+        template_dir = os.path.join(TemplateCodeGenerator.DEFAULT_TEMPLATE_PATH, target)
 
     templateCodeGen = TemplateCodeGenerator(template_dir, dirPathToSaveCodes, projectPrefix)
     templateCodeGen.write_general_template_files()

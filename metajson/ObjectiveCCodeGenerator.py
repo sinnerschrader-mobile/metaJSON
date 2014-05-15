@@ -65,10 +65,7 @@ class ObjectiveCCodeGenerator :
 
     # END template available functions
 
-    def template_file_path(self, filename) :
-        templatePath = os.path.realpath( __file__ )
-        templatePath = templatePath.replace(os.path.basename( __file__ ), 'templates')
-        return os.path.join(templatePath, filename)
+
 
     def makeVarName(self,schemeObj) :
         returnName = schemeObj.type_name
@@ -265,39 +262,6 @@ class ObjectiveCCodeGenerator :
         classes = self.process_subtypes(propObj, propertyHash)
         return classes, propertyHash
 
-    def human_header_content(self, schemeObj) :
-        templateFile = open(self.template_file_path("header.h.mustache"), "r")
-        today = datetime.date.fromtimestamp(time.time())
-
-        hashParams = {"date": str(today.year), "machineClassName": schemeObj.getMachineClassName(), "humanClassName": schemeObj.getClassName()}
-        return self.mustache_renderer.render(templateFile.read(), hashParams)
-
-    def human_source_content(self, schemeObj) :
-        templateFile = open(self.template_file_path("source.m.mustache"), "r")
-        today = datetime.date.fromtimestamp(time.time())
-
-        hashParams = {"date": str(today.year), "machineClassName": schemeObj.getMachineClassName(), "humanClassName": schemeObj.getClassName()}
-        return self.mustache_renderer.render(templateFile.read(), hashParams)
-
-    def machine_header_content(self, schemeObj) :
-        template_file = open(self.template_file_path("_header.h.mustache"), "r")
-        return self.machine_file_content(schemeObj, template_file)
-
-    def machine_source_content(self, schemeObj) :
-        template_file = open(self.template_file_path("_source.m.mustache"), "r")
-        return self.machine_file_content(schemeObj, template_file)
-
-    def make(self, schemeObj) :
-        # machine files
-        self.write_abstract_file(schemeObj.getMachineClassName() + ".h", self.machine_header_content(schemeObj))
-        self.write_abstract_file(schemeObj.getMachineClassName() + ".m", self.machine_source_content(schemeObj))
-
-        # human files
-        self.write_human_file(schemeObj.getClassName() + ".h", self.human_header_content(schemeObj))
-        self.write_human_file(schemeObj.getClassName() + ".m",  self.human_source_content(schemeObj))
-
-        return True
-
 
     def machine_file_content(self, schemeObj, template_file) :
         today = datetime.date.fromtimestamp(time.time())
@@ -368,6 +332,44 @@ class ObjectiveCCodeGenerator :
         sourceString = self.mustache_renderer.render(template_file.read(), hashParams)
         return sourceString
 
+    def template_file_path(self, filename) :
+        templatePath = os.path.realpath( __file__ )
+        templatePath = templatePath.replace(os.path.basename( __file__ ), 'templates/iOS')
+        return os.path.join(templatePath, filename)
+
+    def human_header_content(self, schemeObj) :
+        templateFile = open(self.template_file_path("header.h.mustache"), "r")
+        today = datetime.date.fromtimestamp(time.time())
+
+        hashParams = {"date": str(today.year), "machineClassName": schemeObj.getMachineClassName(), "humanClassName": schemeObj.getClassName()}
+        return self.mustache_renderer.render(templateFile.read(), hashParams)
+
+    def human_source_content(self, schemeObj) :
+        templateFile = open(self.template_file_path("source.m.mustache"), "r")
+        today = datetime.date.fromtimestamp(time.time())
+
+        hashParams = {"date": str(today.year), "machineClassName": schemeObj.getMachineClassName(), "humanClassName": schemeObj.getClassName()}
+        return self.mustache_renderer.render(templateFile.read(), hashParams)
+
+    def machine_header_content(self, schemeObj) :
+        template_file = open(self.template_file_path("_header.h.mustache"), "r")
+        print
+        return self.machine_file_content(schemeObj, template_file)
+
+    def machine_source_content(self, schemeObj) :
+        template_file = open(self.template_file_path("_source.m.mustache"), "r")
+        return self.machine_file_content(schemeObj, template_file)
+
+    def make(self, schemeObj) :
+        # machine files
+        self.write_abstract_file(schemeObj.getMachineClassName() + ".h", self.machine_header_content(schemeObj))
+        self.write_abstract_file(schemeObj.getMachineClassName() + ".m", self.machine_source_content(schemeObj))
+
+        # human files
+        self.write_human_file(schemeObj.getClassName() + ".h", self.human_header_content(schemeObj))
+        self.write_human_file(schemeObj.getClassName() + ".m",  self.human_source_content(schemeObj))
+
+        return True
 
     def write_abstract_file(self, filename, content) :
         folder = "/AbstractInterfaceFiles/"

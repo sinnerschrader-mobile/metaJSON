@@ -3,7 +3,7 @@
 
 - ({{className}} *){{name}}As{{#_upper_camelcase}}{{type}}{{/_upper_camelcase}}:(NSError **)error
 {
-    {{> metajson/templates/number_property}}
+    {{> metajson/templates/iOS/number_property}}
 }
 {{/className}}
 {{/hasCustomType}}
@@ -11,14 +11,14 @@
 
 - (NSNumber *){{name}}AsNumber:(NSError **)error
 {
-    {{> metajson/templates/number_property}}
+    {{> metajson/templates/iOS/number_property}}
 }
 {{/hasNumberType}}
 {{#hasStringType}}
 {{#types}}
 - (NSString *){{name}}As{{#_upper_camelcase}}{{type}}{{/_upper_camelcase}}:(NSError **)error
 {
-    {{> metajson/templates/string_property}}
+    {{> metajson/templates/iOS/string_property}}
 }
 {{/types}}
 {{/hasStringType}}
