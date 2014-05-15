@@ -18,7 +18,6 @@ class TemplateCodeGenerator :
     ## main methods
     def write_general_template_files(self):
         for input_file in self.general_template_files:
-            print input_file
             output_file = self.create_output_file(input_file)
             if output_file:
                 self.write_template(input_file, output_file)
@@ -30,16 +29,16 @@ class TemplateCodeGenerator :
         self.json_template_files = []
         self.general_template_files = []
         for root, dirs, files in os.walk(self.template_path):
-            if root == self.template_path:
-                for name in files:
-                    filepath = os.path.join(root, name)
-                    basename, extension = os.path.splitext(filepath)
-                    if extension == TemplateCodeGenerator.TEMPLATE_EXT:
-                        template_basename, template_extension = os.path.splitext(basename)
-                        if template_basename != basename:
-                            self.json_template_files.append(filepath)
-            else:
-                for name in files:
+            for name in files:
+                if name.startswith('.'):
+                  continue
+                filepath = os.path.join(root, name)
+                basename, extension = os.path.splitext(filepath)
+                if extension == TemplateCodeGenerator.TEMPLATE_EXT:
+                    template_basename, template_extension = os.path.splitext(basename)
+                    if template_basename != basename:
+                        self.json_template_files.append(filepath)
+                else:
                     filepath = os.path.join(root, name)
                     self.general_template_files.append(filepath)
 

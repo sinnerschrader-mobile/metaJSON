@@ -306,9 +306,6 @@ class ObjectiveCCodeGenerator :
                 undefineProps.append(prop_hash)
             if(len(classes) > 0):
               custom_classes.extend(classes)
-            if prop_hash['varName'] == 'senderInfo':
-              print prop_hash
-              print prop.rootBaseType()
 
         hashParams = {"date": str(today.year), "projectPrefix": schemeObj.projectPrefix,"machineClassName": schemeObj.getMachineClassName(), "humanClassName": schemeObj.getClassName(), "variableName": self.makeVarName(schemeObj), "stringProperties": stringProps, "numberProperties": numberProps, "booleanProperties": booleanProps, "dataProperties": dataProps, "dateProperties": dateProps, "arrayProperties": arrayProps, "undefinedProperties": undefineProps, "objectProperties": objectProps}
         hashParams["custom_classes"] = []
@@ -352,12 +349,12 @@ class ObjectiveCCodeGenerator :
         return self.mustache_renderer.render(templateFile.read(), hashParams)
 
     def machine_header_content(self, schemeObj) :
-        template_file = open(self.template_file_path("_header.h.mustache"), "r")
+        template_file = open(self.template_file_path("AbstractInterfaceFiles/_header.h.mustache"), "r")
         print
         return self.machine_file_content(schemeObj, template_file)
 
     def machine_source_content(self, schemeObj) :
-        template_file = open(self.template_file_path("_source.m.mustache"), "r")
+        template_file = open(self.template_file_path("AbstractInterfaceFiles/_source.m.mustache"), "r")
         return self.machine_file_content(schemeObj, template_file)
 
     def make(self, schemeObj) :

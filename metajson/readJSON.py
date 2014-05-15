@@ -36,19 +36,22 @@ from JSONScheme import *
 from ObjectiveCCodeGenerator import *
 from JavaCodeGenerator import *
 
+TARGET_IOS = 'iOS'
+TARGET_ANDROID = 'Android'
+
 def main(argv=sys.argv):
     # parse Options
     template_dir = None
     jsonfiles = []
     inputfile = 'do you have files?'
     projectPrefix = 'S2M'
-    target = 'iOS'
+    target = TARGET_IOS
     dirPathToSaveCodes = './src'
     objectSuffix = "JSONObject"
 
     argv = sys.argv[1:]
     try:
-        opts, args = getopt.getopt(argv,"vhp:s:t:i:o:",["version", "help", "prefix=", "suffix=", "target=", "input=", "output="])
+        opts, args = getopt.getopt(argv,"vhp:s:t:i:o:",["version", "help", "prefix=", "suffix=", "target=", "input=", "output=", "template="])
     except getopt.GetoptError:
         usage()
         sys.exit(2)
@@ -71,6 +74,8 @@ def main(argv=sys.argv):
             objectSuffix = arg
             if objectSuffix == "false":
                 objectSuffix = ""
+        elif opt in ("--template"):
+            template_dir = arg
 
     addFiles = False
     for arg in argv :
@@ -99,9 +104,9 @@ def main(argv=sys.argv):
 
     iOS = False
     Android = False
-    if target == 'iOS' :
+    if target == TARGET_IOS:
         iOS = True
-    elif target == 'Android' :
+    elif target == TARGET_ANDROID:
         Android = True
     else :
         print 'error - unknown target platform : ' + target
@@ -111,8 +116,17 @@ def main(argv=sys.argv):
 
     print "\nGenerate source codes for " + target + ", with Project Prefix \'" + projectPrefix + "\' and suffix \'" + objectSuffix + "\'"
     print "Output path : \'" + dirPathToSaveCodes + "\'\n"
+
     # write templates
-    generate_template_files(dirPathToSaveCodes, projectPrefix, target, template_dir)
+    if dirPathToSaveCodes.endswith("/") :
+            dirPathToSaveCodes = dirPathToSaveCodes[:-1]
+
+    if template_dir == None:
+        template_dir = os.path.join(TemplateCodeGenerator.DEFAULT_TEMPLATE_PATH, target)
+
+    templateCodeGen = TemplateCodeGenerator(template_dir, dirPathToSaveCodes, projectPrefix)
+    templateCodeGen.write_general_template_files()
+
 
     # read JSON file
     JSONScheme.projectPrefix = projectPrefix
@@ -164,16 +178,6 @@ def main(argv=sys.argv):
                 if obj.isNaturalType() == False :
                     codeGen.make(obj)
 
-def generate_template_files(dirPathToSaveCodes, projectPrefix, target, template_dir = None):
-    if dirPathToSaveCodes.endswith("/") :
-            dirPathToSaveCodes = dirPathToSaveCodes[:-1]
-
-    if template_dir == None:
-        template_dir = os.path.join(TemplateCodeGenerator.DEFAULT_TEMPLATE_PATH, target)
-
-    templateCodeGen = TemplateCodeGenerator(template_dir, dirPathToSaveCodes, projectPrefix)
-    templateCodeGen.write_general_template_files()
-
 def usage():
     usageString = '\n'+__file__+' [ -p | -t | -o | -s ] [-i]\n'
     usageString += 'Options:\n'
@@ -184,6 +188,7 @@ def usage():
     usageString += '  -t, --target=         target platform iOS or Android (default: iOS)\n'
     usageString += '  -i, --input=          meta-JSON file to read\n'
     usageString += '  -o, --output=         ouput path of generated source codes (default: src)\n'
+    usageString += '      --template=       template directory to use to generate code\n'
     print(usageString)
     sys.exit()
 
