@@ -15,6 +15,17 @@ class TemplateCodeGenerator :
         self.output_path = output_path
         self.read_template()
 
+    ## main methods
+    def write_general_template_files(self):
+        for input_file in self.general_template_files:
+            print input_file
+            output_file = self.create_output_file(input_file)
+            if output_file:
+                self.write_template(input_file, output_file)
+            else:
+                print "skip " + input_file
+
+    ## internal use
     def read_template(self):
         self.json_template_files = []
         self.general_template_files = []
@@ -53,14 +64,6 @@ class TemplateCodeGenerator :
             os.makedirs(end_dir)
         return open(os.path.join(end_dir, new_filename), 'w')
 
-    def write_general_template_files(self):
-        for input_file in self.general_template_files:
-            print input_file
-            output_file = self.create_output_file(input_file)
-            if output_file:
-                self.write_template(input_file, output_file)
-            else:
-                print "skip " + input_file
 
     def replace_variables(self, text, today):
         newtext = text.replace('_DATE_', "")
