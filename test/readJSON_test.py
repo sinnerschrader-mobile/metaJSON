@@ -12,6 +12,7 @@ class TestReadJSON(unittest.TestCase):
     def execute_script(self, json_file, output_dir):
         os.system("python -m metajson -p '' -i " + json_file)
         # ignoring template files
+        os.system("rm -rf ./src/APIParser")
         os.system("rm -rf ./src/Utilities")
         # return os.system("diff -r src/ " + output_dir)
         # common_file = "/AbstractInterfaceFiles/_ProductDetailJSONObject.h"

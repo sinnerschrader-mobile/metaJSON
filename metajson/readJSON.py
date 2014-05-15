@@ -172,17 +172,17 @@ def main(argv=sys.argv):
                 if obj.isNaturalType() == False :
                     codeGen.make(obj)
 
-def generate_template_files(dirPathToSaveCodes, projectPrefix):
+def generate_template_files(dirPathToSaveCodes, projectPrefix, template_dir = None):
     if dirPathToSaveCodes.endswith("/") :
             dirPathToSaveCodes = dirPathToSaveCodes[:-1]
 
-    if os.path.exists(dirPathToSaveCodes + "/AbstractInterfaceFiles"):
-        shutil.rmtree(dirPathToSaveCodes + "/AbstractInterfaceFiles")
+    # if os.path.exists(dirPathToSaveCodes + "/AbstractInterfaceFiles"):
+    #     shutil.rmtree(dirPathToSaveCodes + "/AbstractInterfaceFiles")
+    if template_dir == None:
+        template_dir = TemplateCodeGenerator.DEFAULT_TEMPLATE_PATH
 
-    templateCodeGen = TemplateCodeGenerator()
-    templateCodeGen.projectPrefix = projectPrefix
-    templateCodeGen.dirPath = dirPathToSaveCodes
-    templateCodeGen.writeTemplates()
+    templateCodeGen = TemplateCodeGenerator(template_dir, dirPathToSaveCodes, projectPrefix)
+    templateCodeGen.write_general_template_files()
 
 def usage():
     usageString = '\n'+__file__+' [ -p | -t | -o | -s ] [-i]\n'
