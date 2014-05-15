@@ -3,17 +3,38 @@ from metajson.JSONScheme import *
 
 import pickle
 import unittest
-
+import sys
+import os
 
 class TestObjectiveCCodeGenerator(unittest.TestCase):
     def setUp(self):
         self.gen = ObjectiveCCodeGenerator()
-        self.gen.dirPath = './src'
         self.maxDiff = None
         self.default_folder = 'test/data/'
 
     def tearDown(self):
         del self.gen
+
+    def template_file_path(self, filename) :
+        templatePath = os.path.realpath( __file__ )
+        templatePath = templatePath.replace(os.path.basename( __file__ ), '../metajson/templates/iOS')
+        return os.path.join(templatePath, filename)
+
+    def human_header_content(self, schemeObj) :
+        template_file = open(self.template_file_path("_CLASSNAME_.h.mustache"), "r")
+        return self.gen.render(schemeObj, template_file.read())
+
+    def human_source_content(self, schemeObj) :
+        template_file = open(self.template_file_path("_CLASSNAME_.m.mustache"), "r")
+        return self.gen.render(schemeObj, template_file.read())
+
+    def machine_header_content(self, schemeObj) :
+        template_file = open(self.template_file_path("AbstractInterfaceFiles/__CLASSNAME_.h.mustache"), "r")
+        return self.gen.render(schemeObj, template_file.read())
+
+    def machine_source_content(self, schemeObj) :
+        template_file = open(self.template_file_path("AbstractInterfaceFiles/__CLASSNAME_.m.mustache"), "r")
+        return self.gen.render(schemeObj, template_file.read())
 
     def assert_content_file(self, filename, content):
         with open(filename, 'r') as content_file:
@@ -28,19 +49,19 @@ class TestSampleTestClassCase(TestObjectiveCCodeGenerator):
 
 
     def test_human_header_content(self):
-        result = self.gen.human_header_content(self.scheme_object)
+        result = self.human_header_content(self.scheme_object)
         self.assert_content_file(self.test_file_path + "/S2MSenderJSONObject.h", result)
 
     def test_human_source_content(self):
-        result = self.gen.human_source_content(self.scheme_object)
+        result = self.human_source_content(self.scheme_object)
         self.assert_content_file(self.test_file_path + "/S2MSenderJSONObject.m", result)
 
     def test_machine_source_content(self):
-        result = self.gen.machine_source_content(self.scheme_object)
+        result = self.machine_source_content(self.scheme_object)
         self.assert_content_file(self.test_file_path + "/_S2MSenderJSONObject.m", result)
 
     def test_machine_header_content(self):
-        result = self.gen.machine_header_content(self.scheme_object)
+        result = self.machine_header_content(self.scheme_object)
         self.assert_content_file(self.test_file_path + "/_S2MSenderJSONObject.h", result)
 
 
@@ -51,11 +72,11 @@ class TestSampleTestStringOptionsCase(TestObjectiveCCodeGenerator):
         self.scheme_object = pickle.load(open(self.test_file_path + '.p', 'rb'))
 
     def test_machine_source_content(self):
-        result = self.gen.machine_source_content(self.scheme_object)
+        result = self.machine_source_content(self.scheme_object)
         self.assert_content_file(self.test_file_path + "/_S2MLoginJSONObject.m", result)
 
     def test_machine_header_content(self):
-        result = self.gen.machine_header_content(self.scheme_object)
+        result = self.machine_header_content(self.scheme_object)
         self.assert_content_file(self.test_file_path + "/_S2MLoginJSONObject.h", result)
 
 class TestSampleTestSubclassCase(TestObjectiveCCodeGenerator):
@@ -72,19 +93,19 @@ class TestSampleTestSubclassMotherCase(TestSampleTestSubclassCase):
         self.scheme_object = pickle.load(open(self.default_folder + '/test_subclass_motherClass.p', 'rb'))
 
     def test_human_header_content(self):
-        result = self.gen.human_header_content(self.scheme_object)
+        result = self.human_header_content(self.scheme_object)
         self.assert_content_file(self.test_file_path + "/MotherClassJSONObject.h", result)
 
     def test_human_source_content(self):
-        result = self.gen.human_source_content(self.scheme_object)
+        result = self.human_source_content(self.scheme_object)
         self.assert_content_file(self.test_file_path + "/MotherClassJSONObject.m", result)
 
     def test_machine_source_content(self):
-        result = self.gen.machine_source_content(self.scheme_object)
+        result = self.machine_source_content(self.scheme_object)
         self.assert_content_file(self.test_file_path + "/_MotherClassJSONObject.m", result)
 
     def test_machine_header_content(self):
-        result = self.gen.machine_header_content(self.scheme_object)
+        result = self.machine_header_content(self.scheme_object)
         self.assert_content_file(self.test_file_path + "/_MotherClassJSONObject.h", result)
 
 class TestSampleTestSubclassSubclassCase(TestSampleTestSubclassCase):
@@ -94,19 +115,19 @@ class TestSampleTestSubclassSubclassCase(TestSampleTestSubclassCase):
         self.scheme_object = pickle.load(open(self.default_folder + '/test_subclass_subClass.p', 'rb'))
 
     def test_human_header_content(self):
-        result = self.gen.human_header_content(self.scheme_object)
+        result = self.human_header_content(self.scheme_object)
         self.assert_content_file(self.test_file_path + "/SubClassJSONObject.h", result)
 
     def test_human_source_content(self):
-        result = self.gen.human_source_content(self.scheme_object)
+        result = self.human_source_content(self.scheme_object)
         self.assert_content_file(self.test_file_path + "/SubClassJSONObject.m", result)
 
     def test_machine_source_content(self):
-        result = self.gen.machine_source_content(self.scheme_object)
+        result = self.machine_source_content(self.scheme_object)
         self.assert_content_file(self.test_file_path + "/_SubClassJSONObject.m", result)
 
     def test_machine_header_content(self):
-        result = self.gen.machine_header_content(self.scheme_object)
+        result = self.machine_header_content(self.scheme_object)
         self.assert_content_file(self.test_file_path + "/_SubClassJSONObject.h", result)
 
 class TestSampleTestTypesCase(TestObjectiveCCodeGenerator):
@@ -119,11 +140,11 @@ class TestSampleTestTypesCase(TestObjectiveCCodeGenerator):
         self.scheme_object = pickle.load(open(self.default_folder + '/test_types_superObject.p', 'rb'))
 
     def test_machine_header_content(self):
-        result = self.gen.machine_header_content(self.scheme_object)
+        result = self.machine_header_content(self.scheme_object)
         self.assert_content_file(self.test_file_path + "/_S2MSuperObjectJSONObject.h", result)
 
     def test_machine_source_content(self):
-        result = self.gen.machine_source_content(self.scheme_object)
+        result = self.machine_source_content(self.scheme_object)
         self.assert_content_file(self.test_file_path + "/_S2MSuperObjectJSONObject.m", result)
 
 

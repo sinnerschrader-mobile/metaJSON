@@ -53,8 +53,6 @@ class JSONScheme :
     domain = ["ROOT"]
 
     def __init__(self):
-        projectPrefix = ""
-        objectSuffix = "JSONObject"
         type_name = ""
         key_name = ""
         base_type = ""

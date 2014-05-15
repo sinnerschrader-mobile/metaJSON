@@ -133,38 +133,11 @@ def main(argv=sys.argv):
     JSONScheme.objectSuffix = objectSuffix
     for filePath in jsonfiles :
         print "read " + filePath + " to parse ...."
-
         jsonObj = read_file(filePath)
+        schemeObj = create_json_scheme(jsonObj)
 
-        if type(jsonObj) == list :
-            for dic in jsonObj :
-                schemeObj = JSONScheme()
-                schemeObj.projectPrefix = projectPrefix
-                schemeObj.objectSuffix = objectSuffix
-                if schemeObj.parseDictionary(dic) == False:
-                    hasError = True
-                    break
-
-        elif type(jsonObj) == dict :
-            schemeObj = JSONScheme()
-            if schemeObj.parseDictionary(jsonObj) == False :
-                hasError = True
-        else :
-            hasError = True
-            print "error : no JSON Scheme"
-            break;
-
-        if hasError :
-            print "error - Fail to make scheme object."
-            break;
-        else:
-            codeGen = 0
-
-            if Android :
-                codeGen = JavaCodeGenerator()
-            else :
-                codeGen = ObjectiveCCodeGenerator()
-
+        if Android :
+            codeGen = JavaCodeGenerator()
             codeGen.projectPrefix = projectPrefix
             codeGen.dirPath = dirPathToSaveCodes
             codeGen.objectSuffix = objectSuffix
@@ -175,8 +148,49 @@ def main(argv=sys.argv):
             allRootKeys = rootDic.keys()
             for typeName in rootDic :
                 obj = rootDic[typeName];
-                if obj.isNaturalType() == False :
+                if obj.isNaturalType() == False:
                     codeGen.make(obj)
+
+        else :
+            codeGen = ObjectiveCCodeGenerator()
+
+            allSchemes = JSONScheme.JSONSchemeDic
+            rootDic = allSchemes["ROOT"]
+
+            for typeName in rootDic :
+                obj = rootDic[typeName];
+                if obj.isNaturalType() == False:
+
+                    for template_filename in templateCodeGen.json_template_files:
+                        template = open(template_filename)
+                        content = codeGen.render(obj, template.read())
+
+                        file = templateCodeGen.create_template_output_file(template_filename, obj.getClassName())
+                        try:
+                            file.write(content)
+                        finally :
+                            file.close()
+
+
+
+def create_json_scheme(jsonObj):
+    schemeObj = None
+    if type(jsonObj) == list :
+        for dic in jsonObj :
+            schemeObj = JSONScheme()
+            if schemeObj.parseDictionary(dic) == False:
+                schemeObj = None
+                print "error - Fail to make scheme object."
+                break
+
+    elif type(jsonObj) == dict :
+        schemeObj = JSONScheme()
+        if schemeObj.parseDictionary(jsonObj) == False :
+            schemeObj = None
+            print "error - Fail to make scheme object."
+    else :
+        print "error : no JSON Scheme"
+    return schemeObj
 
 def usage():
     usageString = '\n'+__file__+' [ -p | -t | -o | -s ] [-i]\n'

@@ -10,7 +10,7 @@ class TestTemplateCodeGenerator(unittest.TestCase):
         os.system("rm -rf ./classes")
 
     def test_read_template(self):
-        expected_jsons = ['./metajson/templates/iOS/header.h.mustache', './metajson/templates/iOS/source.m.mustache', './metajson/templates/iOS/AbstractInterfaceFiles/_header.h.mustache', './metajson/templates/iOS/AbstractInterfaceFiles/_source.m.mustache']
+        expected_jsons = ['./metajson/templates/iOS/_CLASSNAME_.h.mustache', './metajson/templates/iOS/_CLASSNAME_.m.mustache', './metajson/templates/iOS/AbstractInterfaceFiles/__CLASSNAME_.h.mustache', './metajson/templates/iOS/AbstractInterfaceFiles/__CLASSNAME_.m.mustache']
         expected_api_templates = ['./metajson/templates/iOS/APIParser/_PREFIX_APIParser.h', './metajson/templates/iOS/APIParser/_PREFIX_APIParser.m', './metajson/templates/iOS/Utilities/NSString+RegExValidation.h', './metajson/templates/iOS/Utilities/NSString+RegExValidation.m']
 
         self.object.read_template()

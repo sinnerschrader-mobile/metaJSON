@@ -43,6 +43,9 @@ class TemplateCodeGenerator :
                     self.general_template_files.append(filepath)
 
     def create_output_file(self, filename):
+        return self.create_template_output_file(filename, None)
+
+    def create_template_output_file(self, filename, classname):
         start = filename.find(self.template_path)
 
         if start == -1:
@@ -54,7 +57,9 @@ class TemplateCodeGenerator :
         # customize output filename
         today = datetime.date.fromtimestamp(time.time())
         new_filename = self.replace_variables(new_filename, today)
-
+        if classname:
+          new_filename = new_filename.replace('_CLASSNAME_', classname)
+          new_filename = new_filename.replace(TemplateCodeGenerator.TEMPLATE_EXT, '')
         if directories.startswith("/"):
             directories = directories[1:]
 
@@ -62,7 +67,6 @@ class TemplateCodeGenerator :
         if not os.path.exists(end_dir):
             os.makedirs(end_dir)
         return open(os.path.join(end_dir, new_filename), 'w')
-
 
     def replace_variables(self, text, today):
         newtext = text.replace('_DATE_', "")

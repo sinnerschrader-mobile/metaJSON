@@ -32,12 +32,7 @@ from template_code_generator import *
 
 class ObjectiveCCodeGenerator :
 
-    projectPrefix = ""
-    dirPath = ""
-
     def __init__(self):
-        projectPrefix = ""
-        dirPath = "classes"
         self.mustache_renderer = Renderer()
 
     # BEGIN template available functions
@@ -72,7 +67,7 @@ class ObjectiveCCodeGenerator :
         if str(schemeObj.type_name) == "id" or str(schemeObj.type_name) == "description" :
             titleName = schemeObj.type_name.upper()
             titleName = titleName[:1] + schemeObj.type_name[1:]
-            prefix = self.projectPrefix.lower() if self.projectPrefix else 'meta'
+            prefix = schemeObj.projectPrefix.lower() if schemeObj.projectPrefix else 'meta'
             returnName = prefix + titleName
         else :
             prefixes = ["new", "alloc", "copy"]
@@ -80,8 +75,8 @@ class ObjectiveCCodeGenerator :
                 if schemeObj.type_name.startswith(prefix):
                     titleName = schemeObj.type_name.upper()
                     titleName = titleName[:1] + schemeObj.type_name[1:]
-                    returnName = self.projectPrefix.lower() + titleName
-                    #print returnName
+                    returnName = schemeObj.projectPrefix.lower() + titleName
+
                     break
         return returnName
 
@@ -263,7 +258,7 @@ class ObjectiveCCodeGenerator :
         return classes, propertyHash
 
 
-    def machine_file_content(self, schemeObj, template_file) :
+    def render(self, schemeObj, template_content) :
         today = datetime.date.fromtimestamp(time.time())
 
         numberProps = []
@@ -326,76 +321,5 @@ class ObjectiveCCodeGenerator :
             hashParams['baseTypeIsObject'] = True
 
         # render
-        sourceString = self.mustache_renderer.render(template_file.read(), hashParams)
+        sourceString = self.mustache_renderer.render(template_content, hashParams)
         return sourceString
-
-    def template_file_path(self, filename) :
-        templatePath = os.path.realpath( __file__ )
-        templatePath = templatePath.replace(os.path.basename( __file__ ), 'templates/iOS')
-        return os.path.join(templatePath, filename)
-
-    def human_header_content(self, schemeObj) :
-        templateFile = open(self.template_file_path("header.h.mustache"), "r")
-        today = datetime.date.fromtimestamp(time.time())
-
-        hashParams = {"date": str(today.year), "machineClassName": schemeObj.getMachineClassName(), "humanClassName": schemeObj.getClassName()}
-        return self.mustache_renderer.render(templateFile.read(), hashParams)
-
-    def human_source_content(self, schemeObj) :
-        templateFile = open(self.template_file_path("source.m.mustache"), "r")
-        today = datetime.date.fromtimestamp(time.time())
-
-        hashParams = {"date": str(today.year), "machineClassName": schemeObj.getMachineClassName(), "humanClassName": schemeObj.getClassName()}
-        return self.mustache_renderer.render(templateFile.read(), hashParams)
-
-    def machine_header_content(self, schemeObj) :
-        template_file = open(self.template_file_path("AbstractInterfaceFiles/_header.h.mustache"), "r")
-        print
-        return self.machine_file_content(schemeObj, template_file)
-
-    def machine_source_content(self, schemeObj) :
-        template_file = open(self.template_file_path("AbstractInterfaceFiles/_source.m.mustache"), "r")
-        return self.machine_file_content(schemeObj, template_file)
-
-    def make(self, schemeObj) :
-        # machine files
-        self.write_abstract_file(schemeObj.getMachineClassName() + ".h", self.machine_header_content(schemeObj))
-        self.write_abstract_file(schemeObj.getMachineClassName() + ".m", self.machine_source_content(schemeObj))
-
-        # human files
-        self.write_human_file(schemeObj.getClassName() + ".h", self.human_header_content(schemeObj))
-        self.write_human_file(schemeObj.getClassName() + ".m",  self.human_source_content(schemeObj))
-
-        return True
-
-    def write_abstract_file(self, filename, content) :
-        folder = "/AbstractInterfaceFiles/"
-        if not os.path.exists(self.dirPath + folder):
-            os.makedirs(self.dirPath + folder)
-
-        filepath = self.dirPath + folder + filename
-        self.write_file(filepath, content)
-
-    def write_human_file(self, filename, content) :
-        folder = "/"
-        if not os.path.exists(self.dirPath + folder):
-            os.makedirs(self.dirPath + folder)
-
-        filepath = self.dirPath + folder + filename
-        self.write_file(filepath, content)
-
-    def write_file(self, filename, content) :
-        if not os.path.exists(self.dirPath):
-            os.makedirs(self.dirPath)
-
-        if self.dirPath.endswith("/") :
-            self.dirPath = self.dirPath[:-1]
-
-
-        if os.path.isfile(filename) is False :
-            print "create " + filename + " file..."
-            try:
-                writefile = open(filename, "w")
-                writefile.write(content) # Write a string to a file
-            finally :
-                writefile.close()
