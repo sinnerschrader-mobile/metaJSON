@@ -4,16 +4,16 @@ import time
 
 class TemplateCodeGenerator :
 
-    projectPrefix = "S2M"
     TEMPLATE_EXT = ".mustache"
     DEFAULT_TEMPLATE_PATH = "./metajson/templates"
 
-    def __init__(self, template_path = DEFAULT_TEMPLATE_PATH, output_path = "classes"):
+    def __init__(self, template_path = DEFAULT_TEMPLATE_PATH, output_path = "classes", project_prefix = "S2M"):
+        self.project_prefix = project_prefix
         self.template_path = template_path
+        if output_path.endswith("/"):
+            output_path = output_path[:-1]
         self.output_path = output_path
         self.read_template()
-        if len(self.json_template_files) == 0:
-          print ""
 
     def read_template(self):
         self.json_template_files = []
@@ -32,70 +32,48 @@ class TemplateCodeGenerator :
                     filepath = os.path.join(root, name)
                     self.general_template_files.append(filepath)
 
-    def writeNSStringCategory(self) :
+    def create_output_file(self, filename):
+        start = filename.find(self.template_path)
+
+        if start == -1:
+            new_filename = filename
+        else:
+            new_filename = filename[len(self.template_path):]
+        directories, new_filename = os.path.split(new_filename)
+
+        # customize output filename
         today = datetime.date.fromtimestamp(time.time())
+        new_filename = self.replace_variables(new_filename, today)
 
-        if not os.path.exists(self.dirPath):
-            os.makedirs(self.dirPath)
+        if directories.startswith("/"):
+            directories = directories[1:]
 
-        headerDstFile = open(self.dirPath + "/NSString+RegExValidation.h", "w")
-        headerSrcFile = self.template_path + "/NSString+RegExValidation.h"
+        end_dir = os.path.join(self.output_path, directories)
+        if not os.path.exists(end_dir):
+            os.makedirs(end_dir)
+        return open(os.path.join(end_dir, new_filename), 'w')
 
-        try:
-            for line in open(headerSrcFile):
-                newLine = line.replace('_DATE_', "")
-                newLine = newLine.replace('_YEAR_', str(today.year))
-                headerDstFile.write(newLine)
-        finally :
-            headerDstFile.close()
+    def write_general_template_files(self):
+        for input_file in self.general_template_files:
+            print input_file
+            output_file = self.create_output_file(input_file)
+            if output_file:
+                self.write_template(input_file, output_file)
+            else:
+                print "skip " + input_file
 
-        implDstFile = open(self.dirPath + "/NSString+RegExValidation.m", "w")
-        implSrcFile = self.template_path + "/NSString+RegExValidation.m"
+    def replace_variables(self, text, today):
+        newtext = text.replace('_DATE_', "")
+        newtext = newtext.replace('_YEAR_', str(today.year))
+        newtext = newtext.replace('_PREFIX_', self.project_prefix)
+        return newtext
 
-        try:
-            for line in open(implSrcFile):
-                newLine = line.replace('_DATE_', "")
-                newLine = newLine.replace('_YEAR_', str(today.year))
-                implDstFile.write(newLine)
-        finally :
-            implDstFile.close()
-
-    def writeAPIParser(self) :
+    def write_template(self, template, output):
         today = datetime.date.fromtimestamp(time.time())
-        if not os.path.exists(self.dirPath):
-            os.makedirs(self.dirPath)
-
-        headerDstFile = open(self.dirPath + "/"+self.projectPrefix+"APIParser.h", "w")
-        headerSrcFile = self.template_path + "/APIParser/APIParser.h"
-
-
+        # write content to ouptut
         try:
-            for line in open(headerSrcFile):
-                newLine = line.replace('_DATE_', "")
-                newLine = newLine.replace('_YEAR_', str(today.year))
-                newLine = newLine.replace('_PREFIX_', self.projectPrefix)
-                headerDstFile.write(newLine)
+            for line in open(template):
+                newLine = self.replace_variables(line, today)
+                output.write(newLine)
         finally :
-            headerDstFile.close()
-
-        implDstFile = open(self.dirPath + "/"+self.projectPrefix+"APIParser.m", "w")
-        implSrcFile = self.template_path + "/APIParser/APIParser.m"
-
-        try:
-            for line in open(implSrcFile):
-                newLine = line.replace('_DATE_', "")
-                newLine = newLine.replace('_YEAR_', str(today.year))
-                newLine = newLine.replace('_PREFIX_', self.projectPrefix)
-                implDstFile.write(newLine)
-        finally :
-            implDstFile.close()
-
-    def writeTemplates(self) :
-
-        if self.dirPath.endswith("/") :
-            self.dirPath = self.dirPath[:-1]
-        baseDirPath = self.dirPath
-        self.dirPath = baseDirPath + "/Utilities/NSString"
-        self.writeNSStringCategory()
-        self.dirPath = baseDirPath + "/Utilities/APIParser"
-        self.writeAPIParser()
+            output.close()
