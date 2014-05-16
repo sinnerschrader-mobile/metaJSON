@@ -231,8 +231,16 @@ def openFileAndParseJSON(filePath):
         f.close()
     return obj
 
+def git_revision_short_hash():
+    import subprocess
+    return subprocess.check_output(['git', 'rev-parse', '--short', 'HEAD'])
+
 def version():
-    print("metaJSON version %s." % __version__)
+    git_rev = git_revision_short_hash()
+    if git_rev:
+        print("metaJSON version {}. git revision {}").format(__version__, git_rev)
+    else:
+        print("metaJSON version %s." % __version__)
     sys.exit(0)
 
 if __name__ == '__main__':
