@@ -193,8 +193,7 @@ def create_json_scheme(jsonObj):
     return schemeObj
 
 def usage():
-    usageString = '\n'+__file__+' [ -p | -t | -o | -s ] [-i]\n'
-    usageString += 'Options:\n'
+    usageString = 'Options:\n'
     usageString += '  -v, --version         shows version\n'
     usageString += '  -h, --help            shows help\n'
     usageString += '  -p, --prefix=         project prefix (default: S2M)\n'
