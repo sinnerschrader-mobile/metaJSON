@@ -15,8 +15,8 @@ class TestTemplateCodeGenerator(unittest.TestCase):
 
         self.object.read_template()
 
-        self.assertEqual(self.object.json_template_files,expected_jsons)
-        self.assertEqual(self.object.general_template_files,expected_api_templates)
+        self.assertEqual(sorted(self.object.json_template_files),sorted(expected_jsons))
+        self.assertEqual(sorted(self.object.general_template_files),sorted(expected_api_templates))
 
     def test_create_output_file(self):
         output = "classes/APIParser/S2MAPIParser.h"
