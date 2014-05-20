@@ -4,7 +4,7 @@
 //  Created by MetaJSONParser.
 //  Copyright (c) {{date}} SinnerSchrader Mobile. All rights reserved.
 
-#import "{{projectPrefix}}APIParser.h"
+#import "{{prefix}}APIParser.h"
 #import "NSString+RegExValidation.h"
 #import "{{humanClassName}}.h"
 {{#custom_classes}}
@@ -32,7 +32,7 @@
     {{/baseTypeIsObject}}
     if (self) {
         {{#numberProperties}}
-        self.{{varName}} = [{{projectPrefix}}APIParser numberFromResponseDictionary:dic forKey:@"{{name}}" acceptNil:{{#required}}NO{{/required}}{{^required}}YES{{/required}} error:error];
+        self.{{varName}} = [{{prefix}}APIParser numberFromResponseDictionary:dic forKey:@"{{name}}" acceptNil:{{#required}}NO{{/required}}{{^required}}YES{{/required}} error:error];
         if (*error) {
             return self;
         }
@@ -43,7 +43,7 @@
                                        @"reason" : @"max value validation error",
                                        @"objectClass" : NSStringFromClass([self class])
                                        };
-            *error = [NSError errorWithDomain:k{{projectPrefix}}ErrorDomain_parser code:k{{projectPrefix}}ErrorDomain_parser_valueIsNotValid userInfo:userInfo];
+            *error = [NSError errorWithDomain:k{{prefix}}ErrorDomain_parser code:k{{prefix}}ErrorDomain_parser_valueIsNotValid userInfo:userInfo];
             NSLog(@"%@", *error);
             return self;
         }
@@ -55,14 +55,14 @@
                                        @"reason" : @"min value validation error",
                                        @"objectClass" : NSStringFromClass([self class])
                                        };
-            *error = [NSError errorWithDomain:k{{projectPrefix}}ErrorDomain_parser code:k{{projectPrefix}}ErrorDomain_parser_valueIsNotValid userInfo:userInfo];
+            *error = [NSError errorWithDomain:k{{prefix}}ErrorDomain_parser code:k{{prefix}}ErrorDomain_parser_valueIsNotValid userInfo:userInfo];
             NSLog(@"%@", *error);
             return self;
         }
         {{/minValue}}
         {{/numberProperties}}
         {{#stringProperties}}
-        self.{{varName}} = [{{projectPrefix}}APIParser stringFromResponseDictionary:dic forKey:@"{{name}}" acceptNumber:NO acceptNil:{{#required}}NO{{/required}}{{^required}}YES{{/required}} error:error];
+        self.{{varName}} = [{{prefix}}APIParser stringFromResponseDictionary:dic forKey:@"{{name}}" acceptNumber:NO acceptNil:{{#required}}NO{{/required}}{{^required}}YES{{/required}} error:error];
         if (*error) {
             return self;
         }
@@ -73,7 +73,7 @@
                                        @"reason" : @"validation error",
                                        @"objectClass" : NSStringFromClass([self class])
                                        };
-            *error = [NSError errorWithDomain:k{{projectPrefix}}ErrorDomain_parser code:k{{projectPrefix}}ErrorDomain_parser_valueIsNotValid userInfo:userInfo];
+            *error = [NSError errorWithDomain:k{{prefix}}ErrorDomain_parser code:k{{prefix}}ErrorDomain_parser_valueIsNotValid userInfo:userInfo];
             NSLog(@"%@", *error);
             return self;
         }
@@ -85,7 +85,7 @@
                                        @"reason" : @"max length validation error",
                                        @"objectClass" : NSStringFromClass([self class])
                                        };
-            *error = [NSError errorWithDomain:k{{projectPrefix}}ErrorDomain_parser code:k{{projectPrefix}}ErrorDomain_parser_valueIsNotValid userInfo:userInfo];
+            *error = [NSError errorWithDomain:k{{prefix}}ErrorDomain_parser code:k{{prefix}}ErrorDomain_parser_valueIsNotValid userInfo:userInfo];
             NSLog(@"%@", *error);
             return self;
         }
@@ -97,59 +97,59 @@
                                        @"reason" : @"min length validation error",
                                        @"objectClass" : NSStringFromClass([self class])
                                        };
-            *error = [NSError errorWithDomain:k{{projectPrefix}}ErrorDomain_parser code:k{{projectPrefix}}ErrorDomain_parser_valueIsNotValid userInfo:userInfo];
+            *error = [NSError errorWithDomain:k{{prefix}}ErrorDomain_parser code:k{{prefix}}ErrorDomain_parser_valueIsNotValid userInfo:userInfo];
             NSLog(@"%@", *error);
             return self;
         }
         {{/minLength}}
         {{/stringProperties}}
         {{#booleanProperties}}
-        self.{{varName}} = [{{projectPrefix}}APIParser boolFromResponseDictionary:dic forKey:@"{{name}}" acceptNil:{{#required}}NO{{/required}}{{^required}}YES{{/required}} error:error];
+        self.{{varName}} = [{{prefix}}APIParser boolFromResponseDictionary:dic forKey:@"{{name}}" acceptNil:{{#required}}NO{{/required}}{{^required}}YES{{/required}} error:error];
         if (*error) {
             return self;
         }
         {{/booleanProperties}}
         {{#dataProperties}}
-        self.{{varName}} = [{{projectPrefix}}APIParser dataFromResponseDictionary:dic forKey:@"{{name}}" acceptNil:{{#required}}NO{{/required}}{{^required}}YES{{/required}} error:error];
+        self.{{varName}} = [{{prefix}}APIParser dataFromResponseDictionary:dic forKey:@"{{name}}" acceptNil:{{#required}}NO{{/required}}{{^required}}YES{{/required}} error:error];
         if (*error) {
             return self;
         }
         {{/dataProperties}}
         {{#dateProperties}}
-        self.{{varName}} = [{{projectPrefix}}APIParser dateWithTimeIntervalFromResponseDictionary:dic forKey:@"{{name}}" acceptNil:{{#required}}NO{{/required}}{{^required}}YES{{/required}} error:error];
+        self.{{varName}} = [{{prefix}}APIParser dateWithTimeIntervalFromResponseDictionary:dic forKey:@"{{name}}" acceptNil:{{#required}}NO{{/required}}{{^required}}YES{{/required}} error:error];
         if (*error) {
             return self;
         }
         {{/dateProperties}}
         {{#arrayProperties}}
         {{^hasOneSubtype}}
-        self.{{varName}} = [{{projectPrefix}}APIParser arrayFromResponseDictionary:dic forKey:@"{{name}}" acceptNil:{{#required}}NO{{/required}}{{^required}}YES{{/required}} error:error];
+        self.{{varName}} = [{{prefix}}APIParser arrayFromResponseDictionary:dic forKey:@"{{name}}" acceptNil:{{#required}}NO{{/required}}{{^required}}YES{{/required}} error:error];
         if (*error) {
             return self;
         }
         {{/hasOneSubtype}}
         {{#hasOneSubtype}}
         {{#hasAnyType}}
-        self.{{varName}} = [{{projectPrefix}}APIParser arrayFromResponseDictionary:dic forKey:@"{{name}}" acceptNil:{{#required}}NO{{/required}}{{^required}}YES{{/required}} error:error];
+        self.{{varName}} = [{{prefix}}APIParser arrayFromResponseDictionary:dic forKey:@"{{name}}" acceptNil:{{#required}}NO{{/required}}{{^required}}YES{{/required}} error:error];
         if (*error) {
             return self;
         }
         {{/hasAnyType}}
         {{^hasAnyType}}
-        NSArray *tmp{{#_upper_camelcase}}{{varName}}{{/_upper_camelcase}}Array = [{{projectPrefix}}APIParser arrayFromResponseDictionary:dic forKey:@"{{name}}" acceptNil:{{#required}}NO{{/required}}{{^required}}YES{{/required}} error:error];
+        NSArray *tmp{{#_upper_camelcase}}{{varName}}{{/_upper_camelcase}}Array = [{{prefix}}APIParser arrayFromResponseDictionary:dic forKey:@"{{name}}" acceptNil:{{#required}}NO{{/required}}{{^required}}YES{{/required}} error:error];
         if (*error) {
             return self;
         }
         NSMutableArray *tmp{{#_upper_camelcase}}{{varName}}{{/_upper_camelcase}} = [[NSMutableArray alloc] initWithCapacity:tmp{{#_upper_camelcase}}{{varName}}{{/_upper_camelcase}}Array.count];
         for (NSUInteger loop = 0; loop < tmp{{#_upper_camelcase}}{{varName}}{{/_upper_camelcase}}Array.count; loop++) {
             {{#hasStringType}}
-            NSString *tmpValue = [{{projectPrefix}}APIParser stringFromResponseArray:tmp{{#_upper_camelcase}}{{varName}}{{/_upper_camelcase}}Array atIndex:loop acceptNil:{{#required}}NO{{/required}}{{^required}}YES{{/required}} error:error];
+            NSString *tmpValue = [{{prefix}}APIParser stringFromResponseArray:tmp{{#_upper_camelcase}}{{varName}}{{/_upper_camelcase}}Array atIndex:loop acceptNil:{{#required}}NO{{/required}}{{^required}}YES{{/required}} error:error];
             {{/hasStringType}}
             {{#hasNumberType}}
-            NSNumber *tmpValue = [{{projectPrefix}}APIParser numberFromResponseArray:tmp{{#_upper_camelcase}}{{varName}}{{/_upper_camelcase}}Array atIndex:loop acceptNil:{{#required}}NO{{/required}}{{^required}}YES{{/required}} error:error];
+            NSNumber *tmpValue = [{{prefix}}APIParser numberFromResponseArray:tmp{{#_upper_camelcase}}{{varName}}{{/_upper_camelcase}}Array atIndex:loop acceptNil:{{#required}}NO{{/required}}{{^required}}YES{{/required}} error:error];
             {{/hasNumberType}}
             {{#hasDateType}}
-            NSDate *tmpValue = [{{projectPrefix}}APIParser dateFromResponseArray:tmp{{#_upper_camelcase}}{{varName}}{{/_upper_camelcase}}Array atIndex:loop acceptNil:{{#required}}NO{{/required}}{{^required}}YES{{/required}} error:error];
+            NSDate *tmpValue = [{{prefix}}APIParser dateFromResponseArray:tmp{{#_upper_camelcase}}{{varName}}{{/_upper_camelcase}}Array atIndex:loop acceptNil:{{#required}}NO{{/required}}{{^required}}YES{{/required}} error:error];
             {{/hasDateType}}
             {{^hasCustomType}}
             if (*error) {
@@ -188,7 +188,7 @@
                                        @"reason" : @"max count validation error",
                                        @"objectClass" : NSStringFromClass([self class])
                                        };
-            *error = [NSError errorWithDomain:k{{projectPrefix}}ErrorDomain_parser code:k{{projectPrefix}}ErrorDomain_parser_valueIsNotValid userInfo:userInfo];
+            *error = [NSError errorWithDomain:k{{prefix}}ErrorDomain_parser code:k{{prefix}}ErrorDomain_parser_valueIsNotValid userInfo:userInfo];
             NSLog(@"%@", *error);
             return self;
         }
@@ -200,7 +200,7 @@
                                        @"reason" : @"min count validation error",
                                        @"objectClass" : NSStringFromClass([self class])
                                        };
-            *error = [NSError errorWithDomain:k{{projectPrefix}}ErrorDomain_parser code:k{{projectPrefix}}ErrorDomain_parser_valueIsNotValid userInfo:userInfo];
+            *error = [NSError errorWithDomain:k{{prefix}}ErrorDomain_parser code:k{{prefix}}ErrorDomain_parser_valueIsNotValid userInfo:userInfo];
             NSLog(@"%@", *error);
             return self;
         }
@@ -261,7 +261,7 @@
 
 - (NSNumber *){{subtype}}In{{#_upper_camelcase}}{{varName}}{{/_upper_camelcase}}AtIndex:(NSUInteger)index withError:(NSError **)error
 {
-    NSNumber *tmp{{#_upper_camelcase}}{{varName}}{{/_upper_camelcase}} = [{{projectPrefix}}APIParser numberFromResponseArray:self.{{varName}} atIndex:index acceptNil:{{#required}}NO{{/required}}{{^required}}YES{{/required}} error:error];
+    NSNumber *tmp{{#_upper_camelcase}}{{varName}}{{/_upper_camelcase}} = [{{prefix}}APIParser numberFromResponseArray:self.{{varName}} atIndex:index acceptNil:{{#required}}NO{{/required}}{{^required}}YES{{/required}} error:error];
     if (*error) {
         return nil;
     }
@@ -274,7 +274,7 @@
 
 - (NSString *){{subtype}}In{{#_upper_camelcase}}{{varName}}{{/_upper_camelcase}}AtIndex:(NSUInteger)index withError:(NSError **)error
 {
-    NSString *tmp{{#_upper_camelcase}}{{varName}}{{/_upper_camelcase}} = [{{projectPrefix}}APIParser stringFromResponseArray:self.{{varName}} atIndex:index acceptNil:{{#required}}NO{{/required}}{{^required}}YES{{/required}} error:error];
+    NSString *tmp{{#_upper_camelcase}}{{varName}}{{/_upper_camelcase}} = [{{prefix}}APIParser stringFromResponseArray:self.{{varName}} atIndex:index acceptNil:{{#required}}NO{{/required}}{{^required}}YES{{/required}} error:error];
     if (*error) {
         return nil;
     }
@@ -285,7 +285,7 @@
                                    @"reason" : @"max length validation error",
                                    @"objectClass" : NSStringFromClass([self class])
                                    };
-        *error = [NSError errorWithDomain:k{{projectPrefix}}ErrorDomain_parser code:k{{projectPrefix}}ErrorDomain_parser_valueIsNotValid userInfo:userInfo];
+        *error = [NSError errorWithDomain:k{{prefix}}ErrorDomain_parser code:k{{prefix}}ErrorDomain_parser_valueIsNotValid userInfo:userInfo];
         NSLog(@"%@", *error);
         return nil;
     }
@@ -297,7 +297,7 @@
                                    @"reason" : @"min length validation error",
                                    @"objectClass" : NSStringFromClass([self class])
                                    };
-        *error = [NSError errorWithDomain:k{{projectPrefix}}ErrorDomain_parser code:k{{projectPrefix}}ErrorDomain_parser_valueIsNotValid userInfo:userInfo];
+        *error = [NSError errorWithDomain:k{{prefix}}ErrorDomain_parser code:k{{prefix}}ErrorDomain_parser_valueIsNotValid userInfo:userInfo];
         NSLog(@"%@", *error);
         return nil;
     }
@@ -310,7 +310,7 @@
                                    @"reason" : @"validation error",
                                    @"objectClass" : NSStringFromClass([self class])
                                    };
-        *error = [NSError errorWithDomain:k{{projectPrefix}}ErrorDomain_parser code:k{{projectPrefix}}ErrorDomain_parser_valueIsNotValid userInfo:userInfo];
+        *error = [NSError errorWithDomain:k{{prefix}}ErrorDomain_parser code:k{{prefix}}ErrorDomain_parser_valueIsNotValid userInfo:userInfo];
         NSLog(@"%@", *error);
         return nil;
     }
@@ -324,7 +324,7 @@
 
 - (BOOL){{subtype}}In{{#_upper_camelcase}}{{varName}}{{/_upper_camelcase}}AtIndex:(NSUInteger)index withError:(NSError **)error
 {
-    BOOL tmp{{#_upper_camelcase}}{{varName}}{{/_upper_camelcase}} = [{{projectPrefix}}APIParser boolFromResponseArray:self.{{varName}} atIndex:index acceptNil:{{#required}}NO{{/required}}{{^required}}YES{{/required}} error:error];
+    BOOL tmp{{#_upper_camelcase}}{{varName}}{{/_upper_camelcase}} = [{{prefix}}APIParser boolFromResponseArray:self.{{varName}} atIndex:index acceptNil:{{#required}}NO{{/required}}{{^required}}YES{{/required}} error:error];
     if (*error) {
         return nil;
     }
@@ -337,7 +337,7 @@
 
 - (NSDate *){{subtype}}In{{#_upper_camelcase}}{{varName}}{{/_upper_camelcase}}AtIndex:(NSUInteger)index withError:(NSError **)error
 {
-    NSDate *tmp{{#_upper_camelcase}}{{varName}}{{/_upper_camelcase}} = [{{projectPrefix}}APIParser dateWithTimeIntervalFromResponseArray:self.{{varName}} atIndex:index acceptNil:{{#required}}NO{{/required}}{{^required}}YES{{/required}} error:error];
+    NSDate *tmp{{#_upper_camelcase}}{{varName}}{{/_upper_camelcase}} = [{{prefix}}APIParser dateWithTimeIntervalFromResponseArray:self.{{varName}} atIndex:index acceptNil:{{#required}}NO{{/required}}{{^required}}YES{{/required}} error:error];
     if (*error) {
         return nil;
     }
@@ -350,7 +350,7 @@
 
 - (NSData*){{subtype}}In{{#_upper_camelcase}}{{varName}}{{/_upper_camelcase}}AtIndex:(NSUInteger)index withError:(NSError **)error
 {
-    NSData* tmp{{#_upper_camelcase}}{{varName}}{{/_upper_camelcase}} = [{{projectPrefix}}APIParser dataFromResponseArray:self.{{varName}} atIndex:index acceptNil:{{#required}}NO{{/required}}{{^required}}YES{{/required}} error:error];
+    NSData* tmp{{#_upper_camelcase}}{{varName}}{{/_upper_camelcase}} = [{{prefix}}APIParser dataFromResponseArray:self.{{varName}} atIndex:index acceptNil:{{#required}}NO{{/required}}{{^required}}YES{{/required}} error:error];
     if (*error) {
         return nil;
     }

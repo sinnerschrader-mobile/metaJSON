@@ -16,7 +16,7 @@ if (tmp{{#_upper_camelcase}}{{varName}}{{/_upper_camelcase}}.length > {{_type.ma
                                @"reason" : @"max length validation error",
                                @"objectClass" : NSStringFromClass([self class])
                                };
-    *error = [NSError errorWithDomain:k{{projectPrefix}}ErrorDomain_parser code:k{{projectPrefix}}ErrorDomain_parser_valueIsNotValid userInfo:userInfo];
+    *error = [NSError errorWithDomain:k{{prefix}}ErrorDomain_parser code:k{{prefix}}ErrorDomain_parser_valueIsNotValid userInfo:userInfo];
     NSLog(@"%@", *error);
     return nil;
 }
@@ -28,7 +28,7 @@ if (tmp{{#_upper_camelcase}}{{varName}}{{/_upper_camelcase}}.length < {{_type.mi
                                @"reason" : @"min length validation error",
                                @"objectClass" : NSStringFromClass([self class])
                                };
-    *error = [NSError errorWithDomain:k{{projectPrefix}}ErrorDomain_parser code:k{{projectPrefix}}ErrorDomain_parser_valueIsNotValid userInfo:userInfo];
+    *error = [NSError errorWithDomain:k{{prefix}}ErrorDomain_parser code:k{{prefix}}ErrorDomain_parser_valueIsNotValid userInfo:userInfo];
     NSLog(@"%@", *error);
     return nil;
 }
@@ -41,7 +41,7 @@ if (tmp{{#_upper_camelcase}}{{varName}}{{/_upper_camelcase}} && [tmp{{#_upper_ca
                                @"reason" : @"validation error",
                                @"objectClass" : NSStringFromClass([self class])
                                };
-    *error = [NSError errorWithDomain:k{{projectPrefix}}ErrorDomain_parser code:k{{projectPrefix}}ErrorDomain_parser_valueIsNotValid userInfo:userInfo];
+    *error = [NSError errorWithDomain:k{{prefix}}ErrorDomain_parser code:k{{prefix}}ErrorDomain_parser_valueIsNotValid userInfo:userInfo];
     NSLog(@"%@", *error);
     return nil;
 }
