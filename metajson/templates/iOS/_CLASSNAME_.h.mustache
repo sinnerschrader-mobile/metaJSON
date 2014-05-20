@@ -1,10 +1,10 @@
 //
-//  {{humanClassName}}.h
+//  {{prefix}}{{#_upper_camelcase}}{{varName}}{{/_upper_camelcase}}{{suffix}}.h
 //
 //  Created by MetaJSONParser.
 //  Copyright (c) {{date}} SinnerSchrader Mobile. All rights reserved.
 
-#import "{{machineClassName}}.h"
-@interface {{humanClassName}} : {{machineClassName}}
+#import "_{{prefix}}{{#_upper_camelcase}}{{varName}}{{/_upper_camelcase}}{{suffix}}.h"
+@interface {{prefix}}{{#_upper_camelcase}}{{varName}}{{/_upper_camelcase}}{{suffix}} : _{{prefix}}{{#_upper_camelcase}}{{varName}}{{/_upper_camelcase}}{{suffix}}
 
 @end

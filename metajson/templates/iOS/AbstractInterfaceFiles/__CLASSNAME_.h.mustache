@@ -1,5 +1,5 @@
 //
-//  {{machineClassName}}.h
+//  _{{prefix}}{{#_upper_camelcase}}{{name}}{{/_upper_camelcase}}{{suffix}}.h
 //
 //  Created by MetaJSONParser.
 //  Copyright (c) {{date}} SinnerSchrader Mobile. All rights reserved.
@@ -12,13 +12,13 @@
 {{#custom_classes}}
 @class {{.}};
 {{/custom_classes}}
-@class {{humanClassName}};
+@class {{prefix}}{{#_upper_camelcase}}{{varName}}{{/_upper_camelcase}}{{suffix}};
 
 {{#baseTypeIsObject}}
-@interface {{machineClassName}} : NSObject <NSCoding>
+@interface _{{prefix}}{{#_upper_camelcase}}{{name}}{{/_upper_camelcase}}{{suffix}} : NSObject <NSCoding>
 {{/baseTypeIsObject}}
 {{^baseTypeIsObject}}
-@interface {{machineClassName}} : {{baseClassName}}
+@interface _{{prefix}}{{#_upper_camelcase}}{{name}}{{/_upper_camelcase}}{{suffix}} : {{baseClassName}}
 {{/baseTypeIsObject}}
 
 {{#numberProperties}}
@@ -70,7 +70,7 @@
 @property (nonatomic, strong) id {{varName}};
 {{/undefinedProperties}}
 
-+ ({{humanClassName}} *){{varName}}WithDictionary:(NSDictionary *)dic withError:(NSError **)error;
++ ({{prefix}}{{#_upper_camelcase}}{{varName}}{{/_upper_camelcase}}{{suffix}} *){{varName}}WithDictionary:(NSDictionary *)dic withError:(NSError **)error;
 - (id)initWithDictionary:(NSDictionary *)dic withError:(NSError **)error;
 {{#baseTypeIsObject}}
 - (NSDictionary *)propertyDictionary;

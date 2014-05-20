@@ -1,24 +1,24 @@
 //
-//  {{machineClassName}}.m
+//  _{{prefix}}{{#_upper_camelcase}}{{name}}{{/_upper_camelcase}}{{suffix}}.m
 //
 //  Created by MetaJSONParser.
 //  Copyright (c) {{date}} SinnerSchrader Mobile. All rights reserved.
 
 #import "{{prefix}}APIParser.h"
 #import "NSString+RegExValidation.h"
-#import "{{humanClassName}}.h"
+#import "{{prefix}}{{#_upper_camelcase}}{{name}}{{/_upper_camelcase}}{{suffix}}.h"
 {{#custom_classes}}
 #import "{{.}}.h"
 {{/custom_classes}}
 
 
-@implementation {{machineClassName}}
+@implementation _{{prefix}}{{#_upper_camelcase}}{{name}}{{/_upper_camelcase}}{{suffix}}
 
 #pragma mark - factory
 
-+ ({{humanClassName}} *){{varName}}WithDictionary:(NSDictionary *)dic withError:(NSError **)error
++ ({{prefix}}{{#_upper_camelcase}}{{name}}{{/_upper_camelcase}}{{suffix}} *){{varName}}WithDictionary:(NSDictionary *)dic withError:(NSError **)error
 {
-    return [[{{humanClassName}} alloc] initWithDictionary:dic withError:error];
+    return [[{{prefix}}{{#_upper_camelcase}}{{varName}}{{/_upper_camelcase}}{{suffix}} alloc] initWithDictionary:dic withError:error];
 }
 
 #pragma mark - initialize
