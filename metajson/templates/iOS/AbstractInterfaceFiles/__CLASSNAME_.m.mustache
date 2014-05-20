@@ -37,7 +37,7 @@
             return self;
         }
         {{#maxValue}}
-        if (self.{{varName}}.length > {{value}}) {
+        if (self.{{varName}}.length > {{maxValue}}) {
             NSDictionary *userInfo = @{@"propertyName" : @"{{varName}}",
                                        @"key" : @"{{name}}",
                                        @"reason" : @"max value validation error",
@@ -49,7 +49,7 @@
         }
         {{/maxValue}}
         {{#minValue}}
-        if (self.{{varName}}.length < {{value}}) {
+        if (self.{{varName}}.length < {{minValue}}) {
             NSDictionary *userInfo = @{@"propertyName" : @"{{varName}}",
                                        @"key" : @"{{name}}",
                                        @"reason" : @"min value validation error",
@@ -67,7 +67,7 @@
             return self;
         }
         {{#regex}}
-        if (self.{{varName}} && [self.{{varName}} matchesRegExString:@"{{& value}}"] == NO) {
+        if (self.{{varName}} && [self.{{varName}} matchesRegExString:@"{{& regex}}"] == NO) {
             NSDictionary *userInfo = @{@"propertyName" : @"{{varName}}",
                                        @"key" : @"{{name}}",
                                        @"reason" : @"validation error",
@@ -79,7 +79,7 @@
         }
         {{/regex}}
         {{#maxLength}}
-        if (self.{{varName}}.length > {{value}}) {
+        if (self.{{varName}}.length > {{maxLength}}) {
             NSDictionary *userInfo = @{@"propertyName" : @"{{varName}}",
                                        @"key" : @"{{name}}",
                                        @"reason" : @"max length validation error",
@@ -91,7 +91,7 @@
         }
         {{/maxLength}}
         {{#minLength}}
-        if (self.{{varName}}.length < {{value}}) {
+        if (self.{{varName}}.length < {{minLength}}) {
             NSDictionary *userInfo = @{@"propertyName" : @"{{varName}}",
                                        @"key" : @"{{name}}",
                                        @"reason" : @"min length validation error",
@@ -182,7 +182,7 @@
         {{/hasAnyType}}
         {{/hasOneSubtype}}
         {{#maxCount}}
-        if (self.{{varName}}.count > {{value}}) {
+        if (self.{{varName}}.count > {{maxCount}}) {
             NSDictionary *userInfo = @{@"propertyName" : @"{{varName}}",
                                        @"key" : @"{{name}}",
                                        @"reason" : @"max count validation error",
@@ -194,7 +194,7 @@
         }
         {{/maxCount}}
         {{#minCount}}
-        if (self.{{varName}}.count < {{value}}) {
+        if (self.{{varName}}.count < {{minCount}}) {
             NSDictionary *userInfo = @{@"propertyName" : @"{{varName}}",
                                        @"key" : @"{{name}}",
                                        @"reason" : @"min count validation error",

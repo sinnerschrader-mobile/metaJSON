@@ -220,33 +220,33 @@ class ObjectiveCCodeGenerator :
         if propObj.rootBaseType() == "string":
             hasRegex, regex = propObj.getRegex()
             if hasRegex:
-                propertyHash['regex'] = {"value": regex}
+                propertyHash['regex'] = regex
 
             hasMax, maxLength = propObj.getMaxLength()
             if hasMax:
-                propertyHash['maxLength'] = {"value": maxLength}
+                propertyHash['maxLength'] = maxLength
 
             hasMin, minLength = propObj.getMinLength()
             if hasMin:
-                propertyHash['minLength'] = {"value": minLength}
+                propertyHash['minLength'] = minLength
 
         if propObj.rootBaseType() == "number":
             hasMax, maxLength = propObj.getMaxValue()
             if hasMax:
-                propertyHash['maxValue'] = {"value": maxLength}
+                propertyHash['maxValue'] = maxLength
 
             hasMin, minLength = propObj.getMinValue()
             if hasMin:
-                propertyHash['minValue'] = {"value": minLength}
+                propertyHash['minValue'] = minLength
 
         if propObj.rootBaseType() == "array":
             hasMax, maxLength = propObj.getMaxCount()
             if hasMax:
-                propertyHash['maxCount'] = {"value": maxLength}
+                propertyHash['maxCount'] = maxLength
 
             hasMin, minLength = propObj.getMinCount()
             if hasMin:
-                propertyHash['minCount'] = {"value": minLength}
+                propertyHash['minCount'] = minLength
 
         # dealing with array property
         if propObj.rootBaseType() == "multi":
