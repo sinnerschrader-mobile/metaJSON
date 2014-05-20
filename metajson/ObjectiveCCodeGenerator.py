@@ -211,7 +211,7 @@ class ObjectiveCCodeGenerator :
         capitalizeVarName = capitalizeVarName[:1].upper() + capitalizeVarName[1:]
         propertyHash = {'name' : propObj.type_name, 'varName' : self.makeVarName(propObj), 'capitalizeVarName': capitalizeVarName}
         if propObj.type_description and len(propObj.type_description) :
-            propertyHash["comment"] = propObj.type_description
+            propertyHash["description"] = propObj.type_description
         if propObj.required == 1:
             propertyHash['required'] = True
 

@@ -22,51 +22,51 @@
 {{/baseTypeIsObject}}
 
 {{#numberProperties}}
-{{#comment}}
-// {{comment}}
-{{/comment}}
+{{#description}}
+// {{description}}
+{{/description}}
 @property (nonatomic, strong) NSNumber *{{varName}};
 {{/numberProperties}}
 {{#stringProperties}}
-{{#comment}}
-// {{comment}}
-{{/comment}}
+{{#description}}
+// {{description}}
+{{/description}}
 @property (nonatomic, strong) NSString *{{varName}};
 {{/stringProperties}}
 {{#booleanProperties}}
-{{#comment}}
-// {{comment}}
-{{/comment}}
+{{#description}}
+// {{description}}
+{{/description}}
 @property (nonatomic, assign) BOOL {{varName}};
 {{/booleanProperties}}
 {{#dataProperties}}
-{{#comment}}
-// {{comment}}
-{{/comment}}
+{{#description}}
+// {{description}}
+{{/description}}
 @property (nonatomic, strong) NSData *{{varName}};
 {{/dataProperties}}
 {{#dateProperties}}
-{{#comment}}
-// {{comment}}
-{{/comment}}
+{{#description}}
+// {{description}}
+{{/description}}
 @property (nonatomic, strong) NSDate *{{varName}};
 {{/dateProperties}}
 {{#arrayProperties}}
-{{#comment}}
-// {{comment}}
-{{/comment}}
+{{#description}}
+// {{description}}
+{{/description}}
 @property (nonatomic, strong) NSArray *{{varName}};
 {{/arrayProperties}}
 {{#objectProperties}}
-{{#comment}}
-// {{comment}}
-{{/comment}}
+{{#description}}
+// {{description}}
+{{/description}}
 @property (nonatomic, strong) {{className}} *{{varName}};
 {{/objectProperties}}
 {{#undefinedProperties}}
-{{#comment}}
-// {{comment}}
-{{/comment}}
+{{#description}}
+// {{description}}
+{{/description}}
 @property (nonatomic, strong) id {{varName}};
 {{/undefinedProperties}}
 
