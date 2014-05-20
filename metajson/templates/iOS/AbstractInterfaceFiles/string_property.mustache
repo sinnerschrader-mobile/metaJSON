@@ -1,16 +1,16 @@
 if (!self.{{varName}}) return nil;
 NSDictionary *new{{varName}}Dic = @{@"{{varName}}" : self.{{varName}}};
-NSString *tmp{{capitalizeVarName}} = [APIParser stringFromResponseDictionary:new{{varName}}Dic forKey:@"{{name}}" acceptNumber:NO acceptNil:{{#required}}NO{{/required}}{{^required}}YES{{/required}} error:error];
+NSString *tmp{{#_upper_camelcase}}{{varName}}{{/_upper_camelcase}} = [APIParser stringFromResponseDictionary:new{{varName}}Dic forKey:@"{{name}}" acceptNumber:NO acceptNil:{{#required}}NO{{/required}}{{^required}}YES{{/required}} error:error];
 if (*error) {
     return nil;
 }
 {{#_type}}
-if (tmp{{capitalizeVarName}} == nil) {
+if (tmp{{#_upper_camelcase}}{{varName}}{{/_upper_camelcase}} == nil) {
     return nil;
 }
 {{/_type}}
 {{#_type.maxLength}}
-if (tmp{{capitalizeVarName}}.length > {{_type.maxLength}}) {
+if (tmp{{#_upper_camelcase}}{{varName}}{{/_upper_camelcase}}.length > {{_type.maxLength}}) {
     NSDictionary *userInfo = @{@"propertyName" : @"{{_type.name}}",
                                @"key" : @"{{_type.name}}",
                                @"reason" : @"max length validation error",
@@ -22,7 +22,7 @@ if (tmp{{capitalizeVarName}}.length > {{_type.maxLength}}) {
 }
 {{/_type.maxLength}}
 {{#_type.minLength}}
-if (tmp{{capitalizeVarName}}.length < {{_type.minLength}}) {
+if (tmp{{#_upper_camelcase}}{{varName}}{{/_upper_camelcase}}.length < {{_type.minLength}}) {
     NSDictionary *userInfo = @{@"propertyName" : @"{{_type.name}}",
                                @"key" : @"{{_type.name}}",
                                @"reason" : @"min length validation error",
@@ -35,7 +35,7 @@ if (tmp{{capitalizeVarName}}.length < {{_type.minLength}}) {
 {{/_type.minLength}}
 {{! to finish need to pass customClass regex...}}
 {{#_type.regex}}
-if (tmp{{capitalizeVarName}} && [tmp{{capitalizeVarName}} matchesRegExString:@"{{& _type.regex}}"] == NO) {
+if (tmp{{#_upper_camelcase}}{{varName}}{{/_upper_camelcase}} && [tmp{{#_upper_camelcase}}{{varName}}{{/_upper_camelcase}} matchesRegExString:@"{{& _type.regex}}"] == NO) {
     NSDictionary *userInfo = @{@"propertyName" : @"{{_type.name}}",
                                @"key" : @"{{_type.name}}",
                                @"reason" : @"validation error",
@@ -46,4 +46,4 @@ if (tmp{{capitalizeVarName}} && [tmp{{capitalizeVarName}} matchesRegExString:@"{
     return nil;
 }
 {{/_type.regex}}
-return tmp{{capitalizeVarName}};
+return tmp{{#_upper_camelcase}}{{varName}}{{/_upper_camelcase}};

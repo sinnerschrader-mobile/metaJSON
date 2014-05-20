@@ -35,14 +35,17 @@ class ObjectiveCCodeGenerator :
     def __init__(self):
         self.mustache_renderer = Renderer()
 
-    # BEGIN template available functions
     def lambda_uppercase(self, text):
-        return text.upper()
+        process_text = Renderer().render(text, self.mustache_renderer.context)
+        return process_text.upper()
+
     def lambda_lowercase(self, text):
-        return text.lower()
+        process_text = Renderer().render(text, self.mustache_renderer.context)
+        return process_text.lower()
 
     def lambda_capitalize(self, text):
-        return text.capitalize()
+        process_text = Renderer().render(text, self.mustache_renderer.context)
+        return process_text.capitalize()
 
     def lambda_camelcase(self, text):
         process_text = Renderer().render(text, self.mustache_renderer.context)
@@ -55,12 +58,9 @@ class ObjectiveCCodeGenerator :
 
     def lambda_snakecase(self, text):
         return re.sub('([a-z0-9])([A-Z])', r'\1_\2', string).lower()
+
     def lambda_upper_snakecase(self, text):
         return re.sub('([a-z0-9])([A-Z])', r'\1_\2', string).upper()
-
-    # END template available functions
-
-
 
     def makeVarName(self,schemeObj) :
         returnName = schemeObj.type_name
@@ -207,9 +207,7 @@ class ObjectiveCCodeGenerator :
         return classes
 
     def process_properties(self, propObj, undefined = False) :
-        capitalizeVarName = self.makeVarName(propObj)
-        capitalizeVarName = capitalizeVarName[:1].upper() + capitalizeVarName[1:]
-        propertyHash = {'name' : propObj.type_name, 'varName' : self.makeVarName(propObj), 'capitalizeVarName': capitalizeVarName}
+        propertyHash = {'name' : propObj.type_name, 'varName' : self.makeVarName(propObj)}
         if propObj.type_description and len(propObj.type_description) :
             propertyHash["description"] = propObj.type_description
         if propObj.required == 1:

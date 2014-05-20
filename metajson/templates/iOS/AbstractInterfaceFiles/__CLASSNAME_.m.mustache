@@ -136,31 +136,31 @@
         }
         {{/hasAnyType}}
         {{^hasAnyType}}
-        NSArray *tmp{{capitalizeVarName}}Array = [{{projectPrefix}}APIParser arrayFromResponseDictionary:dic forKey:@"{{name}}" acceptNil:{{#required}}NO{{/required}}{{^required}}YES{{/required}} error:error];
+        NSArray *tmp{{#_upper_camelcase}}{{varName}}{{/_upper_camelcase}}Array = [{{projectPrefix}}APIParser arrayFromResponseDictionary:dic forKey:@"{{name}}" acceptNil:{{#required}}NO{{/required}}{{^required}}YES{{/required}} error:error];
         if (*error) {
             return self;
         }
-        NSMutableArray *tmp{{capitalizeVarName}} = [[NSMutableArray alloc] initWithCapacity:tmp{{capitalizeVarName}}Array.count];
-        for (NSUInteger loop = 0; loop < tmp{{capitalizeVarName}}Array.count; loop++) {
+        NSMutableArray *tmp{{#_upper_camelcase}}{{varName}}{{/_upper_camelcase}} = [[NSMutableArray alloc] initWithCapacity:tmp{{#_upper_camelcase}}{{varName}}{{/_upper_camelcase}}Array.count];
+        for (NSUInteger loop = 0; loop < tmp{{#_upper_camelcase}}{{varName}}{{/_upper_camelcase}}Array.count; loop++) {
             {{#hasStringType}}
-            NSString *tmpValue = [{{projectPrefix}}APIParser stringFromResponseArray:tmp{{capitalizeVarName}}Array atIndex:loop acceptNil:{{#required}}NO{{/required}}{{^required}}YES{{/required}} error:error];
+            NSString *tmpValue = [{{projectPrefix}}APIParser stringFromResponseArray:tmp{{#_upper_camelcase}}{{varName}}{{/_upper_camelcase}}Array atIndex:loop acceptNil:{{#required}}NO{{/required}}{{^required}}YES{{/required}} error:error];
             {{/hasStringType}}
             {{#hasNumberType}}
-            NSNumber *tmpValue = [{{projectPrefix}}APIParser numberFromResponseArray:tmp{{capitalizeVarName}}Array atIndex:loop acceptNil:{{#required}}NO{{/required}}{{^required}}YES{{/required}} error:error];
+            NSNumber *tmpValue = [{{projectPrefix}}APIParser numberFromResponseArray:tmp{{#_upper_camelcase}}{{varName}}{{/_upper_camelcase}}Array atIndex:loop acceptNil:{{#required}}NO{{/required}}{{^required}}YES{{/required}} error:error];
             {{/hasNumberType}}
             {{#hasDateType}}
-            NSDate *tmpValue = [{{projectPrefix}}APIParser dateFromResponseArray:tmp{{capitalizeVarName}}Array atIndex:loop acceptNil:{{#required}}NO{{/required}}{{^required}}YES{{/required}} error:error];
+            NSDate *tmpValue = [{{projectPrefix}}APIParser dateFromResponseArray:tmp{{#_upper_camelcase}}{{varName}}{{/_upper_camelcase}}Array atIndex:loop acceptNil:{{#required}}NO{{/required}}{{^required}}YES{{/required}} error:error];
             {{/hasDateType}}
             {{^hasCustomType}}
             if (*error) {
                 return self;
             }
             if (tmpValue) {
-                [tmp{{capitalizeVarName}} addObject:tmpValue];
+                [tmp{{#_upper_camelcase}}{{varName}}{{/_upper_camelcase}} addObject:tmpValue];
             }
             {{/hasCustomType}}
             {{#hasCustomType}}
-            NSDictionary *tmpDic = [APIParser dictionaryFromResponseArray:tmp{{capitalizeVarName}}Array atIndex:loop acceptNil:NO error:error];
+            NSDictionary *tmpDic = [APIParser dictionaryFromResponseArray:tmp{{#_upper_camelcase}}{{varName}}{{/_upper_camelcase}}Array atIndex:loop acceptNil:NO error:error];
             if (*error) {
                 return self;
             }
@@ -173,12 +173,12 @@
                  }
             }
             if (tmpObject) {
-                 [tmp{{capitalizeVarName}} addObject:tmpObject];
+                 [tmp{{#_upper_camelcase}}{{varName}}{{/_upper_camelcase}} addObject:tmpObject];
             }
             {{/subtypes}}
             {{/hasCustomType}}
         }
-        self.{{varName}} = [NSArray arrayWithArray:tmp{{capitalizeVarName}}];
+        self.{{varName}} = [NSArray arrayWithArray:tmp{{#_upper_camelcase}}{{varName}}{{/_upper_camelcase}}];
         {{/hasAnyType}}
         {{/hasOneSubtype}}
         {{#maxCount}}
@@ -207,12 +207,12 @@
         {{/minCount}}
         {{/arrayProperties}}
         {{#objectProperties}}
-        NSDictionary *tmp{{capitalizeVarName}} = [APIParser dictionaryFromResponseDictionary:dic forKey:@"{{name}}" acceptNil:{{#required}}NO{{/required}}{{^required}}YES{{/required}} error:error];
+        NSDictionary *tmp{{#_upper_camelcase}}{{varName}}{{/_upper_camelcase}} = [APIParser dictionaryFromResponseDictionary:dic forKey:@"{{name}}" acceptNil:{{#required}}NO{{/required}}{{^required}}YES{{/required}} error:error];
         if (*error) {
             return self;
         }
-        if (tmp{{capitalizeVarName}}) {
-            self.{{varName}}= [[{{className}} alloc] initWithDictionary:tmp{{capitalizeVarName}} withError:error];
+        if (tmp{{#_upper_camelcase}}{{varName}}{{/_upper_camelcase}}) {
+            self.{{varName}}= [[{{className}} alloc] initWithDictionary:tmp{{#_upper_camelcase}}{{varName}}{{/_upper_camelcase}} withError:error];
             if (*error) {
                 return self;
             }
@@ -235,23 +235,23 @@
 {{#subtypes}}
 {{#className}}
 
-- ({{className}} *){{subtype}}In{{capitalizeVarName}}AtIndex:(NSUInteger)index withError:(NSError **)error
+- ({{className}} *){{subtype}}In{{#_upper_camelcase}}{{varName}}{{/_upper_camelcase}}AtIndex:(NSUInteger)index withError:(NSError **)error
 {
-    NSDictionary *tmp{{capitalizeVarName}}Dic = [APIParser dictionaryFromResponseArray:self.{{varName}} atIndex:index acceptNil:YES error:error];
+    NSDictionary *tmp{{#_upper_camelcase}}{{varName}}{{/_upper_camelcase}}Dic = [APIParser dictionaryFromResponseArray:self.{{varName}} atIndex:index acceptNil:YES error:error];
     if (*error) {
         return nil;
     }
-    {{className}} *tmp{{capitalizeVarName}} = nil;
-    if (tmp{{capitalizeVarName}}Dic== nil) {
+    {{className}} *tmp{{#_upper_camelcase}}{{varName}}{{/_upper_camelcase}} = nil;
+    if (tmp{{#_upper_camelcase}}{{varName}}{{/_upper_camelcase}}Dic== nil) {
         return nil;
     }
-    if (tmp{{capitalizeVarName}}Dic) {
-        tmp{{capitalizeVarName}}= [[{{className}} alloc] initWithDictionary:tmp{{capitalizeVarName}}Dic withError:error];
+    if (tmp{{#_upper_camelcase}}{{varName}}{{/_upper_camelcase}}Dic) {
+        tmp{{#_upper_camelcase}}{{varName}}{{/_upper_camelcase}}= [[{{className}} alloc] initWithDictionary:tmp{{#_upper_camelcase}}{{varName}}{{/_upper_camelcase}}Dic withError:error];
         if (*error) {
             return nil;
         }
     }
-    return tmp{{capitalizeVarName}};
+    return tmp{{#_upper_camelcase}}{{varName}}{{/_upper_camelcase}};
 }
 {{/className}}
 {{/subtypes}}
@@ -259,27 +259,27 @@
 {{#hasNumberType}}
 {{#subtypes}}
 
-- (NSNumber *){{subtype}}In{{capitalizeVarName}}AtIndex:(NSUInteger)index withError:(NSError **)error
+- (NSNumber *){{subtype}}In{{#_upper_camelcase}}{{varName}}{{/_upper_camelcase}}AtIndex:(NSUInteger)index withError:(NSError **)error
 {
-    NSNumber *tmp{{capitalizeVarName}} = [{{projectPrefix}}APIParser numberFromResponseArray:self.{{varName}} atIndex:index acceptNil:{{#required}}NO{{/required}}{{^required}}YES{{/required}} error:error];
+    NSNumber *tmp{{#_upper_camelcase}}{{varName}}{{/_upper_camelcase}} = [{{projectPrefix}}APIParser numberFromResponseArray:self.{{varName}} atIndex:index acceptNil:{{#required}}NO{{/required}}{{^required}}YES{{/required}} error:error];
     if (*error) {
         return nil;
     }
-    return tmp{{capitalizeVarName}};
+    return tmp{{#_upper_camelcase}}{{varName}}{{/_upper_camelcase}};
 }
 {{/subtypes}}
 {{/hasNumberType}}
 {{#hasStringType}}
 {{#subtypes}}
 
-- (NSString *){{subtype}}In{{capitalizeVarName}}AtIndex:(NSUInteger)index withError:(NSError **)error
+- (NSString *){{subtype}}In{{#_upper_camelcase}}{{varName}}{{/_upper_camelcase}}AtIndex:(NSUInteger)index withError:(NSError **)error
 {
-    NSString *tmp{{capitalizeVarName}} = [{{projectPrefix}}APIParser stringFromResponseArray:self.{{varName}} atIndex:index acceptNil:{{#required}}NO{{/required}}{{^required}}YES{{/required}} error:error];
+    NSString *tmp{{#_upper_camelcase}}{{varName}}{{/_upper_camelcase}} = [{{projectPrefix}}APIParser stringFromResponseArray:self.{{varName}} atIndex:index acceptNil:{{#required}}NO{{/required}}{{^required}}YES{{/required}} error:error];
     if (*error) {
         return nil;
     }
     {{#_subtype.maxLength}}
-    if (tmp{{capitalizeVarName}}.length > {{_subtype.maxLength}}) {
+    if (tmp{{#_upper_camelcase}}{{varName}}{{/_upper_camelcase}}.length > {{_subtype.maxLength}}) {
         NSDictionary *userInfo = @{@"propertyName" : @"{{_subtype.name}}",
                                    @"key" : @"{{_subtype.name}}",
                                    @"reason" : @"max length validation error",
@@ -291,7 +291,7 @@
     }
     {{/_subtype.maxLength}}
     {{#_subtype.minLength}}
-    if (tmp{{capitalizeVarName}}.length < {{_subtype.minLength}}) {
+    if (tmp{{#_upper_camelcase}}{{varName}}{{/_upper_camelcase}}.length < {{_subtype.minLength}}) {
         NSDictionary *userInfo = @{@"propertyName" : @"{{_subtype.name}}",
                                    @"key" : @"{{_subtype.name}}",
                                    @"reason" : @"min length validation error",
@@ -304,7 +304,7 @@
     {{/_subtype.minLength}}
     {{! to finish need to pass customClass regex...}}
     {{#_subtype.regex}}
-    if (tmp{{capitalizeVarName}} && [tmp{{capitalizeVarName}} matchesRegExString:@"{{& _subtype.regex}}"] == NO) {
+    if (tmp{{#_upper_camelcase}}{{varName}}{{/_upper_camelcase}} && [tmp{{#_upper_camelcase}}{{varName}}{{/_upper_camelcase}} matchesRegExString:@"{{& _subtype.regex}}"] == NO) {
         NSDictionary *userInfo = @{@"propertyName" : @"{{_subtype.name}}",
                                    @"key" : @"{{_subtype.name}}",
                                    @"reason" : @"validation error",
@@ -315,58 +315,58 @@
         return nil;
     }
     {{/_subtype.regex}}
-    return tmp{{capitalizeVarName}};
+    return tmp{{#_upper_camelcase}}{{varName}}{{/_upper_camelcase}};
 }
 {{/subtypes}}
 {{/hasStringType}}
 {{#hasBooleanType}}
 {{#subtypes}}
 
-- (BOOL){{subtype}}In{{capitalizeVarName}}AtIndex:(NSUInteger)index withError:(NSError **)error
+- (BOOL){{subtype}}In{{#_upper_camelcase}}{{varName}}{{/_upper_camelcase}}AtIndex:(NSUInteger)index withError:(NSError **)error
 {
-    BOOL tmp{{capitalizeVarName}} = [{{projectPrefix}}APIParser boolFromResponseArray:self.{{varName}} atIndex:index acceptNil:{{#required}}NO{{/required}}{{^required}}YES{{/required}} error:error];
+    BOOL tmp{{#_upper_camelcase}}{{varName}}{{/_upper_camelcase}} = [{{projectPrefix}}APIParser boolFromResponseArray:self.{{varName}} atIndex:index acceptNil:{{#required}}NO{{/required}}{{^required}}YES{{/required}} error:error];
     if (*error) {
         return nil;
     }
-    return tmp{{capitalizeVarName}};
+    return tmp{{#_upper_camelcase}}{{varName}}{{/_upper_camelcase}};
 }
 {{/subtypes}}
 {{/hasBooleanType}}
 {{#hasDateType}}
 {{#subtypes}}
 
-- (NSDate *){{subtype}}In{{capitalizeVarName}}AtIndex:(NSUInteger)index withError:(NSError **)error
+- (NSDate *){{subtype}}In{{#_upper_camelcase}}{{varName}}{{/_upper_camelcase}}AtIndex:(NSUInteger)index withError:(NSError **)error
 {
-    NSDate *tmp{{capitalizeVarName}} = [{{projectPrefix}}APIParser dateWithTimeIntervalFromResponseArray:self.{{varName}} atIndex:index acceptNil:{{#required}}NO{{/required}}{{^required}}YES{{/required}} error:error];
+    NSDate *tmp{{#_upper_camelcase}}{{varName}}{{/_upper_camelcase}} = [{{projectPrefix}}APIParser dateWithTimeIntervalFromResponseArray:self.{{varName}} atIndex:index acceptNil:{{#required}}NO{{/required}}{{^required}}YES{{/required}} error:error];
     if (*error) {
         return nil;
     }
-    return tmp{{capitalizeVarName}};
+    return tmp{{#_upper_camelcase}}{{varName}}{{/_upper_camelcase}};
 }
 {{/subtypes}}
 {{/hasDateType}}
 {{#hasDataType}}
 {{#subtypes}}
 
-- (NSData*){{subtype}}In{{capitalizeVarName}}AtIndex:(NSUInteger)index withError:(NSError **)error
+- (NSData*){{subtype}}In{{#_upper_camelcase}}{{varName}}{{/_upper_camelcase}}AtIndex:(NSUInteger)index withError:(NSError **)error
 {
-    NSData* tmp{{capitalizeVarName}} = [{{projectPrefix}}APIParser dataFromResponseArray:self.{{varName}} atIndex:index acceptNil:{{#required}}NO{{/required}}{{^required}}YES{{/required}} error:error];
+    NSData* tmp{{#_upper_camelcase}}{{varName}}{{/_upper_camelcase}} = [{{projectPrefix}}APIParser dataFromResponseArray:self.{{varName}} atIndex:index acceptNil:{{#required}}NO{{/required}}{{^required}}YES{{/required}} error:error];
     if (*error) {
         return nil;
     }
-    return tmp{{capitalizeVarName}};
+    return tmp{{#_upper_camelcase}}{{varName}}{{/_upper_camelcase}};
 }
 {{/subtypes}}
 {{/hasDataType}}
 {{/hasMultipleSubtypes}}
 {{#hasAnyType}}
-- (id)objectIn{{capitalizeVarName}}AtIndex:(NSUInteger)index withError:(NSError **)error
+- (id)objectIn{{#_upper_camelcase}}{{varName}}{{/_upper_camelcase}}AtIndex:(NSUInteger)index withError:(NSError **)error
 {
-    id tmp{{capitalizeVarName}} = [APIParser objectFromResponseArray:self.{{varName}} atIndex:index acceptNil:YES error:error];
+    id tmp{{#_upper_camelcase}}{{varName}}{{/_upper_camelcase}} = [APIParser objectFromResponseArray:self.{{varName}} atIndex:index acceptNil:YES error:error];
     if (*error) {
         return nil;
     }
-    return tmp{{capitalizeVarName}};
+    return tmp{{#_upper_camelcase}}{{varName}}{{/_upper_camelcase}};
 }
 
 {{/hasAnyType}}

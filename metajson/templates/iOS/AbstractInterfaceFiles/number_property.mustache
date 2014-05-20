@@ -1,7 +1,7 @@
 if (!self.{{varName}}) return nil;
 NSDictionary *new{{varName}}Dic = @{@"{{name}}" : self.{{varName}}};
-NSNumber *tmp{{capitalizeVarName}} = [APIParser numberFromResponseDictionary:new{{varName}}Dic forKey:@"{{name}}" acceptNil:NO error:error];
+NSNumber *tmp{{#_upper_camelcase}}{{varName}}{{/_upper_camelcase}} = [APIParser numberFromResponseDictionary:new{{varName}}Dic forKey:@"{{name}}" acceptNil:NO error:error];
 if (*error) {
     return nil;
 }
-return tmp{{capitalizeVarName}};
+return tmp{{#_upper_camelcase}}{{varName}}{{/_upper_camelcase}};
