@@ -199,8 +199,8 @@ def usage():
     usageString += '  -p, --prefix=         project prefix (default: S2M)\n'
     usageString += '  -s, --suffix=         classname suffix (default: JSONObject). Use "-s false" for no suffix\n'
     usageString += '  -t, --target=         target platform iOS or Android (default: iOS)\n'
-    usageString += '  -i, --input=          meta-JSON file to read\n'
-    usageString += '  -o, --output=         ouput path of generated source codes (default: src)\n'
+    usageString += '  -i, --input=          metaJSON file to read\n'
+    usageString += '  -o, --output=         output path of generated source codes (default: src)\n'
     usageString += '      --template=       template directory to use to generate code\n'
     print(usageString)
     sys.exit()
