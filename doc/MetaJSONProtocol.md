@@ -60,11 +60,19 @@ You can also use just one of those ("minValue" or "maxValue").
 	"description" : string
 	"minValue" : UTC time interval since 1970
 	"maxValue" : UTC time interval since 1970
-}
+},
+{
+	"name" : "myISO8601Date",
+	"base-type" : "date",
+	"subType" : "iso8601",
+	"description" : string
+	"minValue" : UTC time interval since 1970
+	"maxValue" : UTC time interval since 1970
+},
 ```
 	
 * The value of myDate should be always UTC time interval since 1970.
-* "subType" is optional, to specify wheather it's millisecond based timestamp or second based timestamp.
+* "subType" is optional, to specify wheather it's millisecond based timestamp, a second based timestamp or an ISO 8601 timestamp.
 * If "subType" is specified as "ms", "minValue" and "maxValue" should be used like "1382455623.098"
 * "minValue" and "maxValue" are optional, to validate this type.
 * "maxValue" should be always same or later than "minValue".
