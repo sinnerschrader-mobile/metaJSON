@@ -5,6 +5,7 @@ import pickle
 import unittest
 import sys
 import os
+import datetime
 
 class TestObjectiveCCodeGenerator(unittest.TestCase):
     def setUp(self):
@@ -39,7 +40,8 @@ class TestObjectiveCCodeGenerator(unittest.TestCase):
     def assert_content_file(self, filename, content):
         with open(filename, 'r') as content_file:
             expected_result = content_file.read()
-        self.assertMultiLineEqual(content, expected_result)
+        # All reference files have a timestamp of 2014 so we tweak our generated code to match them.
+        self.assertMultiLineEqual(content.replace(str(datetime.datetime.now().year), "2014"), expected_result)
 
 class TestSampleTestClassCase(TestObjectiveCCodeGenerator):
     def setUp(self):
