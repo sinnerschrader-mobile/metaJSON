@@ -1,5 +1,6 @@
 import unittest
 import os
+import datetime
 
 class TestReadJSON(unittest.TestCase):
     def setUp(self):
@@ -23,6 +24,9 @@ class TestReadJSON(unittest.TestCase):
         # common_file = "/AbstractInterfaceFiles/_SenderList2JSONObject.m"
         # common_file = "/AbstractInterfaceFiles/_SenderJSONObject.m"
         # common_file = "/AbstractInterfaceFiles/_SenderGroupJSONObject.m"
+        
+        # All timestamps in reference files should be 2014, so we need to tweak our generated files to match them.
+        os.system("find src -type f -exec sed -r --in-place \"s/%d/2014/g\" {} +" % (datetime.datetime.now().year, ) )
         return os.system("diff -r -w -b -B src " + output_dir)
         # return os.system("diff -r -w -b -B src" + common_file + " " + output_dir + common_file)
 
