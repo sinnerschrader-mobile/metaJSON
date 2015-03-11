@@ -1,0 +1,53 @@
+    {{#description}}
+    /**
+     * {{description}}
+     */
+    {{/description}}
+    private JSONArray m{{#_upper_camelcase}}{{name}}{{/_upper_camelcase}};
+    public void set{{#_upper_camelcase}}{{name}}{{/_upper_camelcase}}(JSONArray newVal) {
+        {{#minCount}}
+        if ((newVal != null) && (newVal.length() < {{minCount}})) {
+            throw new IllegalArgumentException("Array only has " + newVal.length() + " elements ({{minCount}} needed).");
+        }
+        {{/minCount}}
+        {{#maxCount}}
+        if ((newVal != null) && (newVal.length() > {{maxCount}})) {
+            throw new IllegalArgumentException("Array has " + newVal.length() + " elements ({{maxCount}} allowed).");
+        }
+        {{/maxCount}}
+        m{{#_upper_camelcase}}{{name}}{{/_upper_camelcase}} = newVal;
+    }
+    public void set{{#_upper_camelcase}}{{name}}{{/_upper_camelcase}}AsDouble(double newVal, int index) throws JSONException {
+        m{{#_upper_camelcase}}{{name}}{{/_upper_camelcase}}.put(index, newVal);
+    }
+    public void set{{#_upper_camelcase}}{{name}}{{/_upper_camelcase}}AsString(String newVal, int index) throws JSONException {
+        m{{#_upper_camelcase}}{{name}}{{/_upper_camelcase}}.put(index, newVal);
+    }
+    public void set{{#_upper_camelcase}}{{name}}{{/_upper_camelcase}}AsBoolean(boolean newVal, int index) throws JSONException {
+        m{{#_upper_camelcase}}{{name}}{{/_upper_camelcase}}.put(index, newVal);
+    }
+    public void set{{#_upper_camelcase}}{{name}}{{/_upper_camelcase}}AsDate(Date newVal, int index) throws JSONException {
+        m{{#_upper_camelcase}}{{name}}{{/_upper_camelcase}}.put(index, newVal);
+    }
+    public void set{{#_upper_camelcase}}{{name}}{{/_upper_camelcase}}AsArray(JSONArray newVal, int index) throws JSONException {
+        m{{#_upper_camelcase}}{{name}}{{/_upper_camelcase}}.put(index, newVal);
+    }
+    public JSONArray get{{#_upper_camelcase}}{{name}}{{/_upper_camelcase}}() {
+        return m{{#_upper_camelcase}}{{name}}{{/_upper_camelcase}};
+    }
+    public double get{{#_upper_camelcase}}{{name}}{{/_upper_camelcase}}AsDouble(int index) {
+        return m{{#_upper_camelcase}}{{name}}{{/_upper_camelcase}}.optDouble(index);
+    }
+    public String get{{#_upper_camelcase}}{{name}}{{/_upper_camelcase}}AsString(int index) {
+        return m{{#_upper_camelcase}}{{name}}{{/_upper_camelcase}}.optString(index);
+    }
+    public boolean get{{#_upper_camelcase}}{{name}}{{/_upper_camelcase}}AsBoolean(int index) {
+        return m{{#_upper_camelcase}}{{name}}{{/_upper_camelcase}}.optBoolean(index);
+    }
+    public Date get{{#_upper_camelcase}}{{name}}{{/_upper_camelcase}}AsDate(int index) {
+        return new Date(m{{#_upper_camelcase}}{{name}}{{/_upper_camelcase}}.optLong(index));
+    }
+    public JSONArray get{{#_upper_camelcase}}{{name}}{{/_upper_camelcase}}AsArray(int index) {
+        return m{{#_upper_camelcase}}{{name}}{{/_upper_camelcase}}.optJSONArray(index);
+    }
+
