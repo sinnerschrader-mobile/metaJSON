@@ -33,7 +33,7 @@ import shutil
 import sys, getopt
 
 from JSONScheme import *
-from ObjectiveCCodeGenerator import *
+from SourceCodeGenerator import *
 
 def main(argv=sys.argv):
     # parse Options
@@ -118,7 +118,7 @@ def main(argv=sys.argv):
         jsonObj = read_file(filePath)
         schemeObj = create_json_scheme(jsonObj)
 
-        codeGen = ObjectiveCCodeGenerator()
+        codeGen = SourceCodeGenerator()
         allSchemes = JSONScheme.JSONSchemeDic
         rootDic = allSchemes["ROOT"]
         for typeName in rootDic :

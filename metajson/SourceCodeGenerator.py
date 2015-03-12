@@ -30,7 +30,7 @@ from cStringIO import StringIO
 
 from template_code_generator import *
 
-class ObjectiveCCodeGenerator :
+class SourceCodeGenerator :
 
     def __init__(self):
         self.mustache_renderer = Renderer()
