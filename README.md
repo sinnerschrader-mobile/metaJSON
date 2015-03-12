@@ -18,6 +18,7 @@ Options:
   -i, --input=          meta-JSON file to read
   -o, --output=         ouput path of generated source codes (default: src)
       --template=       template directory to use to generate code
+      --package=        name of the generated package (default: none)
 ```
 
 A working sample call could look like that:

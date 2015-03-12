@@ -26,6 +26,7 @@ class JSONScheme :
     JSONSchemeDic = {}
     naturalTypeList = ['string', 'array', 'date', 'data', 'boolean', 'number']
     projectPrefix = ""
+    packageName = ""
     objectSuffix = "JSONObject"
     type_name = ""
     key_name = ""
@@ -318,6 +319,7 @@ class JSONScheme :
     def makeNewScheme(self, jsonDic):
         newScheme = JSONScheme()
         newScheme.projectPrefix = self.projectPrefix
+        newScheme.packageName = self.packageName
         newScheme.objectSuffix = self.objectSuffix
         newScheme.domain = self.domain[:]
         newScheme.domain.append(self.type_name)

@@ -42,6 +42,7 @@ TARGET_ANDROID = 'Android'
 def main(argv=sys.argv):
     # parse Options
     template_dir = None
+    packageName = ""
     jsonfiles = []
     inputfile = 'do you have files?'
     projectPrefix = 'S2M'
@@ -51,7 +52,7 @@ def main(argv=sys.argv):
 
     argv = sys.argv[1:]
     try:
-        opts, args = getopt.getopt(argv,"vhp:s:t:i:o:",["version", "help", "prefix=", "suffix=", "target=", "input=", "output=", "template="])
+        opts, args = getopt.getopt(argv,"vhp:s:t:i:o:",["version", "help", "prefix=", "suffix=", "target=", "input=", "output=", "template=", "package="])
     except getopt.GetoptError:
         usage()
         sys.exit(2)
@@ -76,7 +77,8 @@ def main(argv=sys.argv):
                 objectSuffix = ""
         elif opt in ("--template"):
             template_dir = arg
-
+        elif opt in ("--package"):
+            packageName = arg
     addFiles = False
     for arg in argv :
         if arg.endswith(inputfile) :
@@ -122,14 +124,15 @@ def main(argv=sys.argv):
             dirPathToSaveCodes = dirPathToSaveCodes[:-1]
 
     if template_dir == None:
-        template_dir = os.path.join(TemplateCodeGenerator.DEFAULT_TEMPLATE_PATH, target)
+        template_dir = os.path.join(TemplateCodeGenerator.DEFAULT_TEMPLATE_PATH, "iOS")
 
-    templateCodeGen = TemplateCodeGenerator(template_dir, dirPathToSaveCodes, projectPrefix)
+    templateCodeGen = TemplateCodeGenerator(template_dir, dirPathToSaveCodes, projectPrefix, packageName)
     templateCodeGen.write_general_template_files()
 
 
     # read JSON file
     JSONScheme.projectPrefix = projectPrefix
+    JSONScheme.packageName = packageName
     JSONScheme.objectSuffix = objectSuffix
     for filePath in jsonfiles :
         print "read " + filePath + " to parse ...."
@@ -202,6 +205,7 @@ def usage():
     usageString += '  -i, --input=          metaJSON file to read\n'
     usageString += '  -o, --output=         output path of generated source codes (default: src)\n'
     usageString += '      --template=       template directory to use to generate code\n'
+    usageString += '      --package=        name of the generated package (default: none)\n'
     print(usageString)
     sys.exit()
 

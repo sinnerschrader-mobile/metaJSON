@@ -7,8 +7,9 @@ class TemplateCodeGenerator :
     TEMPLATE_EXT = ".mustache"
     DEFAULT_TEMPLATE_PATH = "./metajson/templates"
 
-    def __init__(self, template_path = DEFAULT_TEMPLATE_PATH, output_path = "classes", project_prefix = "S2M"):
+    def __init__(self, template_path = DEFAULT_TEMPLATE_PATH, output_path = "classes", project_prefix = "S2M", package_name = ""):
         self.project_prefix = project_prefix
+        self.package_name = package_name
         self.template_path = template_path
         if output_path.endswith("/"):
             output_path = output_path[:-1]
@@ -72,6 +73,7 @@ class TemplateCodeGenerator :
         newtext = text.replace('_DATE_', "")
         newtext = newtext.replace('_YEAR_', str(today.year))
         newtext = newtext.replace('_PREFIX_', self.project_prefix)
+        newtext = newtext.replace('_PACKAGE_', self.package_name)
         return newtext
 
     def write_template(self, template, output):
