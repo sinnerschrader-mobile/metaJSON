@@ -21,13 +21,13 @@ import org.json.JSONObject;
 import {{package}}.*;
 
 {{#baseTypeIsObject}}
-public class {{prefix}}{{#_upper_camelcase}}{{name}}{{/_upper_camelcase}} {
+public class {{prefix}}{{#_upper_camelcase}}{{name}}{{/_upper_camelcase}}{{suffix}} {
 {{/baseTypeIsObject}}
 {{^baseTypeIsObject}}
-public class {{prefix}}{{#_upper_camelcase}}{{name}}{{/_upper_camelcase}} extends {{baseClassName}} {
+public class {{prefix}}{{#_upper_camelcase}}{{name}}{{/_upper_camelcase}}{{suffix}} extends {{baseClassName}} {
 {{/baseTypeIsObject}}
 
-    public {{prefix}}{{#_upper_camelcase}}{{name}}{{/_upper_camelcase}}(JSONObject source) throws JSONException {
+    public {{prefix}}{{#_upper_camelcase}}{{name}}{{/_upper_camelcase}}{{suffix}}(JSONObject source) throws JSONException {
         {{^baseTypeIsObject}}
         super(source);
         {{/baseTypeIsObject}}
