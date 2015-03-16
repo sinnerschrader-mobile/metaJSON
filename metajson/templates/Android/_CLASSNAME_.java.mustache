@@ -99,6 +99,72 @@ public class {{prefix}}{{#_upper_camelcase}}{{name}}{{/_upper_camelcase}}{{suffi
      */
     {{/description}}
     private double m{{#_upper_camelcase}}{{name}}{{/_upper_camelcase}};
+
+{{/numberProperties}}
+{{#stringProperties}}
+    {{#description}}
+    /**
+     * {{description}}
+     */
+    {{/description}}
+    private String m{{#_upper_camelcase}}{{name}}{{/_upper_camelcase}};
+
+{{/stringProperties}}
+{{#booleanProperties}}
+    {{#description}}
+    /**
+     * {{description}}
+     */
+    {{/description}}
+    private boolean m{{#_upper_camelcase}}{{name}}{{/_upper_camelcase}};
+
+{{/booleanProperties}}
+{{#dataProperties}}
+    {{#description}}
+    /**
+     * {{description}}
+     */
+    {{/description}}
+    private byte[] m{{#_upper_camelcase}}{{name}}{{/_upper_camelcase}};
+
+{{/dataProperties}}
+{{#dateProperties}}
+    {{#description}}
+    /**
+     * {{description}}
+     */
+     {{/description}}
+    private Date m{{#_upper_camelcase}}{{name}}{{/_upper_camelcase}};
+
+{{/dateProperties}}
+{{#arrayProperties}}
+    {{#description}}
+    /**
+     * {{description}}
+     */
+    {{/description}}
+    private JSONArray m{{#_upper_camelcase}}{{name}}{{/_upper_camelcase}};
+
+{{/arrayProperties}}
+{{#objectProperties}}
+    {{#description}}
+    /**
+     * {{description}}
+     */
+    {{/description}}
+    private {{className}} m{{#_upper_camelcase}}{{name}}{{/_upper_camelcase}};
+
+{{/objectProperties}}
+{{#undefinedProperties}}
+    {{#description}}
+    /**
+     * {{description}}
+     */
+    {{/description}}
+    private JSONArray m{{#_upper_camelcase}}{{name}}{{/_upper_camelcase}};
+
+{{/undefinedProperties}}
+{{#numberProperties}}
     public void set{{#_upper_camelcase}}{{name}}{{/_upper_camelcase}}(double newVal) {
         {{#minValue}}
         if (newVal < {{minValue}}) {
@@ -112,18 +178,13 @@ public class {{prefix}}{{#_upper_camelcase}}{{name}}{{/_upper_camelcase}}{{suffi
         {{/maxValue}}
         m{{#_upper_camelcase}}{{name}}{{/_upper_camelcase}} = newVal;
     }
+
     public double get{{#_upper_camelcase}}{{name}}{{/_upper_camelcase}}() {
         return m{{#_upper_camelcase}}{{name}}{{/_upper_camelcase}};
     }
 
 {{/numberProperties}}
 {{#stringProperties}}
-    {{#description}}
-    /**
-     * {{description}}
-     */
-    {{/description}}
-    private String m{{#_upper_camelcase}}{{name}}{{/_upper_camelcase}};
     public void set{{#_upper_camelcase}}{{name}}{{/_upper_camelcase}}(String newVal) {
         {{#maxLength}}
         if ((newVal != null) && (newVal.length() > {{maxLength}})) {
@@ -142,33 +203,23 @@ public class {{prefix}}{{#_upper_camelcase}}{{name}}{{/_upper_camelcase}}{{suffi
         {{/regex}}
         m{{#_upper_camelcase}}{{name}}{{/_upper_camelcase}} = newVal;
     }
+
     public String get{{#_upper_camelcase}}{{name}}{{/_upper_camelcase}}() {
         return m{{#_upper_camelcase}}{{name}}{{/_upper_camelcase}};
     }
 
 {{/stringProperties}}
 {{#booleanProperties}}
-    {{#description}}
-    /**
-     * {{description}}
-     */
-    {{/description}}
-    private boolean m{{#_upper_camelcase}}{{name}}{{/_upper_camelcase}};
     public void set{{#_upper_camelcase}}{{name}}{{/_upper_camelcase}}(boolean newVal) {
         m{{#_upper_camelcase}}{{name}}{{/_upper_camelcase}} = newVal;
     }
+
     public boolean get{{#_upper_camelcase}}{{name}}{{/_upper_camelcase}}() {
         return m{{#_upper_camelcase}}{{name}}{{/_upper_camelcase}};
     }
 
 {{/booleanProperties}}
 {{#dataProperties}}
-    {{#description}}
-    /**
-     * {{description}}
-     */
-    {{/description}}
-    private byte[] m{{#_upper_camelcase}}{{name}}{{/_upper_camelcase}};
     public void set{{#_upper_camelcase}}{{name}}{{/_upper_camelcase}}(byte[] newVal) {
         {{#minLength}}
         if ((newVal != null) && (newVal.length < {{minLength}})) {
@@ -182,18 +233,13 @@ public class {{prefix}}{{#_upper_camelcase}}{{name}}{{/_upper_camelcase}}{{suffi
         {{/maxLength}}
         m{{#_upper_camelcase}}{{name}}{{/_upper_camelcase}} = newVal;
     }
+
     public byte[] get{{#_upper_camelcase}}{{name}}{{/_upper_camelcase}}() {
         return m{{#_upper_camelcase}}{{name}}{{/_upper_camelcase}};
     }
 
 {{/dataProperties}}
 {{#dateProperties}}
-    {{#description}}
-    /**
-     * {{description}}
-     */
-     {{/description}}
-    private Date m{{#_upper_camelcase}}{{name}}{{/_upper_camelcase}};
     public void set{{#_upper_camelcase}}{{name}}{{/_upper_camelcase}}(Date newVal) {
         {{#minValue}}
         if ((newVal != null) && (newVal.getTime() < {{minValue}}) {
@@ -207,6 +253,7 @@ public class {{prefix}}{{#_upper_camelcase}}{{name}}{{/_upper_camelcase}}{{suffi
         {{/maxValue}}
         m{{#_upper_camelcase}}{{name}}{{/_upper_camelcase}} = newVal;
     }
+
     public Date get{{#_upper_camelcase}}{{name}}{{/_upper_camelcase}}() {
         return m{{#_upper_camelcase}}{{name}}{{/_upper_camelcase}};
     }
@@ -215,15 +262,10 @@ public class {{prefix}}{{#_upper_camelcase}}{{name}}{{/_upper_camelcase}}{{suffi
 {{> metajson/templates/Android/array}}
 {{/arrayProperties}}
 {{#objectProperties}}
-    {{#description}}
-    /**
-     * {{description}}
-     */
-    {{/description}}
-    private {{className}} m{{#_upper_camelcase}}{{name}}{{/_upper_camelcase}};
     public void set{{#_upper_camelcase}}{{name}}{{/_upper_camelcase}}({{className}} newVal) {
         m{{#_upper_camelcase}}{{name}}{{/_upper_camelcase}} = newVal;
     }
+
     public {{className}} get{{#_upper_camelcase}}{{name}}{{/_upper_camelcase}}() {
         return m{{#_upper_camelcase}}{{name}}{{/_upper_camelcase}};
     }
