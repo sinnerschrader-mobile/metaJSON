@@ -30,7 +30,7 @@ from cStringIO import StringIO
 
 from template_code_generator import *
 
-class ObjectiveCCodeGenerator :
+class SourceCodeGenerator :
 
     def __init__(self):
         self.mustache_renderer = Renderer()
@@ -300,7 +300,7 @@ class ObjectiveCCodeGenerator :
             if(len(classes) > 0):
               custom_classes.extend(classes)
 
-        hashParams = {"date": str(today.year), "suffix": schemeObj.objectSuffix, "prefix": schemeObj.projectPrefix, "name": schemeObj.type_name, "varName": self.makeVarName(schemeObj), "stringProperties": stringProps, "numberProperties": numberProps, "booleanProperties": booleanProps, "dataProperties": dataProps, "dateProperties": dateProps, "arrayProperties": arrayProps, "undefinedProperties": undefineProps, "objectProperties": objectProps}
+        hashParams = {"date": str(today.year), "suffix": schemeObj.objectSuffix, "prefix": schemeObj.projectPrefix, "package": schemeObj.packageName, "name": schemeObj.type_name, "varName": self.makeVarName(schemeObj), "stringProperties": stringProps, "numberProperties": numberProps, "booleanProperties": booleanProps, "dataProperties": dataProps, "dateProperties": dateProps, "arrayProperties": arrayProps, "undefinedProperties": undefineProps, "objectProperties": objectProps}
         hashParams["custom_classes"] = []
         for classname in custom_classes:
           if classname not in hashParams["custom_classes"]:

@@ -1,0 +1,278 @@
+/**
+*  {{prefix}}{{#_upper_camelcase}}{{varName}}{{/_upper_camelcase}}{{suffix}}.h
+*
+*  Created by MetaJSONParser.
+*  Copyright (c) {{date}} SinnerSchrader Mobile. All rights reserved.
+**/
+
+package {{package}};
+
+import android.util.Base64;
+
+import java.lang.IllegalArgumentException;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import {{package}}.*;
+
+{{#baseTypeIsObject}}
+public class {{prefix}}{{#_upper_camelcase}}{{name}}{{/_upper_camelcase}}{{suffix}} {
+{{/baseTypeIsObject}}
+{{^baseTypeIsObject}}
+public class {{prefix}}{{#_upper_camelcase}}{{name}}{{/_upper_camelcase}}{{suffix}} extends {{baseClassName}} {
+{{/baseTypeIsObject}}
+
+    public {{prefix}}{{#_upper_camelcase}}{{name}}{{/_upper_camelcase}}{{suffix}}(JSONObject source) throws JSONException {
+        {{^baseTypeIsObject}}
+        super(source);
+        {{/baseTypeIsObject}}
+        {{#numberProperties}}
+        {{#required}}
+        set{{#_upper_camelcase}}{{name}}{{/_upper_camelcase}}(source.getDouble("{{name}}"));
+        {{/required}}
+        {{^required}}
+        set{{#_upper_camelcase}}{{name}}{{/_upper_camelcase}}(source.optDouble("{{name}}"));
+        {{/required}}
+        {{/numberProperties}}
+        {{#stringProperties}}
+        {{#required}}
+        set{{#_upper_camelcase}}{{name}}{{/_upper_camelcase}}(source.getString("{{name}}"));
+        {{/required}}
+        {{^required}}
+        set{{#_upper_camelcase}}{{name}}{{/_upper_camelcase}}(source.optString("{{name}}"));
+        {{/required}}
+        {{/stringProperties}}
+        {{#booleanProperties}}
+        {{#required}}
+        m{{#_upper_camelcase}}{{name}}{{/_upper_camelcase}} = source.getBoolean("{{name}}");
+        {{/required}}
+        {{^required}}
+        m{{#_upper_camelcase}}{{name}}{{/_upper_camelcase}} = source.optBoolean("{{name}}");
+        {{/required}}
+        {{/booleanProperties}}
+        {{#dateProperties}}
+        {{#required}}
+        set{{#_upper_camelcase}}{{name}}{{/_upper_camelcase}}(new Date(source.getLong("{{name}}")));
+        {{/required}}
+        {{^required}}
+        set{{#_upper_camelcase}}{{name}}{{/_upper_camelcase}}(new Date(source.optLong("{{name}}")));
+        {{/required}}
+        {{/dateProperties}}
+        {{#dataProperties}}
+        {{#required}}
+        set{{#_upper_camelcase}}{{name}}{{/_upper_camelcase}}(Base64.decode(source.getString("{{name}}"), Base64.DEFAULT));
+        {{/required}}
+        {{^required}}
+        set{{#_upper_camelcase}}{{name}}{{/_upper_camelcase}}(Base64.decode(source.opString("{{name}}"), Base64.DEFAULT));
+        {{/required}}
+        {{/dataProperties}}
+        {{#arrayProperties}}
+        {{#required}}
+        set{{#_upper_camelcase}}{{name}}{{/_upper_camelcase}}(source.getJSONArray("{{name}}"));
+        {{/required}}
+        {{^required}}
+        set{{#_upper_camelcase}}{{name}}{{/_upper_camelcase}}(source.optJSONArray("{{name}}"));
+        {{/required}}
+        {{/arrayProperties}}
+        {{#objectProperties}}
+        m{{#_upper_camelcase}}{{name}}{{/_upper_camelcase}} = new {{className}}(source.optJSONObject("{{name}}"));
+        {{/objectProperties}}
+        {{#undefinedProperties}}
+        {{#required}}
+        set{{#_upper_camelcase}}{{name}}{{/_upper_camelcase}}(source.getJSONArray("{{name}}"));
+        {{/required}}
+        {{^required}}
+        set{{#_upper_camelcase}}{{name}}{{/_upper_camelcase}}(source.optJSONArray("{{name}}"));
+        {{/required}}
+        {{/undefinedProperties}}
+    }
+
+{{#numberProperties}}
+    {{#description}}
+    /**
+     * {{description}}
+     */
+    {{/description}}
+    private double m{{#_upper_camelcase}}{{name}}{{/_upper_camelcase}};
+
+{{/numberProperties}}
+{{#stringProperties}}
+    {{#description}}
+    /**
+     * {{description}}
+     */
+    {{/description}}
+    private String m{{#_upper_camelcase}}{{name}}{{/_upper_camelcase}};
+
+{{/stringProperties}}
+{{#booleanProperties}}
+    {{#description}}
+    /**
+     * {{description}}
+     */
+    {{/description}}
+    private boolean m{{#_upper_camelcase}}{{name}}{{/_upper_camelcase}};
+
+{{/booleanProperties}}
+{{#dataProperties}}
+    {{#description}}
+    /**
+     * {{description}}
+     */
+    {{/description}}
+    private byte[] m{{#_upper_camelcase}}{{name}}{{/_upper_camelcase}};
+
+{{/dataProperties}}
+{{#dateProperties}}
+    {{#description}}
+    /**
+     * {{description}}
+     */
+     {{/description}}
+    private Date m{{#_upper_camelcase}}{{name}}{{/_upper_camelcase}};
+
+{{/dateProperties}}
+{{#arrayProperties}}
+    {{#description}}
+    /**
+     * {{description}}
+     */
+    {{/description}}
+    private JSONArray m{{#_upper_camelcase}}{{name}}{{/_upper_camelcase}};
+
+{{/arrayProperties}}
+{{#objectProperties}}
+    {{#description}}
+    /**
+     * {{description}}
+     */
+    {{/description}}
+    private {{className}} m{{#_upper_camelcase}}{{name}}{{/_upper_camelcase}};
+
+{{/objectProperties}}
+{{#undefinedProperties}}
+    {{#description}}
+    /**
+     * {{description}}
+     */
+    {{/description}}
+    private JSONArray m{{#_upper_camelcase}}{{name}}{{/_upper_camelcase}};
+
+{{/undefinedProperties}}
+{{#numberProperties}}
+    public void set{{#_upper_camelcase}}{{name}}{{/_upper_camelcase}}(double newVal) {
+        {{#minValue}}
+        if (newVal < {{minValue}}) {
+            throw new IllegalArgumentException("Number " + newVal + " is smaller than {{minValue}}.");
+        }
+        {{/minValue}}
+        {{#maxValue}}
+        if (newVal > {{maxValue}}) {
+            throw new IllegalArgumentException("Number " + newVal + " is bigger than {{maxValue}}");
+        }
+        {{/maxValue}}
+        m{{#_upper_camelcase}}{{name}}{{/_upper_camelcase}} = newVal;
+    }
+
+    public double get{{#_upper_camelcase}}{{name}}{{/_upper_camelcase}}() {
+        return m{{#_upper_camelcase}}{{name}}{{/_upper_camelcase}};
+    }
+
+{{/numberProperties}}
+{{#stringProperties}}
+    public void set{{#_upper_camelcase}}{{name}}{{/_upper_camelcase}}(String newVal) {
+        {{#maxLength}}
+        if ((newVal != null) && (newVal.length() > {{maxLength}})) {
+            throw new IllegalArgumentException("String is longer than " + {{maxLength}} + " characters.");
+        }
+        {{/maxLength}}
+        {{#minLength}}
+        if ((newVal != null) && (newVal.length() < {{minLength}})) {
+            throw new IllegalArgumentException("String is shorter than " + {{minLength}} + " characters.");
+        }
+        {{/minLength}}
+        {{#regex}}
+        if ((newVal != null) && (!newVal.matches("{{regex}}"))) {
+          throw new IllegalArgumentException("String \"" + newVal + "\" does not match regexp \"{{regex}}\".");
+        }
+        {{/regex}}
+        m{{#_upper_camelcase}}{{name}}{{/_upper_camelcase}} = newVal;
+    }
+
+    public String get{{#_upper_camelcase}}{{name}}{{/_upper_camelcase}}() {
+        return m{{#_upper_camelcase}}{{name}}{{/_upper_camelcase}};
+    }
+
+{{/stringProperties}}
+{{#booleanProperties}}
+    public void set{{#_upper_camelcase}}{{name}}{{/_upper_camelcase}}(boolean newVal) {
+        m{{#_upper_camelcase}}{{name}}{{/_upper_camelcase}} = newVal;
+    }
+
+    public boolean get{{#_upper_camelcase}}{{name}}{{/_upper_camelcase}}() {
+        return m{{#_upper_camelcase}}{{name}}{{/_upper_camelcase}};
+    }
+
+{{/booleanProperties}}
+{{#dataProperties}}
+    public void set{{#_upper_camelcase}}{{name}}{{/_upper_camelcase}}(byte[] newVal) {
+        {{#minLength}}
+        if ((newVal != null) && (newVal.length < {{minLength}})) {
+          throw new IllegalArgumentException("Data is only " + newVal.length + " bytes long (min: {{minLength}})");
+        }
+        {{/minLength}}
+        {{#maxLength}}
+        if ((newVal != null) && (newVal.length > {{maxLength}})) {
+          throw new IllegalArgumentException("Data is " + newVal.length + " bytes long (max: {{maxLength}})");
+        }
+        {{/maxLength}}
+        m{{#_upper_camelcase}}{{name}}{{/_upper_camelcase}} = newVal;
+    }
+
+    public byte[] get{{#_upper_camelcase}}{{name}}{{/_upper_camelcase}}() {
+        return m{{#_upper_camelcase}}{{name}}{{/_upper_camelcase}};
+    }
+
+{{/dataProperties}}
+{{#dateProperties}}
+    public void set{{#_upper_camelcase}}{{name}}{{/_upper_camelcase}}(Date newVal) {
+        {{#minValue}}
+        if ((newVal != null) && (newVal.getTime() < {{minValue}}) {
+            throw new IllegalArgumentException("Date " + newVal.getTime() + " is before {{minValue}}.");
+        }
+        {{/minValue}}
+        {{#maxValue}}
+        if ((newVal != null) && (newVal.getTime() > {{maxValue}}) {
+            throw new IllegalArgumentException("Date " + newVal.getTime() + " is after {{maxValue}}.");
+        }
+        {{/maxValue}}
+        m{{#_upper_camelcase}}{{name}}{{/_upper_camelcase}} = newVal;
+    }
+
+    public Date get{{#_upper_camelcase}}{{name}}{{/_upper_camelcase}}() {
+        return m{{#_upper_camelcase}}{{name}}{{/_upper_camelcase}};
+    }
+{{/dateProperties}}
+{{#arrayProperties}}
+{{> metajson/templates/Android/array}}
+{{/arrayProperties}}
+{{#objectProperties}}
+    public void set{{#_upper_camelcase}}{{name}}{{/_upper_camelcase}}({{className}} newVal) {
+        m{{#_upper_camelcase}}{{name}}{{/_upper_camelcase}} = newVal;
+    }
+
+    public {{className}} get{{#_upper_camelcase}}{{name}}{{/_upper_camelcase}}() {
+        return m{{#_upper_camelcase}}{{name}}{{/_upper_camelcase}};
+    }
+
+{{/objectProperties}}
+{{#undefinedProperties}}
+{{> metajson/templates/Android/array}}
+{{/undefinedProperties}}
+
+}

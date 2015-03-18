@@ -33,25 +33,21 @@ import shutil
 import sys, getopt
 
 from JSONScheme import *
-from ObjectiveCCodeGenerator import *
-from JavaCodeGenerator import *
-
-TARGET_IOS = 'iOS'
-TARGET_ANDROID = 'Android'
+from SourceCodeGenerator import *
 
 def main(argv=sys.argv):
     # parse Options
     template_dir = None
+    packageName = ""
     jsonfiles = []
     inputfile = 'do you have files?'
     projectPrefix = 'S2M'
-    target = TARGET_IOS
     dirPathToSaveCodes = './src'
     objectSuffix = "JSONObject"
 
     argv = sys.argv[1:]
     try:
-        opts, args = getopt.getopt(argv,"vhp:s:t:i:o:",["version", "help", "prefix=", "suffix=", "target=", "input=", "output=", "template="])
+        opts, args = getopt.getopt(argv,"vhp:s:i:o:",["version", "help", "prefix=", "suffix=", "input=", "output=", "template=", "package="])
     except getopt.GetoptError:
         usage()
         sys.exit(2)
@@ -64,8 +60,6 @@ def main(argv=sys.argv):
             version()
         elif opt in ("-p", "--prefix"):
             projectPrefix = arg
-        elif opt in ("-t", "--target"):
-            target = arg
         elif opt in ("-i", "--input"):
             inputfile = arg
         elif opt in ("-o", "--output"):
@@ -76,7 +70,8 @@ def main(argv=sys.argv):
                 objectSuffix = ""
         elif opt in ("--template"):
             template_dir = arg
-
+        elif opt in ("--package"):
+            packageName = arg
     addFiles = False
     for arg in argv :
         if arg.endswith(inputfile) :
@@ -91,10 +86,6 @@ def main(argv=sys.argv):
         if addFiles :
             jsonfiles.append(arg)
 
-    if target == 'none' :
-        print 'error - target platform is not defined'
-        usage()
-
     if len(jsonfiles) == 0 :
         print 'error - meta JSON file is not defined'
         usage()
@@ -102,19 +93,9 @@ def main(argv=sys.argv):
     if not os.path.exists(dirPathToSaveCodes):
         os.makedirs(dirPathToSaveCodes)
 
-    iOS = False
-    Android = False
-    if target == TARGET_IOS:
-        iOS = True
-    elif target == TARGET_ANDROID:
-        Android = True
-    else :
-        print 'error - unknown target platform : ' + target
-        usage()
-
     hasError = False
 
-    print "\nGenerate source codes for " + target + ", with Project Prefix \'" + projectPrefix + "\' and suffix \'" + objectSuffix + "\'"
+    print "\nGenerate source codes with Project Prefix \'" + projectPrefix + "\' and suffix \'" + objectSuffix + "\'"
     print "Output path : \'" + dirPathToSaveCodes + "\'\n"
 
     # write templates
@@ -122,54 +103,35 @@ def main(argv=sys.argv):
             dirPathToSaveCodes = dirPathToSaveCodes[:-1]
 
     if template_dir == None:
-        template_dir = os.path.join(TemplateCodeGenerator.DEFAULT_TEMPLATE_PATH, target)
+        template_dir = os.path.join(TemplateCodeGenerator.DEFAULT_TEMPLATE_PATH, "iOS")
 
-    templateCodeGen = TemplateCodeGenerator(template_dir, dirPathToSaveCodes, projectPrefix)
+    templateCodeGen = TemplateCodeGenerator(template_dir, dirPathToSaveCodes, projectPrefix, packageName)
     templateCodeGen.write_general_template_files()
 
 
     # read JSON file
     JSONScheme.projectPrefix = projectPrefix
+    JSONScheme.packageName = packageName
     JSONScheme.objectSuffix = objectSuffix
     for filePath in jsonfiles :
         print "read " + filePath + " to parse ...."
         jsonObj = read_file(filePath)
         schemeObj = create_json_scheme(jsonObj)
 
-        if Android :
-            codeGen = JavaCodeGenerator()
-            codeGen.projectPrefix = projectPrefix
-            codeGen.dirPath = dirPathToSaveCodes
-            codeGen.objectSuffix = objectSuffix
-            allSchemes = JSONScheme.JSONSchemeDic
-            codeGen.JSONSchemeDic = allSchemes
-
-            rootDic = allSchemes["ROOT"]
-            allRootKeys = rootDic.keys()
-            for typeName in rootDic :
-                obj = rootDic[typeName];
-                if obj.isNaturalType() == False:
-                    codeGen.make(obj)
-
-        else :
-            codeGen = ObjectiveCCodeGenerator()
-
-            allSchemes = JSONScheme.JSONSchemeDic
-            rootDic = allSchemes["ROOT"]
-
-            for typeName in rootDic :
-                obj = rootDic[typeName];
-                if obj.isNaturalType() == False:
-
-                    for template_filename in templateCodeGen.json_template_files:
-                        template = open(template_filename)
-                        content = codeGen.render(obj, template.read())
-
-                        file = templateCodeGen.create_template_output_file(template_filename, obj.getClassName())
-                        try:
-                            file.write(content)
-                        finally :
-                            file.close()
+        codeGen = SourceCodeGenerator()
+        allSchemes = JSONScheme.JSONSchemeDic
+        rootDic = allSchemes["ROOT"]
+        for typeName in rootDic :
+            obj = rootDic[typeName];
+            if obj.isNaturalType() == False:
+                for template_filename in templateCodeGen.json_template_files:
+                    template = open(template_filename)
+                    content = codeGen.render(obj, template.read())
+                    file = templateCodeGen.create_template_output_file(template_filename, obj.getClassName())
+                    try:
+                        file.write(content)
+                    finally :
+                        file.close()
 
 
 
@@ -198,10 +160,10 @@ def usage():
     usageString += '  -h, --help            shows help\n'
     usageString += '  -p, --prefix=         project prefix (default: S2M)\n'
     usageString += '  -s, --suffix=         classname suffix (default: JSONObject). Use "-s false" for no suffix\n'
-    usageString += '  -t, --target=         target platform iOS or Android (default: iOS)\n'
     usageString += '  -i, --input=          metaJSON file to read\n'
     usageString += '  -o, --output=         output path of generated source codes (default: src)\n'
     usageString += '      --template=       template directory to use to generate code\n'
+    usageString += '      --package=        name of the generated package (default: none)\n'
     print(usageString)
     sys.exit()
 

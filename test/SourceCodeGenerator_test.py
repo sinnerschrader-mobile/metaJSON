@@ -1,4 +1,4 @@
-from metajson.ObjectiveCCodeGenerator import ObjectiveCCodeGenerator
+from metajson.SourceCodeGenerator import SourceCodeGenerator
 from metajson.JSONScheme import *
 
 import pickle
@@ -7,9 +7,9 @@ import sys
 import os
 import datetime
 
-class TestObjectiveCCodeGenerator(unittest.TestCase):
+class TestSourceCodeGenerator(unittest.TestCase):
     def setUp(self):
-        self.gen = ObjectiveCCodeGenerator()
+        self.gen = SourceCodeGenerator()
         self.maxDiff = None
         self.default_folder = 'test/data/'
 
@@ -43,7 +43,7 @@ class TestObjectiveCCodeGenerator(unittest.TestCase):
         # All reference files have a timestamp of 2014 so we tweak our generated code to match them.
         self.assertMultiLineEqual(content.replace(str(datetime.datetime.now().year), "2014"), expected_result)
 
-class TestSampleTestClassCase(TestObjectiveCCodeGenerator):
+class TestSampleTestClassCase(TestSourceCodeGenerator):
     def setUp(self):
         super(TestSampleTestClassCase, self).setUp()
         self.test_file_path = self.default_folder + 'test_class'
@@ -67,7 +67,7 @@ class TestSampleTestClassCase(TestObjectiveCCodeGenerator):
         self.assert_content_file(self.test_file_path + "/_S2MSenderJSONObject.h", result)
 
 
-class TestSampleTestStringOptionsCase(TestObjectiveCCodeGenerator):
+class TestSampleTestStringOptionsCase(TestSourceCodeGenerator):
     def setUp(self):
         super(TestSampleTestStringOptionsCase, self).setUp()
         self.test_file_path = self.default_folder + 'test_string_options'
@@ -81,7 +81,7 @@ class TestSampleTestStringOptionsCase(TestObjectiveCCodeGenerator):
         result = self.machine_header_content(self.scheme_object)
         self.assert_content_file(self.test_file_path + "/_S2MLoginJSONObject.h", result)
 
-class TestSampleTestSubclassCase(TestObjectiveCCodeGenerator):
+class TestSampleTestSubclassCase(TestSourceCodeGenerator):
     def setUp(self):
         super(TestSampleTestSubclassCase, self).setUp()
         scheme = pickle.load(open(self.default_folder + '/test_subclass_scheme.p', 'rb'))
@@ -132,7 +132,7 @@ class TestSampleTestSubclassSubclassCase(TestSampleTestSubclassCase):
         result = self.machine_header_content(self.scheme_object)
         self.assert_content_file(self.test_file_path + "/_SubClassJSONObject.h", result)
 
-class TestSampleTestTypesCase(TestObjectiveCCodeGenerator):
+class TestSampleTestTypesCase(TestSourceCodeGenerator):
     def setUp(self):
         super(TestSampleTestTypesCase, self).setUp()
         scheme = pickle.load(open(self.default_folder + '/test_types_scheme.p', 'rb'))
